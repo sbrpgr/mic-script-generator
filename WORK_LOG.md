@@ -32,6 +32,7 @@
   - `CLOUDFLARE_ACCOUNT_ID`
   - `CLOUDFLARE_API_TOKEN`
 - GitHub Actions 배포 성공 확인
+- GitHub Actions JavaScript action 런타임 Node 24 사전 전환
 
 ### 보안
 
