@@ -52,7 +52,11 @@
     </script>
   </head>
   <body>
-    <main class="app-shell">
+    <div class="site-layout">
+      <aside class="ad-slot ad-rail ad-rail-left" data-ad-placement="left-rail" aria-label="광고 영역"></aside>
+      <div class="content-column">
+        <aside class="ad-slot ad-band ad-band-top" data-ad-placement="top-banner" aria-label="광고 영역"></aside>
+        <main class="app-shell">
       <section class="workspace" aria-label="음성으로 텍스트 쓰기">
         <header class="topbar">
           <div class="brand-block">
@@ -162,7 +166,11 @@
           <a href="/terms">이용약관</a>
         </footer>
       </section>
-    </main>
+        </main>
+        <aside class="ad-slot ad-band ad-band-bottom" data-ad-placement="bottom-banner" aria-label="광고 영역"></aside>
+      </div>
+      <aside class="ad-slot ad-rail ad-rail-right" data-ad-placement="right-rail" aria-label="광고 영역"></aside>
+    </div>
 
     <button id="selectionCopyBtn" class="selection-copy" type="button" hidden>선택 복사</button>
 

@@ -54,6 +54,7 @@ function init() {
   }
 
   bindEvents();
+  initAdSlots();
   updateMeta();
 }
 
@@ -113,6 +114,20 @@ function closeHelpDialogFromBackdrop(event) {
   if (event.target === els.helpDialog) {
     closeHelpDialog();
   }
+}
+
+function initAdSlots() {
+  const adUnits = document.querySelectorAll(".ad-slot .adsbygoogle");
+  if (adUnits.length === 0) return;
+
+  window.adsbygoogle = window.adsbygoogle || [];
+  adUnits.forEach(() => {
+    try {
+      window.adsbygoogle.push({});
+    } catch (error) {
+      // AdSense may not be ready yet; a later page load will retry after script setup.
+    }
+  });
 }
 
 function createRecognition() {
