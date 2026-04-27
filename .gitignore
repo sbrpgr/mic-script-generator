@@ -3,3 +3,36 @@
 .wrangler/
 node_modules/
 *.log
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.local
+
+# Cloud and deploy credentials
+wrangler.toml
+wrangler.json
+wrangler.jsonc
+cloudflare-token*
+github-token*
+credentials.json
+service-account*.json
+
+# Private keys and certificates
+*.key
+*.pem
+*.p12
+*.pfx
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
