@@ -32,14 +32,14 @@ const TOOL_DEFS = [
     category: "영상",
     title: "웹캠 녹화기",
     summary:
-      "카메라와 마이크를 브라우저에서 바로 녹화하고, 좌우반전·밝기·대비·채도·필터를 적용해 WebM 파일로 저장합니다.",
+      "카메라와 마이크를 브라우저에서 바로 녹화하고, 좌우반전·필터·배경 흐림·사용자 배경 이미지를 적용해 WebM 파일로 저장합니다.",
     seoTitle: "웹캠 녹화기 | 브라우저 카메라 녹화",
     seoDescription:
-      "설치 없이 브라우저에서 웹캠과 마이크를 녹화하고 좌우반전, 밝기, 대비, 채도, 필터를 적용해 WebM으로 저장합니다.",
-    keywords: ["웹캠", "녹화", "WebM", "좌우반전"],
+      "설치 없이 브라우저에서 웹캠과 마이크를 녹화하고 좌우반전, 필터, 배경 흐림, 사용자 배경 이미지를 적용해 WebM으로 저장합니다.",
+    keywords: ["웹캠", "녹화", "WebM", "배경 흐림"],
     guide: [
       { title: "카메라 허용", text: "브라우저 권한 창에서 카메라와 필요한 경우 마이크 사용을 허용합니다." },
-      { title: "화면 조정", text: "좌우반전, 밝기, 대비, 채도, 필터를 미리보기에서 확인하며 맞춥니다." },
+      { title: "화면 조정", text: "좌우반전, 밝기, 대비, 채도, 필터, 배경 흐림이나 배경 이미지를 미리보기에서 확인하며 맞춥니다." },
       { title: "녹화 시작", text: "기본 WebM 형식으로 녹화하며, 지원되는 Chrome 환경에서는 MP4도 선택할 수 있습니다." },
       { title: "파일 저장", text: "녹화가 끝나면 결과 영상을 확인하고 PC에 바로 다운로드합니다." },
     ],
@@ -1443,6 +1443,39 @@ function renderWebcamRecorder(container) {
             </label>
           </div>
 
+          <div class="background-effect-card">
+            <div class="section-heading compact-heading">
+              <div>
+                <h2>배경 효과</h2>
+                <p id="backgroundEffectStatus" class="tool-note">효과를 켜면 브라우저에서만 배경을 분리합니다.</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="backgroundMode">효과</label>
+              <select id="backgroundMode">
+                <option value="none">사용 안 함</option>
+                <option value="blur">배경 흐리게</option>
+                <option value="color">단색 배경</option>
+                <option value="image">이미지 배경</option>
+              </select>
+            </div>
+            <div class="field-row background-options">
+              <div class="field">
+                <label for="backgroundBlurRange">흐림</label>
+                <input id="backgroundBlurRange" type="range" min="4" max="28" value="14" />
+              </div>
+              <div class="field">
+                <label for="backgroundColorInput">배경색</label>
+                <input id="backgroundColorInput" type="color" value="#f4f7fb" />
+              </div>
+            </div>
+            <div class="background-upload-row">
+              <label class="secondary-action background-file-label" for="backgroundImageFile">배경 이미지 선택</label>
+              <input id="backgroundImageFile" type="file" accept="image/*" />
+              <button id="clearBackgroundImageBtn" type="button" disabled>이미지 지우기</button>
+            </div>
+          </div>
+
           <p id="formatSupportNote" class="tool-note">
             ${mp4Supported ? "기본은 WebM입니다. 이 브라우저에서는 MP4 직접 녹화도 선택할 수 있습니다." : "기본은 WebM입니다. 현재 브라우저에서는 MP4 직접 녹화를 지원하지 않습니다."}
           </p>
@@ -1494,6 +1527,12 @@ function renderWebcamRecorder(container) {
     brightnessValue: container.querySelector("#brightnessValue"),
     contrastValue: container.querySelector("#contrastValue"),
     saturationValue: container.querySelector("#saturationValue"),
+    backgroundMode: container.querySelector("#backgroundMode"),
+    backgroundBlurRange: container.querySelector("#backgroundBlurRange"),
+    backgroundColorInput: container.querySelector("#backgroundColorInput"),
+    backgroundImageFile: container.querySelector("#backgroundImageFile"),
+    clearBackgroundImageBtn: container.querySelector("#clearBackgroundImageBtn"),
+    backgroundEffectStatus: container.querySelector("#backgroundEffectStatus"),
     permissionTitle: container.querySelector("#cameraPermissionTitle"),
     permissionText: container.querySelector("#cameraPermissionText"),
     requestPermissionBtn: container.querySelector("#requestCameraPermissionBtn"),
@@ -1518,9 +1557,27 @@ function renderWebcamRecorder(container) {
     lastMimeType: "video/webm",
     cameraPermission: "unknown",
     micPermission: "unknown",
+    backgroundImage: null,
+    backgroundImageUrl: "",
+    backgroundEffectReady: false,
+    backgroundEffectLoading: false,
+    backgroundEffectError: "",
+    segmenter: null,
+    segmenterPromise: null,
+    segmentationBusy: false,
+    lastSegmentationAt: 0,
+    maskImageData: null,
+    maskWidth: 0,
+    maskHeight: 0,
   };
 
   const context = nodes.canvas.getContext("2d", { alpha: false });
+  const personCanvas = document.createElement("canvas");
+  const foregroundCanvas = document.createElement("canvas");
+  const maskCanvas = document.createElement("canvas");
+  const personContext = personCanvas.getContext("2d", { alpha: false });
+  const foregroundContext = foregroundCanvas.getContext("2d");
+  const maskContext = maskCanvas.getContext("2d");
   const mediaSupported =
     Boolean(navigator.mediaDevices?.getUserMedia) &&
     Boolean(window.MediaRecorder) &&
@@ -1550,6 +1607,11 @@ function renderWebcamRecorder(container) {
   nodes.cameraSelect.addEventListener("change", restartCameraIfIdle);
   nodes.recordQuality.addEventListener("change", restartCameraIfIdle);
   nodes.includeMic.addEventListener("change", restartCameraIfIdle);
+  nodes.backgroundMode.addEventListener("change", handleBackgroundModeChange);
+  nodes.backgroundImageFile.addEventListener("change", loadBackgroundImage);
+  nodes.clearBackgroundImageBtn.addEventListener("click", clearBackgroundImage);
+  nodes.backgroundBlurRange.addEventListener("input", syncBackgroundControls);
+  nodes.backgroundColorInput.addEventListener("input", syncBackgroundControls);
   [nodes.brightnessRange, nodes.contrastRange, nodes.saturationRange].forEach((input) => {
     input.addEventListener("input", syncRangeLabels);
   });
@@ -1558,6 +1620,7 @@ function renderWebcamRecorder(container) {
 
   initPermissionStatus();
   syncRangeLabels();
+  syncBackgroundControls();
   syncRecorderButtons();
 
   async function initPermissionStatus() {
@@ -1725,6 +1788,92 @@ function renderWebcamRecorder(container) {
     await startCamera();
   }
 
+  async function handleBackgroundModeChange() {
+    if (nodes.backgroundMode.value !== "none" && state.backgroundEffectError) {
+      state.backgroundEffectError = "";
+      state.segmenterPromise = null;
+    }
+    syncBackgroundControls();
+    if (usesSegmentedBackground()) {
+      await ensureBackgroundSegmenter();
+    }
+  }
+
+  function syncBackgroundControls() {
+    const mode = nodes.backgroundMode.value;
+    const effectActive = mode !== "none";
+    nodes.backgroundBlurRange.disabled = mode !== "blur";
+    nodes.backgroundColorInput.disabled = mode !== "color";
+    nodes.backgroundImageFile.disabled = mode !== "image";
+    nodes.clearBackgroundImageBtn.disabled = !state.backgroundImage || state.isRecording;
+
+    if (!effectActive) {
+      nodes.backgroundEffectStatus.textContent = "효과를 켜면 브라우저에서만 배경을 분리합니다.";
+      return;
+    }
+
+    if (state.backgroundEffectError) {
+      nodes.backgroundEffectStatus.textContent = state.backgroundEffectError;
+      return;
+    }
+
+    if (state.backgroundEffectLoading) {
+      nodes.backgroundEffectStatus.textContent = "배경 효과 모델을 불러오는 중입니다.";
+      return;
+    }
+
+    if (mode === "image" && !state.backgroundImage) {
+      nodes.backgroundEffectStatus.textContent = "배경으로 사용할 이미지를 선택해 주세요. 파일은 서버로 업로드되지 않습니다.";
+      return;
+    }
+
+    nodes.backgroundEffectStatus.textContent = state.backgroundEffectReady
+      ? "배경 효과 적용 중입니다. 처리는 브라우저에서만 진행됩니다."
+      : "효과를 선택하면 배경 분리 모델을 불러옵니다.";
+  }
+
+  function usesSegmentedBackground() {
+    const mode = nodes.backgroundMode.value;
+    return mode === "blur" || mode === "color" || (mode === "image" && Boolean(state.backgroundImage));
+  }
+
+  async function loadBackgroundImage() {
+    const file = nodes.backgroundImageFile.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      showToast("이미지 파일을 선택해 주세요.");
+      nodes.backgroundImageFile.value = "";
+      return;
+    }
+
+    if (state.backgroundImageUrl) URL.revokeObjectURL(state.backgroundImageUrl);
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    image.decoding = "async";
+    image.onload = async () => {
+      state.backgroundImage = image;
+      state.backgroundImageUrl = url;
+      nodes.backgroundMode.value = "image";
+      syncBackgroundControls();
+      await ensureBackgroundSegmenter();
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      nodes.backgroundImageFile.value = "";
+      showToast("배경 이미지를 불러오지 못했습니다.");
+    };
+    image.src = url;
+  }
+
+  function clearBackgroundImage() {
+    if (state.backgroundImageUrl) URL.revokeObjectURL(state.backgroundImageUrl);
+    state.backgroundImage = null;
+    state.backgroundImageUrl = "";
+    nodes.backgroundImageFile.value = "";
+    if (nodes.backgroundMode.value === "image") nodes.backgroundMode.value = "none";
+    syncBackgroundControls();
+  }
+
   function buildCameraConstraints() {
     const quality = {
       "1080": { width: 1920, height: 1080 },
@@ -1781,19 +1930,217 @@ function renderWebcamRecorder(container) {
       nodes.canvas.width = width;
       nodes.canvas.height = height;
     }
+    ensureWorkCanvasSize(width, height);
 
-    context.save();
-    context.fillStyle = "#101828";
-    context.fillRect(0, 0, width, height);
-    context.filter = buildCanvasFilter();
-    if (nodes.mirrorVideo.checked) {
-      context.translate(width, 0);
-      context.scale(-1, 1);
+    drawCameraFrame(personContext, video, width, height);
+
+    if (usesSegmentedBackground()) {
+      drawBackgroundComposite(width, height);
+    } else {
+      context.drawImage(personCanvas, 0, 0, width, height);
     }
-    context.drawImage(video, 0, 0, width, height);
-    context.restore();
 
     state.animationId = window.requestAnimationFrame(drawPreviewFrame);
+  }
+
+  function ensureWorkCanvasSize(width, height) {
+    [personCanvas, foregroundCanvas].forEach((canvas) => {
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+      }
+    });
+  }
+
+  function drawCameraFrame(targetContext, video, width, height) {
+    targetContext.save();
+    targetContext.fillStyle = "#101828";
+    targetContext.fillRect(0, 0, width, height);
+    targetContext.filter = buildCanvasFilter();
+    if (nodes.mirrorVideo.checked) {
+      targetContext.translate(width, 0);
+      targetContext.scale(-1, 1);
+    }
+    targetContext.drawImage(video, 0, 0, width, height);
+    targetContext.restore();
+  }
+
+  function drawBackgroundComposite(width, height) {
+    ensureBackgroundSegmenter();
+    maybeUpdateSegmentationMask();
+
+    if (!state.maskImageData) {
+      context.drawImage(personCanvas, 0, 0, width, height);
+      return;
+    }
+
+    drawSelectedBackground(width, height);
+
+    foregroundContext.clearRect(0, 0, width, height);
+    foregroundContext.globalCompositeOperation = "source-over";
+    foregroundContext.drawImage(personCanvas, 0, 0, width, height);
+    foregroundContext.globalCompositeOperation = "destination-in";
+    foregroundContext.drawImage(maskCanvas, 0, 0, width, height);
+    foregroundContext.globalCompositeOperation = "source-over";
+    context.drawImage(foregroundCanvas, 0, 0, width, height);
+  }
+
+  function drawSelectedBackground(width, height) {
+    const mode = nodes.backgroundMode.value;
+    context.save();
+    context.filter = "none";
+
+    if (mode === "blur") {
+      const blurPx = Number(nodes.backgroundBlurRange.value) || 14;
+      context.filter = `blur(${blurPx}px)`;
+      const bleed = Math.max(24, blurPx * 2);
+      context.drawImage(personCanvas, -bleed, -bleed, width + bleed * 2, height + bleed * 2);
+    } else if (mode === "color") {
+      context.fillStyle = nodes.backgroundColorInput.value || "#f4f7fb";
+      context.fillRect(0, 0, width, height);
+    } else if (mode === "image" && state.backgroundImage) {
+      drawImageCover(context, state.backgroundImage, 0, 0, width, height);
+    } else {
+      context.drawImage(personCanvas, 0, 0, width, height);
+    }
+
+    context.restore();
+  }
+
+  function drawImageCover(targetContext, image, x, y, width, height) {
+    const sourceWidth = image.naturalWidth || image.width;
+    const sourceHeight = image.naturalHeight || image.height;
+    const scale = Math.max(width / sourceWidth, height / sourceHeight);
+    const drawWidth = sourceWidth * scale;
+    const drawHeight = sourceHeight * scale;
+    const drawX = x + (width - drawWidth) / 2;
+    const drawY = y + (height - drawHeight) / 2;
+    targetContext.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+  }
+
+  async function ensureBackgroundSegmenter() {
+    if (!usesSegmentedBackground() || state.segmenter || state.backgroundEffectError) {
+      return state.segmenter;
+    }
+    if (state.segmenterPromise) return state.segmenterPromise;
+
+    state.backgroundEffectLoading = true;
+    syncBackgroundControls();
+    state.segmenterPromise = (async () => {
+      try {
+        const visionTasks = await importVisionTasks();
+        const vision = await visionTasks.FilesetResolver.forVisionTasks(
+          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
+        );
+        const segmenter = await visionTasks.ImageSegmenter.createFromOptions(vision, {
+          baseOptions: {
+            modelAssetPath:
+              "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter_landscape/float16/latest/selfie_segmenter_landscape.tflite",
+            delegate: "CPU",
+          },
+          runningMode: "VIDEO",
+          outputCategoryMask: true,
+          outputConfidenceMasks: true,
+        });
+        state.segmenter = segmenter;
+        state.backgroundEffectReady = true;
+        return segmenter;
+      } catch (error) {
+        state.backgroundEffectError = "배경 효과를 불러오지 못했습니다. 효과 없이 녹화합니다.";
+        nodes.backgroundMode.value = "none";
+        throw error;
+      } finally {
+        state.backgroundEffectLoading = false;
+        syncBackgroundControls();
+      }
+    })();
+
+    try {
+      return await state.segmenterPromise;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async function importVisionTasks() {
+    try {
+      return await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14");
+    } catch (error) {
+      return import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/+esm");
+    }
+  }
+
+  function maybeUpdateSegmentationMask() {
+    if (!state.segmenter || state.segmentationBusy || personCanvas.width === 0 || personCanvas.height === 0) return;
+
+    const now = performance.now();
+    const intervalMs = nodes.recordQuality.value === "1080" ? 170 : 120;
+    if (now - state.lastSegmentationAt < intervalMs) return;
+
+    state.segmentationBusy = true;
+    state.lastSegmentationAt = now;
+    try {
+      const result = state.segmenter.segmentForVideo(personCanvas, now);
+      if (result) applySegmentationResult(result);
+    } catch (error) {
+      state.backgroundEffectError = "배경 효과 처리 중 오류가 발생했습니다. 효과 없이 녹화합니다.";
+      nodes.backgroundMode.value = "none";
+      syncBackgroundControls();
+    } finally {
+      state.segmentationBusy = false;
+    }
+  }
+
+  function applySegmentationResult(result) {
+    const confidenceMasks = result.confidenceMasks ? Array.from(result.confidenceMasks) : [];
+    const confidenceMask = confidenceMasks.length ? confidenceMasks[confidenceMasks.length - 1] : null;
+    const categoryMask = result.categoryMask || null;
+
+    if (confidenceMask?.getAsFloat32Array) {
+      updateMaskCanvas(confidenceMask, confidenceMask.getAsFloat32Array(), "confidence");
+    } else if (categoryMask?.getAsUint8Array) {
+      updateMaskCanvas(categoryMask, categoryMask.getAsUint8Array(), "category");
+    }
+
+    closeSegmentationResult(result);
+  }
+
+  function updateMaskCanvas(mask, data, type) {
+    const width = Number(mask.width) || personCanvas.width;
+    const height = Number(mask.height) || personCanvas.height;
+    if (!width || !height || !data || data.length < width * height) return;
+
+    if (maskCanvas.width !== width || maskCanvas.height !== height) {
+      maskCanvas.width = width;
+      maskCanvas.height = height;
+    }
+
+    const imageData = maskContext.createImageData(width, height);
+    for (let index = 0; index < width * height; index += 1) {
+      const value = data[index];
+      const alpha =
+        type === "confidence"
+          ? Math.max(0, Math.min(255, ((value - 0.28) / 0.36) * 255))
+          : value === 1
+            ? 255
+            : 0;
+      const offset = index * 4;
+      imageData.data[offset] = 255;
+      imageData.data[offset + 1] = 255;
+      imageData.data[offset + 2] = 255;
+      imageData.data[offset + 3] = alpha;
+    }
+
+    maskContext.putImageData(imageData, 0, 0);
+    state.maskImageData = imageData;
+    state.maskWidth = width;
+    state.maskHeight = height;
+  }
+
+  function closeSegmentationResult(result) {
+    result.categoryMask?.close?.();
+    result.confidenceMasks?.forEach((mask) => mask?.close?.());
+    result.close?.();
   }
 
   function stopPreviewLoop() {
@@ -2050,6 +2397,8 @@ function renderWebcamRecorder(container) {
     stopPreviewLoop();
     stopRecordingTimer();
     if (state.recordedUrl) URL.revokeObjectURL(state.recordedUrl);
+    if (state.backgroundImageUrl) URL.revokeObjectURL(state.backgroundImageUrl);
+    state.segmenter?.close?.();
   }
 
   function getCameraErrorMessage(error) {

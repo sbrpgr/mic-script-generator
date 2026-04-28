@@ -51,6 +51,7 @@ Google Tag Manager uses container `GTM-W3MF6BSN`.
 - Client-side scripts do not contain Cloudflare, GitHub, Google, or AI API secrets.
 - CSP is configured in `_headers`.
 - Initial tools do not upload text or files to an application server.
+- Webcam background blur and custom background images are processed locally in the browser; user-selected background files are not uploaded.
 
 ## Related Docs
 

@@ -30,3 +30,11 @@
 
 - Initial advanced features such as OCR, background removal, PDF password removal, PDF compression, and AI summary/translation remain excluded from the static-only launch scope
 - Ad slots remain separated from the work surface and hidden when unused
+
+### Webcam Recorder Update
+
+- Added optional webcam background effects: blur, solid color, and user-uploaded image background
+- Kept background removal/transparency out of scope
+- Loaded MediaPipe segmentation only when a background effect is enabled
+- Kept uploaded background images local to the browser; files are not sent to an application server
+- Updated CSP to allow the pinned MediaPipe CDN and WASM execution needed for browser-side segmentation
