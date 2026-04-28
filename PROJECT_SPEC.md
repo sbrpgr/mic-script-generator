@@ -12,9 +12,12 @@ Core constraints:
 
 - No backend server for core tools
 - No database or persistent user storage
+- No account system for the current public tool set
+- No collection of user-entered work data by the application itself
 - No paid external API required for baseline execution
 - No private API key exposed to client-side JavaScript
 - Tool pages must be directly deployable as static pages
+- User work data should be handled as 100% browser-side processing unless a future spec explicitly changes the architecture
 
 ## Implemented Tools
 
@@ -26,6 +29,15 @@ Core constraints:
   - Transcript cleanup
   - Script generation for general, YouTube, presentation, and meeting formats
   - Copy and TXT export
+
+### Video
+
+- `웹캠 녹화기`
+  - Camera and optional microphone recording
+  - WebM default output with browser-dependent MP4 options
+  - Mirror, filters, brightness, contrast, and saturation controls
+  - Optional background blur, solid color background, and user-uploaded image background
+  - Background images remain local to the browser and are not uploaded
 
 ### Text
 
@@ -92,7 +104,28 @@ Each tool page should have:
 - CSP is managed in `_headers`
 - External runtime libraries are limited to browser-side tool libraries loaded from CDN
 - Tool inputs and uploaded files are processed in the browser and not sent to an application server
+- The service copy should communicate clearly that work data is not stored by our server and is processed in the user's browser
+- The current product does not operate login, membership, or first-party personal-data collection
 - Deployment secrets remain in GitHub Actions Secrets or Cloudflare settings only
+
+## Public Contact Copy
+
+Footer and policy pages should expose the same operator information:
+
+- Maker: Dayway / 데이웨이
+- Website: `https://dayway.web.app`
+- Email: `dayway.ict@gmail.com`
+- Advertising, collaboration, and partnership inquiries should be directed to the email address above.
+
+## Remaining Work
+
+- Run manual camera and microphone checks on real Chrome/Edge devices after each media-tool change
+- Add compact FAQ sections to high-value tool pages for SEO without crowding the work surface
+- Create category landing pages for text, PDF, image, subtitle, voice, and video tools
+- Add privacy-friendly analytics events for tool open, run, copy, and download actions
+- Tune AdSense placements after approval and keep ads outside editor/upload/drop zones
+- Monitor MediaPipe background-effect load failures and add a local fallback if CDN reliability becomes a problem
+- Request indexing for new or materially changed tool pages in Search Console
 
 ## Open Source Fallback Rule
 

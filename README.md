@@ -17,8 +17,10 @@ The current product ships as a static multi-tool site focused on tasks that can 
 - No login required
 - Browser-side processing first
 - No backend server for core tools
+- No first-party personal-data collection for the current public tools
 - No private API keys in client code
 - Ad slots are separated from the work surface
+- Advertising, collaboration, and partnership inquiries go to `dayway.ict@gmail.com`
 
 ## URL Structure
 
@@ -52,6 +54,7 @@ Google Tag Manager uses container `GTM-W3MF6BSN`.
 - CSP is configured in `_headers`.
 - Initial tools do not upload text or files to an application server.
 - Webcam background blur and custom background images are processed locally in the browser; user-selected background files are not uploaded.
+- Work data is intended to stay 100% inside the user's browser for the current static-tool scope.
 
 ## Related Docs
 

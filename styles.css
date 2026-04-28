@@ -839,9 +839,24 @@ body.home-mode .tool-workspace {
   font-weight: 800;
 }
 
+.footer-contact {
+  color: #4f5968;
+  font-weight: 700;
+}
+
 .document-footer {
   margin: 18px auto 0;
   max-width: 860px;
+}
+
+.privacy-assurance {
+  border: 1px solid #dfe7f2;
+  border-radius: 8px;
+  background: #f8fbff;
+  color: #243043;
+  font-weight: 700;
+  line-height: 1.7;
+  padding: 14px;
 }
 
 .tool-section {

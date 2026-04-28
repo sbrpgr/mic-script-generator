@@ -1,6 +1,6 @@
 # 코워크스페이스 (ko-workspace) Roadmap
 
-Last updated: 2026-04-28
+Last updated: 2026-04-29
 
 ## 1. Platform Direction
 
@@ -12,6 +12,7 @@ Core principles:
 - Prefer browser-side processing where practical, especially for text, images, PDF page operations, and simple media utilities.
 - Initial production scope must run on Cloudflare Pages as static browser-side tools. Do not require a backend server, database, queue, storage bucket, paid API, or private API key for core tool execution.
 - Keep privacy and security explicit: do not upload user files or text for initial tools.
+- Current public tools should not require membership or first-party personal-data collection.
 - Design every tool page with ad slots separated from the work surface, so AdSense can be added without breaking the UI.
 - Build in small, indexable tools first, then expand into heavier PDF/OCR/AI workflows after the platform structure is stable.
 
@@ -24,6 +25,7 @@ Accepted for initial development:
 - QR generation using a local client-side library.
 - PDF page operations that can run in the browser with a bundled client-side library.
 - Subtitle text parsing and timestamp adjustment in the browser.
+- Webcam recording and optional browser-side background effects when models are loaded only on demand.
 
 Excluded from initial development:
 
@@ -31,6 +33,7 @@ Excluded from initial development:
 - Features requiring private API keys in the browser.
 - Features that need third-party paid APIs to work.
 - Heavy AI/OCR/background-removal models unless a future build proves they are fast enough locally.
+- Transparent-background export and standalone background-removal tools remain excluded for now.
 - PDF operations that require unreliable or legally sensitive behavior, such as password removal from protected documents.
 
 ## 2. URL Structure
@@ -47,10 +50,9 @@ Recommended long-term structure:
 
 Current migration note:
 
-- `https://ko-workspace.com/` currently serves `음성으로 텍스트 쓰기`.
-- When at least 4-6 tools exist, consider changing `/` into the platform home.
-- At that point, move the current tool to `/tools/voice-to-text/`.
-- Preserve existing search value with either a clear canonical strategy or a 301 redirect plan.
+- `https://ko-workspace.com/` now serves the platform home.
+- Individual tools are served under `/tools/{tool-slug}/`.
+- Preserve canonical URLs and sitemap entries whenever tool pages are updated.
 
 ## 3. Priority Roadmap
 
@@ -59,6 +61,7 @@ Current migration note:
 | Tool | URL | SEO Keywords | Difficulty | Notes |
 | --- | --- | --- | --- | --- |
 | 음성으로 텍스트 쓰기 | `/tools/voice-to-text/` | 음성으로 텍스트 쓰기, 음성 텍스트 변환, 한국어 받아쓰기, 마이크 텍스트 입력, 회의록 받아쓰기 | M | Current tool. Improve reliability, add FAQ, preserve root URL strategy. |
+| 웹캠 녹화기 | `/tools/webcam-recorder/` | 웹캠 녹화기, 카메라 녹화, 배경 흐림, 배경 바꾸기, WebM 녹화 | L | Shipped. Keep testing camera permission, background effects, and browser compatibility on real devices. |
 | 음성 텍스트 대본 정리 | `/tools/voice-script-maker/` | 유튜브 대본 만들기, 회의록 정리, 발표문 초안, 음성 대본 변환 | M | Could become a mode inside voice-to-text first, then separate if search demand grows. |
 
 ### P1. Lightweight SEO Tools
@@ -234,6 +237,27 @@ Rules:
 - Do not place ads inside drag-and-drop zones.
 - Do not add inline AdSense scripts.
 - Keep CSP strict and add only the minimum required ad domains.
+
+## 5A. Monetization And Membership Direction
+
+Near-term monetization should stay simple:
+
+- AdSense display ads on tool pages, with ads kept outside the work surface.
+- Sponsored guide posts or comparison articles only when they match the tool category.
+- Direct advertising, collaboration, and partnership inquiries through `dayway.ict@gmail.com`.
+
+Membership should not be introduced until there is a clear reason:
+
+- Keep the default service anonymous and free while the platform earns search traffic.
+- Consider membership later for saved presets, batch queues, usage history, cloud sync, or team workspaces.
+- If membership is added, separate it from the current browser-only tools and update the privacy policy before launch.
+
+Revenue ideas that do not break the current privacy model:
+
+- Optional downloadable templates and document packs.
+- Sponsored placement on blog/category pages, not inside editors.
+- B2B custom tool requests handled through email.
+- Lightweight premium desktop-style bundles only after core tools have traffic and repeated use.
 
 ## 6. Security And Privacy Rules
 

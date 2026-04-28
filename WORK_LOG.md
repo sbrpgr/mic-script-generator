@@ -38,3 +38,10 @@
 - Loaded MediaPipe segmentation only when a background effect is enabled
 - Kept uploaded background images local to the browser; files are not sent to an application server
 - Updated CSP to allow the pinned MediaPipe CDN and WASM execution needed for browser-side segmentation
+
+### Trust And Contact Copy
+
+- Added public copy that work data is processed in the browser and not stored by our own server
+- Clarified that the current public tools do not require membership or first-party personal-data collection
+- Added advertising, collaboration, and partnership inquiry guidance to use `dayway.ict@gmail.com`
+- Updated the product specification with remaining operational, SEO, analytics, and monetization tasks
