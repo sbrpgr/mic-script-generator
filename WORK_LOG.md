@@ -74,3 +74,19 @@
 - Linked category landing pages from the home screen with a compact category navigation strip
 - Added category page structured data and sitemap entries
 - Improved usage flow and FAQ copy for core tools: AI text cleaner, character counter, QR generator, image compressor, and PDF merge
+- Bumped shared asset cache version to `20260429-13`
+- Deployed commit `580c060 Improve AdSense SEO readiness` through GitHub Actions / Cloudflare Pages
+- Verified production category URLs returned `200`, used `app.js?v=20260429-13`, and included `data-category-page`
+- Verified production `/privacy` contained the Google advertising/cookie copy
+- Verified production `sitemap.xml` contained category landing page URLs
+
+### Handoff Notes
+
+- `PROJECT_SPEC.md` is the primary product/spec handoff document.
+- `ROADMAP.md` records SEO, URL, and future feature direction.
+- `ANALYTICS.md` is the event privacy contract; do not add analytics fields outside its allowlist without updating it.
+- Category landing pages are controlled by `CATEGORY_PAGE_DEFS`, `renderCategoryPage()`, and `injectCategoryStructuredData()` in `app.js`.
+- The home category strip is controlled by `renderHomeCategoryLinks()` in `app.js` and `.home-category-links` in `styles.css`.
+- Category page layout is controlled by `.category-mode` styles.
+- New HTML pages must run through `npm.cmd run apply:site-tags`.
+- Broad JS/CSS changes should bump the shared cache version across all HTML pages and `site.webmanifest`.

@@ -52,7 +52,28 @@ Current migration note:
 
 - `https://ko-workspace.com/` now serves the platform home.
 - Individual tools are served under `/tools/{tool-slug}/`.
+- Category landing pages are now live at `/tools/text/`, `/tools/pdf/`, `/tools/image/`, `/tools/subtitle/`, and `/tools/voice-video/`.
+- Category pages reuse the shared app shell and are rendered from `CATEGORY_PAGE_DEFS` in `app.js`; do not fork tool logic into category HTML files.
 - Preserve canonical URLs and sitemap entries whenever tool pages are updated.
+- Current static asset cache version is `20260429-13`; bump this version whenever `app.js` or `styles.css` changes.
+
+## 2A. Current SEO And AdSense Baseline
+
+Completed for AdSense/SEO readiness:
+
+- Google AdSense script and account meta are present on public pages.
+- `ads.txt`, `sitemap.xml`, `robots.txt`, `/privacy`, and `/terms` are present.
+- `/privacy` includes Google advertising, analytics, cookies, personalized ads, and non-content analytics-event language.
+- Tool pages include unique titles, meta descriptions, canonical URLs, Open Graph data, usage flows, collapsed FAQ/examples, and dynamic FAQ structured data.
+- Category landing pages include static metadata, sitemap entries, and dynamic `CollectionPage`/`ItemList`/`BreadcrumbList` structured data.
+- The home page includes compact category links to strengthen internal navigation.
+
+Operational reminders:
+
+- After adding or changing HTML, run `npm.cmd run apply:site-tags` and then `npm.cmd run check`.
+- Keep ad slots outside the primary editor/upload/result areas.
+- Never track user-entered text, file names, extracted contacts, or recording contents in analytics.
+- Request Search Console indexing for materially changed pages after deployment.
 
 ## 3. Priority Roadmap
 

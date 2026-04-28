@@ -8,6 +8,15 @@
 
 The current deployment targets Cloudflare Pages and keeps all initial tools inside a browser-only execution model.
 
+Current production baseline:
+
+- Production branch: `main`
+- Production domain: `https://ko-workspace.com/`
+- Cloudflare Pages project: `mic-script-generator`
+- Latest AdSense/SEO readiness commit: `580c060 Improve AdSense SEO readiness`
+- Current static asset cache version: `20260429-13`
+- Category landing pages, privacy policy updates, sitemap updates, and core FAQ copy were deployed on 2026-04-29
+
 Core constraints:
 
 - No backend server for core tools
@@ -94,12 +103,36 @@ Each tool page should have:
 - Browser-side app shell driven by `app.js`
 - Collapsed usage examples and FAQ below Quick Flow for SEO and user help
 
+Current category pages:
+
+| Category | URL | Source file | `data-category-page` |
+| --- | --- | --- | --- |
+| Text | `/tools/text/` | `tools/text/index.html` | `text` |
+| PDF | `/tools/pdf/` | `tools/pdf/index.html` | `pdf` |
+| Image | `/tools/image/` | `tools/image/index.html` | `image` |
+| Subtitle | `/tools/subtitle/` | `tools/subtitle/index.html` | `subtitle` |
+| Voice/Video | `/tools/voice-video/` | `tools/voice-video/index.html` | `voice-video` |
+
+Category pages are static HTML shells that reuse `app.js`. They should not duplicate individual tool logic. The category content is rendered from `CATEGORY_PAGE_DEFS` in `app.js`.
+
 ## Frontend Structure
 
 - `index.html`: platform home shell
 - `tools/*/index.html`: static tool entry pages
 - `styles.css`: shared platform and tool styles
 - `app.js`: tool registry, page rendering, and browser-side tool logic
+
+Important frontend implementation notes:
+
+- `TOOL_DEFS` in `app.js` is the source of truth for individual tools.
+- `CATEGORY_PAGE_DEFS` in `app.js` is the source of truth for category landing pages.
+- `renderCategoryPage()` renders category landing pages.
+- `renderHomeCategoryLinks()` adds the compact category links on the home screen.
+- `injectCategoryStructuredData()` injects `CollectionPage`, `ItemList`, and `BreadcrumbList` schema for category pages.
+- `.category-mode` and `.home-category-links` in `styles.css` control category landing layout and home category navigation.
+- The current category pages intentionally hide the left tool sidebar and show a wider category tool grid.
+- When `app.js` or `styles.css` changes, bump the query-string cache version in every HTML entry and `site.webmanifest`.
+- Run `npm.cmd run apply:site-tags` after adding or changing HTML pages so GTM tags and CSP hashes remain managed.
 
 ## Deployment Model
 
@@ -118,6 +151,32 @@ Each tool page should have:
 - Deployment secrets remain in GitHub Actions Secrets or Cloudflare settings only
 - GA/GTM events must follow `ANALYTICS.md` and use only allowlisted, non-content parameters
 
+## AdSense And Privacy Readiness
+
+Current readiness state:
+
+- AdSense script and `google-adsense-account` meta tag are present on public HTML pages.
+- `ads.txt` exists at the site root.
+- `privacy.html` explains Google advertising, Google Analytics/Tag Manager, cookies, personalized ads, browser/ad settings, and non-content analytics events.
+- The privacy policy states that user-entered text, file contents, extracted data, recording contents, and generated outputs are not sent as analytics or advertising event parameters.
+- Footer contact information is present for advertising, collaboration, and partnership inquiries.
+- Empty ad slots remain hidden; ad areas are separated from editor/upload/result surfaces.
+
+Do not:
+
+- Add copy that asks users to click ads.
+- Place ads inside textareas, file upload boxes, download controls, modals, or QR/image/PDF result previews.
+- Send user content, file names, extracted email/URL/phone data, or recording contents through GTM/GA.
+- Add new third-party ad or analytics scripts without updating `_headers`, `privacy.html`, and this spec.
+
+Core tool FAQ/usage copy was expanded for AdSense/SEO readiness on these tools:
+
+- `AI 복붙 서식 정리`
+- `글자수 세기`
+- `QR 코드 생성기`
+- `이미지 용량 압축`
+- `PDF 합치기`
+
 ## Public Contact Copy
 
 Footer and policy pages should expose the same operator information:
@@ -132,9 +191,28 @@ Footer and policy pages should expose the same operator information:
 - Run manual camera and microphone checks on real Chrome/Edge devices after each media-tool change
 - Manually scan generated QR samples on real mobile devices after QR design changes, especially colored or rounded styles
 - Monitor category landing pages in Search Console and expand category copy if pages are indexed with weak impressions
+- Request indexing for the five category landing pages after deployment:
+  - `https://ko-workspace.com/tools/text/`
+  - `https://ko-workspace.com/tools/pdf/`
+  - `https://ko-workspace.com/tools/image/`
+  - `https://ko-workspace.com/tools/subtitle/`
+  - `https://ko-workspace.com/tools/voice-video/`
 - Tune AdSense placements after approval and keep ads outside editor/upload/drop zones
 - Monitor MediaPipe background-effect load failures and add a local fallback if CDN reliability becomes a problem
 - Request indexing for new or materially changed tool pages in Search Console
+
+## Verification Checklist
+
+Before committing or deploying broad platform changes:
+
+- Run `npm.cmd run check`
+- Run `git diff --check`
+- Confirm all HTML pages use the latest cache version for `/app.js`, `/styles.css`, `/favicon.svg`, and `/site.webmanifest`
+- For new HTML pages, confirm these IDs exist: `heroEyebrow`, `pageTitle`, `pageDescription`, `toolSearch`, `categoryFilters`, `toolList`, `toolOverview`, `toolWorkspace`, `toolGuideList`, `helpBtn`, `helpDialog`, `helpCloseBtn`, `selectionCopyBtn`
+- Confirm `sitemap.xml` includes new indexable URLs
+- After push, verify GitHub Actions / Cloudflare Pages success
+- For category pages, verify each production URL returns `200` and contains `data-category-page`
+- For privacy changes, verify production `/privacy` contains the updated Google advertising/cookie language
 
 ## Open Source Fallback Rule
 
