@@ -82,6 +82,7 @@ Core constraints:
 
 - Home: `/`
 - Tool pages: `/tools/{slug}/`
+- Category landing pages: `/tools/text/`, `/tools/pdf/`, `/tools/image/`, `/tools/subtitle/`, `/tools/voice-video/`
 - Policy pages: `/privacy`, `/terms`
 
 Each tool page should have:
@@ -130,7 +131,7 @@ Footer and policy pages should expose the same operator information:
 
 - Run manual camera and microphone checks on real Chrome/Edge devices after each media-tool change
 - Manually scan generated QR samples on real mobile devices after QR design changes, especially colored or rounded styles
-- Create category landing pages for text, PDF, image, subtitle, voice, and video tools on a separate rollback branch
+- Monitor category landing pages in Search Console and expand category copy if pages are indexed with weak impressions
 - Tune AdSense placements after approval and keep ads outside editor/upload/drop zones
 - Monitor MediaPipe background-effect load failures and add a local fallback if CDN reliability becomes a problem
 - Request indexing for new or materially changed tool pages in Search Console

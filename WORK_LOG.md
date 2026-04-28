@@ -66,3 +66,11 @@
 - Added automatic contrast fallback to dark foreground on light background when the selected colors may reduce recognition reliability
 - Bumped static asset cache version to `20260429-12`
 - Deployed commit `18b5f47 Improve QR generator exports` through GitHub Actions / Cloudflare Pages
+
+### AdSense And SEO Readiness
+
+- Expanded the privacy policy with Google advertising, analytics, cookies, personalized ads, and non-content analytics-event guidance
+- Added five category landing pages: text, PDF, image, subtitle, and voice/video
+- Linked category landing pages from the home screen with a compact category navigation strip
+- Added category page structured data and sitemap entries
+- Improved usage flow and FAQ copy for core tools: AI text cleaner, character counter, QR generator, image compressor, and PDF merge

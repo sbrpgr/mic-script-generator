@@ -50,16 +50,16 @@ const TOOL_DEFS = [
     category: "텍스트",
     title: "AI 복붙 서식 정리",
     summary:
-      "ChatGPT, Claude, Gemini 같은 AI 답변을 붙여넣었을 때 남는 마크다운, 별표, 제목, 링크, 코드블록을 일반 문서용 텍스트로 정리합니다.",
+      "ChatGPT, Claude, Gemini 같은 AI 답변을 붙여넣었을 때 남는 별표, 제목, 링크, 코드블록, 과한 줄바꿈을 문서용 텍스트로 정리합니다.",
     seoTitle: "AI 복붙 서식 정리 | ChatGPT 마크다운 제거",
     seoDescription:
       "AI 답변 복사 후 붙는 별표, 제목, 링크, 코드블록, 줄바꿈을 브라우저에서 정리하는 무료 도구입니다.",
     keywords: ["ChatGPT", "마크다운", "별표", "서식"],
     guide: [
-      { title: "원문 붙여넣기", text: "AI 답변이나 웹에서 복사한 텍스트를 입력합니다." },
-      { title: "정리 모드 선택", text: "일반 텍스트, 문서용, 블로그용, 표 정리 모드 중 하나를 고릅니다." },
-      { title: "옵션 조정", text: "링크 처리, 코드블록 제거, 제목 처리, 공백 정리 여부를 선택합니다." },
-      { title: "결과 사용", text: "출력 텍스트를 복사해서 메일, 워드, 한글, 메신저에 바로 붙여넣습니다." },
+      { title: "AI 답변 붙여넣기", text: "복사한 답변, 블로그 초안, 메일 문안을 원문 영역에 넣습니다." },
+      { title: "문서 목적 선택", text: "일반 텍스트, 문서용, 블로그용, 표 정리처럼 붙여넣을 곳에 맞는 모드를 고릅니다." },
+      { title: "서식 제거 범위 조정", text: "별표, 제목 기호, 코드블록, 링크, 빈 줄 정리 옵션을 필요한 만큼만 켭니다." },
+      { title: "결과 확인", text: "정리된 문장을 확인한 뒤 한글, 워드, 메일, 메신저에 바로 붙여넣습니다." },
     ],
   },
   {
@@ -74,9 +74,9 @@ const TOOL_DEFS = [
       "텍스트를 붙여넣으면 글자수, 공백 제외 글자수, 단어 수, 바이트 수, 예상 읽기 시간을 바로 계산합니다.",
     keywords: ["글자수", "공백 제외", "바이트", "분량"],
     guide: [
-      { title: "텍스트 입력", text: "원고, 보고서, 댓글, 설명문 등 원하는 텍스트를 붙여넣습니다." },
-      { title: "실시간 확인", text: "입력 즉시 글자수와 바이트 수가 자동으로 계산됩니다." },
-      { title: "분량 점검", text: "읽기 시간과 문단 수를 함께 보며 초안 분량을 빠르게 확인합니다." },
+      { title: "텍스트 입력", text: "자기소개서, 과제, 블로그 원고, 상품 설명처럼 분량을 확인할 글을 붙여넣습니다." },
+      { title: "기준별 확인", text: "공백 포함/제외 글자수, 단어 수, 줄 수, 바이트 수를 동시에 확인합니다." },
+      { title: "제출 조건 점검", text: "공고나 플랫폼에서 요구하는 글자수 기준에 맞는지 빠르게 비교합니다." },
     ],
   },
   {
@@ -204,15 +204,15 @@ const TOOL_DEFS = [
     category: "이미지",
     title: "QR 코드 생성기",
     summary:
-      "URL, 일반 텍스트, Wi-Fi 접속 정보를 QR 코드로 만들고 SVG로 저장합니다.",
+      "URL, 일반 텍스트, Wi-Fi 접속 정보를 QR 코드로 만들고 SVG, PNG, JPG 형식으로 저장합니다.",
     seoTitle: "QR 코드 생성기 | URL 텍스트 Wi-Fi QR 만들기",
     seoDescription:
       "브라우저에서 URL, 텍스트, Wi-Fi 정보를 QR 코드로 만들고 바로 다운로드하는 무료 도구입니다.",
     keywords: ["QR", "URL", "Wi-Fi", "생성"],
     guide: [
       { title: "형식 선택", text: "URL, 텍스트, Wi-Fi 정보 중 하나를 고릅니다." },
-      { title: "내용 입력", text: "QR에 넣을 값을 입력하고 크기와 오류 복원 수준을 조정합니다." },
-      { title: "생성 및 저장", text: "즉시 생성된 QR을 미리 보고 SVG 파일로 저장합니다." },
+      { title: "디자인 조정", text: "파일명, 색상, 배경, 모양, 크기, 저장 형식을 간단히 선택합니다." },
+      { title: "생성 및 저장", text: "미리보기에서 QR을 확인하고 SVG, PNG, JPG 중 필요한 형식으로 저장합니다." },
     ],
   },
   {
@@ -261,9 +261,9 @@ const TOOL_DEFS = [
       "브라우저에서 JPG, PNG, WEBP 이미지 용량을 줄이고 압축 결과를 바로 내려받는 도구입니다.",
     keywords: ["압축", "용량", "사진", "업로드"],
     guide: [
-      { title: "파일 업로드", text: "압축할 이미지를 선택합니다." },
-      { title: "압축 수준 조정", text: "품질과 최대 너비를 조절하며 미리보기를 확인합니다." },
-      { title: "결과 저장", text: "원본 대비 용량 변화를 확인하고 압축본을 저장합니다." },
+      { title: "이미지 업로드", text: "메일 첨부, 웹 업로드, 제출용으로 줄일 JPG, PNG, WEBP 이미지를 선택합니다." },
+      { title: "용량과 품질 조정", text: "품질과 최대 너비를 조절하면서 파일 크기 변화를 확인합니다." },
+      { title: "압축본 저장", text: "원본은 그대로 두고 브라우저에서 생성된 압축 이미지만 내려받습니다." },
     ],
   },
   {
@@ -278,9 +278,9 @@ const TOOL_DEFS = [
       "브라우저에서 여러 PDF 파일을 하나로 병합하는 무료 도구입니다. 업로드 파일은 서버에 저장하지 않습니다.",
     keywords: ["PDF", "병합", "합치기", "문서"],
     guide: [
-      { title: "파일 선택", text: "합칠 PDF를 순서대로 업로드합니다." },
-      { title: "병합 실행", text: "브라우저 안에서 페이지를 복사해 하나의 PDF로 결합합니다." },
-      { title: "저장", text: "완성된 병합 PDF를 바로 내려받습니다." },
+      { title: "PDF 선택", text: "견적서, 계약서, 첨부자료처럼 하나로 묶을 PDF 파일을 순서대로 선택합니다." },
+      { title: "순서 확인", text: "업로드된 파일 순서를 확인한 뒤 병합을 실행합니다." },
+      { title: "결과 저장", text: "브라우저 안에서 만들어진 병합 PDF를 바로 내려받습니다." },
     ],
   },
   {
@@ -444,10 +444,12 @@ const TOOL_USE_EXAMPLES = {
   "ai-text-cleaner": [
     "AI 답변을 메일이나 한글 문서에 붙여넣기 전에 별표와 마크다운을 정리합니다.",
     "블로그 초안, 보고서 초안, 메신저 공유용 텍스트를 깔끔하게 바꿉니다.",
+    "표 형태의 마크다운을 스프레드시트에 붙여넣기 좋은 형태로 정리합니다.",
   ],
   "character-counter": [
     "자기소개서, 과제, 블로그 원고의 공백 포함/제외 글자수를 확인합니다.",
     "SNS 문구, 광고 문안, 보고서 요약문의 분량을 빠르게 점검합니다.",
+    "채용 공고나 플랫폼 제출 기준에 맞춰 바이트 수와 읽기 시간을 함께 확인합니다.",
   ],
   "line-break-cleaner": [
     "PDF나 웹페이지에서 복사한 글의 어색한 줄바꿈을 문단 형태로 정리합니다.",
@@ -480,6 +482,7 @@ const TOOL_USE_EXAMPLES = {
   "qr-code-generator": [
     "행사 안내 URL, 설문 링크, 지도 링크를 QR 코드로 만들어 배포합니다.",
     "사무실 또는 매장 Wi-Fi 접속 정보를 QR 코드로 정리합니다.",
+    "포스터, 안내문, 명함에 넣을 QR을 PNG, JPG, SVG 중 필요한 형식으로 저장합니다.",
   ],
   "image-resizer": [
     "블로그, 쇼핑몰, 지원서 업로드 기준에 맞게 이미지 크기를 줄입니다.",
@@ -492,10 +495,12 @@ const TOOL_USE_EXAMPLES = {
   "image-compressor": [
     "메일 첨부, 사이트 업로드, 공공기관 제출용 이미지 용량을 줄입니다.",
     "원본을 서버에 올리지 않고 브라우저에서 압축 결과를 확인합니다.",
+    "쇼핑몰 상품 이미지나 블로그 삽입 이미지를 적당한 품질과 크기로 줄입니다.",
   ],
   "pdf-merge": [
     "여러 견적서, 계약서, 첨부문서를 하나의 PDF로 합칩니다.",
     "제출용 파일을 순서대로 묶어 하나의 문서로 정리합니다.",
+    "스캔본과 별도 첨부자료를 한 파일로 묶어 이메일이나 업무 시스템에 제출합니다.",
   ],
   "pdf-split": [
     "긴 PDF를 페이지 단위로 나누어 필요한 부분만 별도 파일로 만듭니다.",
@@ -538,11 +543,11 @@ const TOOL_EXTRA_FAQS = {
   },
   "ai-text-cleaner": {
     question: "AI 답변의 별표나 제목 표시를 제거할 수 있나요?",
-    answer: "네. 별표, 마크다운 제목, 링크, 코드블록, 과한 줄바꿈을 정리해 일반 문서에 붙여넣기 좋은 형태로 바꿀 수 있습니다.",
+    answer: "네. `**굵게**`, `### 제목`, 코드블록, 링크 표기, 과한 빈 줄을 목적에 맞게 정리할 수 있습니다. 원문을 직접 서버에 저장하지 않고 브라우저 안에서 처리합니다.",
   },
   "character-counter": {
     question: "공백 제외 글자수도 계산되나요?",
-    answer: "네. 공백 포함 글자수와 공백 제외 글자수, 단어 수, 줄 수, 바이트 수를 함께 확인할 수 있습니다.",
+    answer: "네. 공백 포함 글자수와 공백 제외 글자수, 단어 수, 줄 수, 바이트 수를 함께 보여줍니다. 자기소개서, 과제, 블로그 원고처럼 제출 기준이 있는 글을 점검할 때 유용합니다.",
   },
   "line-break-cleaner": {
     question: "마침표 기준으로 문장을 정리할 수 있나요?",
@@ -573,8 +578,8 @@ const TOOL_EXTRA_FAQS = {
     answer: "두 텍스트를 줄 단위로 비교해 추가, 삭제, 유지된 부분을 시각적으로 나누어 보여줍니다.",
   },
   "qr-code-generator": {
-    question: "Wi-Fi 접속 정보도 QR로 만들 수 있나요?",
-    answer: "네. URL, 일반 텍스트, Wi-Fi 접속 정보를 QR 코드로 만들고 SVG 파일로 저장할 수 있습니다.",
+    question: "QR 코드를 PNG나 JPG로 저장할 수 있나요?",
+    answer: "네. URL, 일반 텍스트, Wi-Fi 정보를 QR 코드로 만들고 SVG, PNG, JPG 형식으로 저장할 수 있습니다. 인식 안정성을 위해 최소 여백과 색상 대비를 유지합니다.",
   },
   "image-resizer": {
     question: "비율을 유지하면서 이미지 크기를 바꿀 수 있나요?",
@@ -586,11 +591,11 @@ const TOOL_EXTRA_FAQS = {
   },
   "image-compressor": {
     question: "압축하면 화질을 조정할 수 있나요?",
-    answer: "네. 품질과 최대 너비를 조정해 용량과 화질의 균형을 맞출 수 있습니다.",
+    answer: "네. 품질과 최대 너비를 조정해 용량과 화질의 균형을 맞출 수 있습니다. 결과 이미지는 브라우저에서 생성되며 원본 파일은 자체 서버에 저장하지 않습니다.",
   },
   "pdf-merge": {
     question: "PDF 파일은 서버로 업로드되나요?",
-    answer: "아니요. 선택한 PDF는 브라우저에서 합쳐지며 코워크스페이스 자체 서버에 저장하지 않습니다.",
+    answer: "아니요. 선택한 PDF는 브라우저에서 합쳐지며 코워크스페이스 자체 서버에 저장하지 않습니다. 파일 크기가 큰 경우에는 브라우저 메모리 상태에 따라 처리 속도가 달라질 수 있습니다.",
   },
   "pdf-split": {
     question: "몇 페이지마다 PDF를 나눌 수 있나요?",
@@ -674,6 +679,92 @@ const HOME_CATEGORY_META = {
   },
 };
 
+const CATEGORY_PAGE_DEFS = [
+  {
+    id: "text",
+    path: "/tools/text/",
+    title: "텍스트 업무 도구",
+    eyebrow: "Text Tools",
+    description:
+      "AI 복붙 서식 정리, 글자수 세기, 줄바꿈 정리, 추출기처럼 매일 쓰는 텍스트 작업을 브라우저에서 바로 처리합니다.",
+    metaDescription:
+      "코워크스페이스 텍스트 업무 도구 모음입니다. AI 복붙 서식 정리, 글자수 세기, 줄바꿈 정리, 이메일·URL·전화번호 추출 등을 무료로 사용할 수 있습니다.",
+    keywords: ["텍스트 정리", "글자수 세기", "AI 서식 정리", "이메일 추출"],
+    categories: ["텍스트"],
+    guide: [
+      { title: "도구 선택", text: "정리, 계산, 추출, 비교처럼 필요한 텍스트 작업을 고릅니다." },
+      { title: "내용 입력", text: "텍스트를 붙여넣고 필요한 옵션을 선택합니다." },
+      { title: "결과 활용", text: "정리된 결과를 복사하거나 문서 작업에 바로 붙여넣습니다." },
+    ],
+  },
+  {
+    id: "pdf",
+    path: "/tools/pdf/",
+    title: "PDF 업무 도구",
+    eyebrow: "PDF Tools",
+    description: "PDF 합치기, 분할, 페이지 추출, 이미지 변환처럼 자주 쓰는 문서 작업을 설치 없이 처리합니다.",
+    metaDescription:
+      "코워크스페이스 PDF 업무 도구 모음입니다. PDF 합치기, PDF 분할, 페이지 추출, 이미지 PDF 변환을 브라우저에서 무료로 사용할 수 있습니다.",
+    keywords: ["PDF 합치기", "PDF 분할", "PDF 페이지 추출", "PDF 변환"],
+    categories: ["PDF"],
+    guide: [
+      { title: "파일 선택", text: "처리할 PDF나 이미지를 브라우저에서 선택합니다." },
+      { title: "옵션 설정", text: "합치기, 분할 기준, 페이지 범위, 변환 형식을 지정합니다." },
+      { title: "파일 저장", text: "완성된 결과 파일을 PC에 다운로드합니다." },
+    ],
+  },
+  {
+    id: "image",
+    path: "/tools/image/",
+    title: "이미지 업무 도구",
+    eyebrow: "Image Tools",
+    description: "이미지 크기 조절, 형식 변환, 용량 압축, QR 생성 작업을 브라우저 안에서 빠르게 처리합니다.",
+    metaDescription:
+      "코워크스페이스 이미지 업무 도구 모음입니다. 이미지 크기 조절, JPG PNG WEBP 변환, 이미지 압축, QR 코드 생성을 무료로 사용할 수 있습니다.",
+    keywords: ["이미지 크기 조절", "이미지 변환", "이미지 압축", "QR 코드"],
+    categories: ["이미지"],
+    guide: [
+      { title: "이미지 선택", text: "사진, 캡처, 웹 업로드용 이미지를 선택합니다." },
+      { title: "작업 적용", text: "크기, 형식, 품질, QR 내용을 업무 목적에 맞게 조정합니다." },
+      { title: "결과 다운로드", text: "브라우저에서 처리된 결과물을 바로 저장합니다." },
+    ],
+  },
+  {
+    id: "subtitle",
+    path: "/tools/subtitle/",
+    title: "자막 업무 도구",
+    eyebrow: "Subtitle Tools",
+    description: "SRT 자막 정리, SRT/VTT 변환, 자막 시간 보정을 영상 작업 흐름에 맞게 처리합니다.",
+    metaDescription:
+      "코워크스페이스 자막 업무 도구 모음입니다. SRT 자막 정리, SRT VTT 변환, 자막 시간 보정을 브라우저에서 무료로 사용할 수 있습니다.",
+    keywords: ["SRT 자막 정리", "SRT VTT 변환", "자막 시간 보정", "자막 싱크"],
+    categories: ["자막"],
+    guide: [
+      { title: "자막 입력", text: "SRT 또는 VTT 자막 파일이나 텍스트를 입력합니다." },
+      { title: "정리 또는 변환", text: "번호, 공백, 형식, 시간 오프셋을 목적에 맞게 조정합니다." },
+      { title: "편집툴에 적용", text: "정리된 자막을 복사하거나 파일로 저장해 영상 작업에 사용합니다." },
+    ],
+  },
+  {
+    id: "voice-video",
+    path: "/tools/voice-video/",
+    title: "음성·영상 업무 도구",
+    eyebrow: "Voice & Video Tools",
+    description: "음성으로 텍스트를 쓰고 웹캠 영상을 녹화하는 입력·녹화 작업을 브라우저에서 바로 실행합니다.",
+    metaDescription:
+      "코워크스페이스 음성·영상 업무 도구 모음입니다. 음성으로 텍스트 쓰기와 웹캠 녹화기를 로그인 없이 브라우저에서 사용할 수 있습니다.",
+    keywords: ["음성 텍스트 변환", "웹캠 녹화", "카메라 녹화", "브라우저 녹화"],
+    categories: ["음성", "영상"],
+    guide: [
+      { title: "권한 허용", text: "마이크나 카메라가 필요한 도구에서 브라우저 권한을 허용합니다." },
+      { title: "입력 또는 녹화", text: "음성을 텍스트로 받아 적거나 웹캠 영상을 녹화합니다." },
+      { title: "결과 저장", text: "작성된 텍스트나 녹화 파일을 로컬 PC에 저장합니다." },
+    ],
+  },
+];
+
+const CATEGORY_PAGE_MAP = Object.fromEntries(CATEGORY_PAGE_DEFS.map((page) => [page.id, page]));
+
 const LIBRARIES = {
   qrcode: {
     global: "qrcode",
@@ -696,6 +787,7 @@ const libraryCache = {};
 const appState = {
   category: "전체",
   activeToolId: "",
+  categoryPageId: "",
   quickOffset: 0,
   quickMotion: "",
   quickMotionTimerId: null,
@@ -726,19 +818,27 @@ function init() {
   renderSidebarTools();
 
   const activeTool = getActiveTool();
+  const activeCategoryPage = getActiveCategoryPage();
   if (activeTool) {
     renderToolPage(activeTool);
+  } else if (activeCategoryPage) {
+    renderCategoryPage(activeCategoryPage);
   } else {
     renderHomePage();
   }
 
   initAdSlots();
-  injectStructuredData(activeTool);
+  injectStructuredData(activeTool, activeCategoryPage);
 }
 
 function getActiveTool() {
   const toolId = document.body.dataset.tool;
   return TOOL_MAP[toolId] || null;
+}
+
+function getActiveCategoryPage() {
+  const categoryId = document.body.dataset.categoryPage;
+  return CATEGORY_PAGE_MAP[categoryId] || null;
 }
 
 function bindGlobalEvents() {
@@ -856,6 +956,7 @@ function renderSidebarTools() {
 
 function renderHomePage() {
   appState.activeToolId = "";
+  appState.categoryPageId = "";
   setPageMode("home");
   setHeroCopy(
     BRAND_NAME_EN,
@@ -880,6 +981,7 @@ function renderHomePage() {
         <input id="homeToolSearch" type="search" placeholder="글자수, PDF, QR, 자막" autocomplete="off" />
       </label>
     </section>
+    ${renderHomeCategoryLinks()}
   `;
 
   els.toolWorkspace.innerHTML = `
@@ -896,8 +998,57 @@ function renderHomePage() {
   renderQuickToolDock(null);
 }
 
+function renderCategoryPage(categoryPage) {
+  appState.activeToolId = "";
+  appState.categoryPageId = categoryPage.id;
+  setPageMode("category");
+  setHeroCopy(categoryPage.eyebrow, categoryPage.title, categoryPage.description);
+  setDocumentMeta({
+    title: `${categoryPage.title} | 무료 온라인 도구 - ${BRAND_NAME}`,
+    description: categoryPage.metaDescription,
+    url: `${TOOL_ORIGIN}${categoryPage.path}`,
+  });
+
+  const tools = getCategoryPageTools(categoryPage);
+  els.toolOverview.innerHTML = `
+    <div class="category-overview">
+      <div>
+        <p class="eyebrow">${escapeHtml(categoryPage.eyebrow)}</p>
+        <h2>${escapeHtml(categoryPage.title)}</h2>
+        <p>${escapeHtml(categoryPage.description)}</p>
+      </div>
+      <div class="category-metrics" aria-label="카테고리 요약">
+        <span><strong>${tools.length}</strong><small>도구</small></span>
+        <span><strong>0</strong><small>서버 저장</small></span>
+        <span><strong>무료</strong><small>로그인 없음</small></span>
+      </div>
+    </div>
+  `;
+
+  els.toolWorkspace.innerHTML = `
+    <section class="category-tool-section" aria-label="${escapeHtml(categoryPage.title)} 목록">
+      <div class="tool-launch-grid">
+        ${tools.map((tool) => renderToolLaunchCard(tool)).join("")}
+      </div>
+    </section>
+    <section class="panel category-seo-panel">
+      <h2>${escapeHtml(categoryPage.title)}를 브라우저에서 바로 사용하세요</h2>
+      <p>${escapeHtml(categoryPage.metaDescription)}</p>
+      <div class="seo-keywords">
+        ${categoryPage.keywords.map((keyword) => `<span>${escapeHtml(keyword)}</span>`).join("")}
+      </div>
+    </section>
+  `;
+
+  renderGuideList(categoryPage.guide);
+  renderToolDetailAccordion(null);
+  renderQuickToolDock(null);
+  trackCategoryEvent("category_open", categoryPage);
+}
+
 function renderToolPage(tool) {
   appState.activeToolId = tool.id;
+  appState.categoryPageId = "";
   setPageMode("tool");
   setHeroCopy("무료 온라인 도구", tool.title, tool.summary);
   setDocumentMeta({
@@ -934,6 +1085,12 @@ function renderToolPage(tool) {
 function setPageMode(mode) {
   document.body.classList.toggle("home-mode", mode === "home");
   document.body.classList.toggle("tool-mode", mode === "tool");
+  document.body.classList.toggle("category-mode", mode === "category");
+}
+
+function getCategoryPageTools(categoryPage) {
+  const categorySet = new Set(categoryPage.categories);
+  return TOOL_DEFS.filter((tool) => categorySet.has(tool.category));
 }
 
 function renderHomeSections() {
@@ -943,6 +1100,21 @@ function renderHomeSections() {
         ${TOOL_DEFS.map((tool) => renderToolLaunchCard(tool)).join("")}
       </div>
     </section>
+  `;
+}
+
+function renderHomeCategoryLinks() {
+  return `
+    <nav class="home-category-links" aria-label="카테고리별 도구">
+      ${CATEGORY_PAGE_DEFS.map(
+        (page) => `
+          <a href="${page.path}">
+            <span>${escapeHtml(page.eyebrow)}</span>
+            <strong>${escapeHtml(page.title)}</strong>
+          </a>
+        `
+      ).join("")}
+    </nav>
   `;
 }
 
@@ -1102,9 +1274,13 @@ function buildToolDetailContent(tool) {
   };
 }
 
-function injectStructuredData(tool) {
+function injectStructuredData(tool, categoryPage = null) {
   document.querySelectorAll('script[data-schema="dynamic"]').forEach((node) => node.remove());
   injectFaqStructuredData(tool);
+  if (categoryPage) {
+    injectCategoryStructuredData(categoryPage);
+    return;
+  }
   if (document.querySelector(tool ? 'script[data-schema="static-tool"]' : 'script[data-schema="static-site"]')) {
     return;
   }
@@ -1166,6 +1342,61 @@ function injectStructuredData(tool) {
     );
   }
 
+  document.head.appendChild(script);
+}
+
+function injectCategoryStructuredData(categoryPage) {
+  const tools = getCategoryPageTools(categoryPage);
+  const script = document.createElement("script");
+  script.type = "application/ld+json";
+  script.dataset.schema = "dynamic";
+  script.textContent = JSON.stringify(
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "CollectionPage",
+          "@id": `${TOOL_ORIGIN}${categoryPage.path}#page`,
+          name: `${categoryPage.title} - ${BRAND_NAME}`,
+          url: `${TOOL_ORIGIN}${categoryPage.path}`,
+          inLanguage: "ko-KR",
+          description: categoryPage.metaDescription,
+          isPartOf: {
+            "@id": `${TOOL_ORIGIN}/#website`,
+          },
+          mainEntity: {
+            "@type": "ItemList",
+            itemListElement: tools.map((tool, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              name: tool.title,
+              url: `${TOOL_ORIGIN}${tool.path}`,
+            })),
+          },
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": `${TOOL_ORIGIN}${categoryPage.path}#breadcrumb`,
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: BRAND_NAME,
+              item: `${TOOL_ORIGIN}/`,
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: categoryPage.title,
+              item: `${TOOL_ORIGIN}${categoryPage.path}`,
+            },
+          ],
+        },
+      ],
+    },
+    null,
+    2
+  );
   document.head.appendChild(script);
 }
 
@@ -1235,6 +1466,18 @@ function trackToolEvent(eventName, tool, params = {}) {
     control_id: sanitizeAnalyticsValue(params.control_id),
     section: sanitizeAnalyticsValue(params.section),
     output_format: sanitizeAnalyticsValue(params.output_format),
+  });
+}
+
+function trackCategoryEvent(eventName, categoryPage) {
+  if (!categoryPage || typeof window === "undefined") return;
+
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: eventName,
+    category_page_id: categoryPage.id,
+    category_page_title: categoryPage.title,
+    tool_count: getCategoryPageTools(categoryPage).length,
   });
 }
 
