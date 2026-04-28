@@ -52,13 +52,8 @@ These should be built early because they are fast to implement, safe for browser
 | AI 복붙 서식 정리 | `/tools/ai-text-cleaner/` | AI 글 서식 제거, ChatGPT 복사 붙여넣기 정리, 마크다운 제거, 별표 제거, 글 정리 | S | Removes common AI/Markdown artifacts such as `**`, `###`, code fences, excessive bullets, and awkward spacing. Browser-side only. |
 | 줄바꿈 정리 | `/tools/line-break-cleaner/` | 줄바꿈 제거, 문단 정리, 공백 제거, 텍스트 정리 | S | Good companion to voice-to-text output cleanup. |
 | 텍스트 중복 줄 제거 | `/tools/duplicate-line-remover/` | 중복 줄 제거, 중복 텍스트 제거, 리스트 정리 | S | Simple utility, good internal link from text tools. |
-| 텍스트 비교 | `/tools/text-diff/` | 텍스트 비교, 문서 비교, 변경사항 비교, 두 글 비교 | M | Useful for contracts, emails, reports, prompts, and revision checks. |
-| 표 변환기 | `/tools/table-converter/` | 표 CSV 변환, 엑셀 표 변환, 마크다운 표 변환, TSV 변환 | M | Converts pasted tables between CSV, TSV, Markdown table, and plain text. |
 | 이메일/URL 추출기 | `/tools/text-extractor/` | 이메일 추출, URL 추출, 전화번호 추출, 텍스트에서 링크 추출 | S | Useful for messy documents, CRM prep, and personal contact cleanup. |
-| 목록 정렬/섞기 | `/tools/list-sorter/` | 목록 정렬, 줄 정렬, 랜덤 추첨, 중복 제거 | S | Combines sorting, deduplication, numbering, and random pick. |
 | QR 코드 생성기 | `/tools/qr-code-generator/` | QR 코드 만들기, 무료 QR 생성기, URL QR 코드 | S | Use client-side QR library. No server storage. |
-| 날짜 계산기 | `/tools/date-calculator/` | 날짜 계산, D-day 계산, 며칠 남았는지, 날짜 차이 계산 | S | Everyday personal/work utility. Keep scope simple and deterministic. |
-| 퍼센트 계산기 | `/tools/percent-calculator/` | 퍼센트 계산, 할인율 계산, 증감률 계산, 부가세 계산 | S | Useful but should avoid financial advice wording. |
 | 이미지 크기 조절 | `/tools/image-resizer/` | 이미지 크기 줄이기, 사진 사이즈 변경, 이미지 리사이즈 | M | Canvas-based browser processing. |
 | 이미지 형식 변환 | `/tools/image-converter/` | WEBP JPG 변환, PNG JPG 변환, 이미지 변환 | M | Browser support varies by format. Clearly state supported formats. |
 
@@ -106,19 +101,13 @@ Risks and safeguards:
 - Keep all processing local to the browser.
 - Do not add external AI calls in the first version.
 
-### P1B. Everyday Work And Personal Utilities
+### P1B. Selected Everyday Work Utility
 
-Additional high-frequency tools worth considering:
+The only everyday work/personal utility kept in the near-term roadmap is the extractor. Other generic utilities such as date calculators, percent calculators, checklist makers, password generators, and URL encoders are excluded for now to keep the platform focused.
 
 | Tool | URL | SEO Keywords | Difficulty | Notes |
 | --- | --- | --- | --- | --- |
-| JSON 정리/검사 | `/tools/json-formatter/` | JSON 정리, JSON 검사, JSON 포맷터 | S | Useful for office automation, API work, and no-code tools. |
-| URL 인코딩/디코딩 | `/tools/url-encoder/` | URL 인코딩, URL 디코딩, 링크 변환 | S | Small utility, good developer/marketer traffic. |
-| 비밀번호 생성기 | `/tools/password-generator/` | 비밀번호 생성기, 랜덤 비밀번호, 안전한 비밀번호 만들기 | S | Browser-side only. Must not store generated values. |
-| 파일명 정리 규칙 생성기 | `/tools/filename-cleaner/` | 파일명 정리, 파일 이름 변경, 파일명 일괄 정리 | M | Browser cannot rename local files directly without user action; can generate cleaned names or ZIP output later. |
-| 메모 템플릿 생성기 | `/tools/memo-template/` | 회의 메모 양식, 업무 메모 템플릿, 체크리스트 만들기 | S | Good non-file utility that pairs with text tools. |
-| 체크리스트 만들기 | `/tools/checklist-maker/` | 체크리스트 만들기, 할일 목록, 업무 체크리스트 | S | Can start as a printable/copyable checklist generator. |
-| 주소 라벨 정리 | `/tools/address-label-cleaner/` | 주소 라벨 만들기, 주소 정리, 우편 라벨 | M | Useful for small business/personal shipping. Needs Korean address edge cases. |
+| 이메일/URL/전화번호 추출기 | `/tools/text-extractor/` | 이메일 추출, URL 추출, 전화번호 추출, 텍스트에서 링크 추출 | S | Extracts contacts and links from pasted text, supports copy by type, and stays browser-side only. |
 
 ### P2. Core PDF Tools
 
@@ -232,16 +221,16 @@ Security requirements:
 
 Recommended next 10 tools:
 
-1. 글자수 세기
-2. AI 복붙 서식 정리
+1. AI 복붙 서식 정리
+2. 글자수 세기
 3. 줄바꿈 정리
-4. 텍스트 중복 줄 제거
-5. QR 코드 생성기
-6. 이미지 크기 조절
-7. 이미지 형식 변환
-8. PDF 합치기
-9. PDF 분할
-10. 이미지 PDF 변환
+4. 이메일/URL/전화번호 추출기
+5. 텍스트 중복 줄 제거
+6. QR 코드 생성기
+7. 이미지 크기 조절
+8. 이미지 형식 변환
+9. PDF 합치기
+10. PDF 분할
 
 Recommended platform work before tool count grows beyond 3:
 
