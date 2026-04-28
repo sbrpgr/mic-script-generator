@@ -90,3 +90,9 @@
 - Category page layout is controlled by `.category-mode` styles.
 - New HTML pages must run through `npm.cmd run apply:site-tags`.
 - Broad JS/CSS changes should bump the shared cache version across all HTML pages and `site.webmanifest`.
+
+### Policy Page Layout Update
+
+- Added centered document-page/document-panel styling for `/privacy` and `/terms`
+- Improved policy page readability with constrained width, card surface, section spacing, and mobile padding
+- Bumped shared asset cache version to `20260429-14`
