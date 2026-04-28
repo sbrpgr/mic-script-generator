@@ -457,6 +457,7 @@ const libraryCache = {};
 
 const appState = {
   category: "전체",
+  quickOffset: 0,
   selectedText: "",
   lastPointer: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
   selectionCheckTimerId: null,
@@ -648,6 +649,7 @@ function renderHomePage() {
 
   bindHomeToolSearch();
   renderGuideList([]);
+  renderQuickToolDock(null);
 }
 
 function renderToolPage(tool) {
@@ -671,6 +673,7 @@ function renderToolPage(tool) {
   `;
 
   renderGuideList(tool.guide);
+  renderQuickToolDock(tool);
 
   const renderer = TOOL_RENDERERS[tool.id];
   if (!renderer) {
@@ -1508,92 +1511,6 @@ function renderLineBreakCleaner(container) {
 
   output.addEventListener("input", updateMeta);
   updateMeta();
-}
-
-function renderMarkdownEditor(container) {
-  container.innerHTML = `
-    <div class="tool-section markdown-tool">
-      <div class="tool-grid">
-        <article class="input-card markdown-editor-card">
-          <div class="section-heading">
-            <div>
-              <h2>마크다운 입력</h2>
-              <p class="tool-note">일반 텍스트를 붙여넣고 필요한 마크다운 문법을 버튼으로 적용합니다.</p>
-            </div>
-          </div>
-          <div class="markdown-toolbar" aria-label="마크다운 서식">
-            <button type="button" data-format="h2">제목</button>
-            <button type="button" data-format="bold">굵게</button>
-            <button type="button" data-format="list">목록</button>
-            <button type="button" data-format="quote">인용</button>
-            <button type="button" data-format="code">코드</button>
-            <button type="button" data-format="link">링크</button>
-            <button type="button" data-format="table">표</button>
-          </div>
-          <textarea id="markdownInput" class="markdown-textarea" placeholder="# 제목&#10;&#10;내용을 입력하거나 일반 텍스트를 붙여넣으세요."></textarea>
-        </article>
-        <article class="result-card">
-          <div class="section-heading">
-            <div>
-              <h2>미리보기</h2>
-              <p id="markdownMeta" class="tool-note">0자</p>
-            </div>
-            <div class="action-row">
-              <button id="copyMarkdownBtn" type="button">MD 복사</button>
-              <button id="copyPlainBtn" type="button">텍스트 복사</button>
-              <button id="downloadMarkdownBtn" type="button">MD 저장</button>
-            </div>
-          </div>
-          <div id="markdownPreview" class="markdown-preview" aria-live="polite"></div>
-        </article>
-      </div>
-    </div>
-  `;
-
-  const input = container.querySelector("#markdownInput");
-  const preview = container.querySelector("#markdownPreview");
-  const meta = container.querySelector("#markdownMeta");
-
-  function render() {
-    preview.innerHTML = markdownToHtml(input.value);
-    meta.textContent = `${input.value.length.toLocaleString("ko-KR")}자`;
-  }
-
-  container.querySelectorAll(".markdown-toolbar button").forEach((button) => {
-    button.addEventListener("click", () => {
-      applyMarkdownFormat(input, button.dataset.format);
-      render();
-      input.focus();
-    });
-  });
-
-  container.querySelector("#copyMarkdownBtn").addEventListener("click", async () => {
-    if (!input.value.trim()) {
-      showToast("복사할 마크다운이 없습니다.");
-      return;
-    }
-    await safeCopy(input.value, "마크다운을 복사했습니다.");
-  });
-
-  container.querySelector("#copyPlainBtn").addEventListener("click", async () => {
-    const plainText = markdownToPlainText(input.value);
-    if (!plainText.trim()) {
-      showToast("복사할 텍스트가 없습니다.");
-      return;
-    }
-    await safeCopy(plainText, "일반 텍스트를 복사했습니다.");
-  });
-
-  container.querySelector("#downloadMarkdownBtn").addEventListener("click", () => {
-    if (!input.value.trim()) {
-      showToast("저장할 마크다운이 없습니다.");
-      return;
-    }
-    downloadText(input.value, "markdown-document.md");
-  });
-
-  input.addEventListener("input", render);
-  render();
 }
 
 function renderTextExtractor(container) {
@@ -3097,130 +3014,6 @@ function joinParagraphLines(text) {
     .join("\n\n");
 }
 
-function applyMarkdownFormat(textarea, mode) {
-  const start = textarea.selectionStart;
-  const end = textarea.selectionEnd;
-  const value = textarea.value;
-  const selected = value.slice(start, end) || getMarkdownPlaceholder(mode);
-  const before = value.slice(0, start);
-  const after = value.slice(end);
-  const replacement = buildMarkdownReplacement(mode, selected);
-  textarea.value = `${before}${replacement}${after}`;
-  textarea.setSelectionRange(start, start + replacement.length);
-}
-
-function getMarkdownPlaceholder(mode) {
-  const placeholders = {
-    h2: "제목",
-    bold: "강조할 텍스트",
-    list: "목록 항목",
-    quote: "인용문",
-    code: "code",
-    link: "링크 텍스트",
-    table: "항목",
-  };
-  return placeholders[mode] || "텍스트";
-}
-
-function buildMarkdownReplacement(mode, selected) {
-  const text = selected.trim() || getMarkdownPlaceholder(mode);
-  if (mode === "h2") return `## ${text}`;
-  if (mode === "bold") return `**${text}**`;
-  if (mode === "list") {
-    return text
-      .split("\n")
-      .map((line) => `- ${line.replace(/^\s*[-*+]\s+/, "").trim() || "목록 항목"}`)
-      .join("\n");
-  }
-  if (mode === "quote") {
-    return text
-      .split("\n")
-      .map((line) => `> ${line.replace(/^\s*>\s?/, "").trim()}`)
-      .join("\n");
-  }
-  if (mode === "code") return text.includes("\n") ? `\`\`\`\n${text}\n\`\`\`` : `\`${text}\``;
-  if (mode === "link") return `[${text}](https://example.com)`;
-  if (mode === "table") return `| 항목 | 내용 |\n| --- | --- |\n| ${text} | 설명 |`;
-  return text;
-}
-
-function markdownToHtml(markdown) {
-  const blocks = normalizeNewlines(markdown).split(/\n{2,}/);
-  if (!markdown.trim()) {
-    return `<p class="tool-note">마크다운을 입력하면 미리보기가 여기에 표시됩니다.</p>`;
-  }
-  return blocks.map(renderMarkdownBlock).join("");
-}
-
-function renderMarkdownBlock(block) {
-  const lines = block.split("\n");
-  if (/^```/.test(lines[0])) {
-    const code = lines.slice(1, lines.at(-1)?.startsWith("```") ? -1 : undefined).join("\n");
-    return `<pre><code>${escapeHtml(code)}</code></pre>`;
-  }
-  if (lines.every((line) => /^\s*[-*+]\s+/.test(line))) {
-    return `<ul>${lines.map((line) => `<li>${renderMarkdownInline(line.replace(/^\s*[-*+]\s+/, ""))}</li>`).join("")}</ul>`;
-  }
-  if (lines.every((line) => /^\s*\d+\.\s+/.test(line))) {
-    return `<ol>${lines.map((line) => `<li>${renderMarkdownInline(line.replace(/^\s*\d+\.\s+/, ""))}</li>`).join("")}</ol>`;
-  }
-  if (lines.every((line) => /^\s*>\s?/.test(line))) {
-    return `<blockquote>${lines.map((line) => renderMarkdownInline(line.replace(/^\s*>\s?/, ""))).join("<br>")}</blockquote>`;
-  }
-  if (lines.length >= 2 && /\|/.test(lines[0]) && /^\s*\|?\s*:?-{3,}:?\s*\|/.test(lines[1])) {
-    return renderMarkdownTable(lines);
-  }
-  const heading = block.match(/^(#{1,6})\s+(.+)$/);
-  if (heading) {
-    const level = Math.min(heading[1].length + 1, 6);
-    return `<h${level}>${renderMarkdownInline(heading[2])}</h${level}>`;
-  }
-  return `<p>${lines.map(renderMarkdownInline).join("<br>")}</p>`;
-}
-
-function renderMarkdownTable(lines) {
-  const rows = lines
-    .filter((line, index) => index !== 1)
-    .map((line) =>
-      line
-        .trim()
-        .replace(/^\|/, "")
-        .replace(/\|$/, "")
-        .split("|")
-        .map((cell) => cell.trim())
-    );
-  if (rows.length === 0) return "";
-  const head = rows[0].map((cell) => `<th>${renderMarkdownInline(cell)}</th>`).join("");
-  const body = rows
-    .slice(1)
-    .map((row) => `<tr>${row.map((cell) => `<td>${renderMarkdownInline(cell)}</td>`).join("")}</tr>`)
-    .join("");
-  return `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
-}
-
-function renderMarkdownInline(text) {
-  let result = escapeHtml(text);
-  result = result.replace(/`([^`]+)`/g, "<code>$1</code>");
-  result = result.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-  result = result.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-  result = result.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
-  return result;
-}
-
-function markdownToPlainText(markdown) {
-  return normalizeNewlines(markdown)
-    .replace(/^#{1,6}\s+/gm, "")
-    .replace(/^\s*[-*+]\s+/gm, "")
-    .replace(/^\s*\d+\.\s+/gm, "")
-    .replace(/^\s*>\s?/gm, "")
-    .replace(/```[\s\S]*?```/g, (match) => match.replace(/```/g, "").trim())
-    .replace(/`([^`]+)`/g, "$1")
-    .replace(/\*\*([^*]+)\*\*/g, "$1")
-    .replace(/\*([^*]+)\*/g, "$1")
-    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, "$1 $2")
-    .trim();
-}
-
 function extractContacts(text) {
   const emails = uniqueList(text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi) || []);
   const urls = uniqueList(
@@ -3937,6 +3730,464 @@ async function copySelectedText() {
   }
   await safeCopy(appState.selectedText, "선택한 내용을 복사했습니다.");
   hideSelectionCopyButton();
+}
+
+function renderQuickToolDock(activeTool) {
+  const dock = ensureQuickToolDock();
+  if (!dock) return;
+
+  if (!activeTool) {
+    dock.hidden = true;
+    dock.innerHTML = "";
+    return;
+  }
+
+  const tools = TOOL_DEFS.filter((tool) => tool.id !== activeTool.id);
+  const pageSize = 10;
+  const step = 5;
+  const maxOffset = Math.max(0, tools.length - pageSize);
+  appState.quickOffset = Math.min(Math.max(appState.quickOffset, 0), maxOffset);
+  const visible = tools.slice(appState.quickOffset, appState.quickOffset + pageSize);
+
+  dock.hidden = false;
+  dock.innerHTML = `
+    <div class="quick-tool-head">
+      <strong>다른 도구</strong>
+      <span>${appState.quickOffset + 1}-${Math.min(appState.quickOffset + pageSize, tools.length)} / ${tools.length}</span>
+    </div>
+    <div class="quick-tool-strip" aria-label="다른 도구로 이동">
+      <button class="quick-tool-arrow" type="button" data-shift="${-step}" aria-label="이전 도구 보기" ${appState.quickOffset === 0 ? "disabled" : ""}>‹</button>
+      <div class="quick-tool-icons">
+        ${visible.map(renderQuickToolIcon).join("")}
+      </div>
+      <button class="quick-tool-arrow" type="button" data-shift="${step}" aria-label="다음 도구 보기" ${appState.quickOffset >= maxOffset ? "disabled" : ""}>›</button>
+    </div>
+  `;
+
+  dock.querySelectorAll(".quick-tool-arrow").forEach((button) => {
+    button.addEventListener("click", () => {
+      appState.quickOffset = Math.min(maxOffset, Math.max(0, appState.quickOffset + Number(button.dataset.shift)));
+      renderQuickToolDock(activeTool);
+    });
+  });
+}
+
+function ensureQuickToolDock() {
+  let dock = document.querySelector("#quickToolDock");
+  if (dock) return dock;
+
+  const infoGrid = document.querySelector(".info-grid");
+  if (!infoGrid || !infoGrid.parentElement) return null;
+
+  dock = document.createElement("section");
+  dock.id = "quickToolDock";
+  dock.className = "quick-tool-dock";
+  infoGrid.parentElement.insertBefore(dock, infoGrid);
+  return dock;
+}
+
+function renderQuickToolIcon(tool) {
+  const visual = TOOL_VISUALS[tool.id] || {
+    icon: tool.title.slice(0, 1),
+    tone: "slate",
+  };
+
+  return `
+    <a class="quick-tool-icon" href="${tool.path}" data-tone="${escapeHtml(visual.tone)}" title="${escapeHtml(tool.title)}" aria-label="${escapeHtml(tool.title)} 열기">
+      <span aria-hidden="true">${escapeHtml(visual.icon)}</span>
+    </a>
+  `;
+}
+
+function renderMarkdownEditor(container) {
+  container.innerHTML = `
+    <div class="tool-section markdown-tool markdown-editor-v2">
+      <div class="markdown-shell">
+        <article class="input-card markdown-pane markdown-input-pane">
+          <div class="section-heading markdown-pane-head">
+            <div>
+              <h2>마크다운 입력</h2>
+              <p class="tool-note">빈 문서에서도 버튼을 눌러 제목, 목록, 표, 코드 블록을 바로 작성합니다.</p>
+            </div>
+          </div>
+          <div class="markdown-toolbar" role="toolbar" aria-label="마크다운 서식">
+            <div class="toolbar-group" aria-label="제목">
+              <button type="button" data-format="h1" title="큰 제목">H1</button>
+              <button type="button" data-format="h2" title="중간 제목">H2</button>
+              <button type="button" data-format="h3" title="작은 제목">H3</button>
+            </div>
+            <div class="toolbar-group" aria-label="강조">
+              <button type="button" data-format="bold" title="굵게">B</button>
+              <button type="button" data-format="italic" title="기울임">I</button>
+              <button type="button" data-format="strike" title="취소선">S</button>
+              <button type="button" data-format="inline-code" title="인라인 코드">&lt;/&gt;</button>
+            </div>
+            <div class="toolbar-group" aria-label="목록">
+              <button type="button" data-format="bullet-list" title="글머리 기호">•</button>
+              <button type="button" data-format="number-list" title="번호 목록">1.</button>
+              <button type="button" data-format="check-list" title="체크 목록">☐</button>
+              <button type="button" data-format="quote" title="인용">❝</button>
+            </div>
+            <div class="toolbar-group" aria-label="삽입">
+              <button type="button" data-format="link" title="링크">링크</button>
+              <button type="button" data-format="table" title="표">표</button>
+              <button type="button" data-format="code-block" title="코드 블록">코드</button>
+              <button type="button" data-format="divider" title="구분선">—</button>
+            </div>
+          </div>
+          <textarea id="markdownInput" class="markdown-textarea" spellcheck="false" placeholder="# 제목&#10;&#10;문서를 작성하거나 일반 텍스트를 붙여넣으세요."></textarea>
+        </article>
+        <article class="result-card markdown-pane markdown-preview-pane">
+          <div class="section-heading markdown-pane-head">
+            <div>
+              <h2>미리보기</h2>
+              <p id="markdownMeta" class="tool-note">0자 · 0줄</p>
+            </div>
+            <div class="action-row compact-actions">
+              <button id="copyMarkdownBtn" type="button">MD 복사</button>
+              <button id="copyPlainBtn" type="button">텍스트 복사</button>
+              <button id="downloadMarkdownBtn" type="button">MD 저장</button>
+            </div>
+          </div>
+          <div id="markdownPreview" class="markdown-preview" aria-live="polite"></div>
+        </article>
+      </div>
+    </div>
+  `;
+
+  const input = container.querySelector("#markdownInput");
+  const preview = container.querySelector("#markdownPreview");
+  const meta = container.querySelector("#markdownMeta");
+
+  function render() {
+    preview.innerHTML = markdownToHtml(input.value);
+    const lines = input.value ? normalizeNewlines(input.value).split("\n").length : 0;
+    meta.textContent = `${input.value.length.toLocaleString("ko-KR")}자 · ${lines.toLocaleString("ko-KR")}줄`;
+  }
+
+  container.querySelectorAll(".markdown-toolbar button").forEach((button) => {
+    button.addEventListener("click", () => {
+      applyMarkdownFormat(input, button.dataset.format);
+      render();
+      input.focus();
+    });
+  });
+
+  container.querySelector("#copyMarkdownBtn").addEventListener("click", async () => {
+    if (!input.value.trim()) {
+      showToast("복사할 마크다운이 없습니다.");
+      return;
+    }
+    await safeCopy(input.value, "마크다운을 복사했습니다.");
+  });
+
+  container.querySelector("#copyPlainBtn").addEventListener("click", async () => {
+    const plainText = markdownToPlainText(input.value);
+    if (!plainText.trim()) {
+      showToast("복사할 텍스트가 없습니다.");
+      return;
+    }
+    await safeCopy(plainText, "일반 텍스트를 복사했습니다.");
+  });
+
+  container.querySelector("#downloadMarkdownBtn").addEventListener("click", () => {
+    if (!input.value.trim()) {
+      showToast("저장할 마크다운이 없습니다.");
+      return;
+    }
+    downloadText(input.value, "markdown-document.md");
+  });
+
+  input.addEventListener("input", render);
+  render();
+}
+
+function applyMarkdownFormat(textarea, mode) {
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const value = textarea.value;
+  const selected = value.slice(start, end);
+  const result = buildMarkdownEdit(mode, selected, value, start, end);
+
+  textarea.value = `${value.slice(0, start)}${result.text}${value.slice(end)}`;
+  textarea.setSelectionRange(start + result.selectionStart, start + result.selectionEnd);
+}
+
+function buildMarkdownEdit(mode, selected, value, start, end) {
+  const hasSelection = selected.length > 0;
+  const text = selected || markdownPlaceholder(mode);
+  const linePrefix = start > 0 && value[start - 1] !== "\n" ? "\n" : "";
+  const lineSuffix = end < value.length && value[end] !== "\n" ? "\n" : "";
+
+  if (mode === "h1" || mode === "h2" || mode === "h3") {
+    const level = Number(mode.slice(1));
+    return markdownEdit(`${"#".repeat(level)} ${text}`, linePrefix.length + level + 1, linePrefix.length + level + 1 + text.length, linePrefix, lineSuffix);
+  }
+  if (mode === "bold") return markdownInlineEdit(`**${text}**`, 2, text.length);
+  if (mode === "italic") return markdownInlineEdit(`*${text}*`, 1, text.length);
+  if (mode === "strike") return markdownInlineEdit(`~~${text}~~`, 2, text.length);
+  if (mode === "inline-code") return markdownInlineEdit(`\`${text}\``, 1, text.length);
+  if (mode === "bullet-list") {
+    const body = listifyMarkdownLines(text, (line) => `- ${line}`);
+    return markdownEdit(body, linePrefix.length + 2, linePrefix.length + body.length, linePrefix, lineSuffix);
+  }
+  if (mode === "number-list") {
+    const lines = normalizeNewlines(text).split("\n");
+    const body = lines.map((line, index) => `${index + 1}. ${stripListMarker(line) || markdownPlaceholder(mode)}`).join("\n");
+    return markdownEdit(body, linePrefix.length + 3, linePrefix.length + body.length, linePrefix, lineSuffix);
+  }
+  if (mode === "check-list") {
+    const body = listifyMarkdownLines(text, (line) => `- [ ] ${line}`);
+    return markdownEdit(body, linePrefix.length + 6, linePrefix.length + body.length, linePrefix, lineSuffix);
+  }
+  if (mode === "quote") {
+    const body = normalizeNewlines(text)
+      .split("\n")
+      .map((line) => `> ${line.replace(/^\s*>\s?/, "").trim() || markdownPlaceholder(mode)}`)
+      .join("\n");
+    return markdownEdit(body, linePrefix.length + 2, linePrefix.length + body.length, linePrefix, lineSuffix);
+  }
+  if (mode === "link") {
+    const replacement = `[${text}](https://example.com)`;
+    return { text: replacement, selectionStart: 1, selectionEnd: 1 + text.length };
+  }
+  if (mode === "table") {
+    const firstCell = hasSelection ? selected.trim().split(/\s+/)[0] || "항목" : "항목";
+    const table = `| ${firstCell} | 내용 |\n| --- | --- |\n| 예시 | 설명 |`;
+    return markdownEdit(table, linePrefix.length + 2, linePrefix.length + 2 + firstCell.length, linePrefix, lineSuffix);
+  }
+  if (mode === "code-block") {
+    const code = selected || "code";
+    const block = `\`\`\`\n${code}\n\`\`\``;
+    return markdownEdit(block, linePrefix.length + 4, linePrefix.length + 4 + code.length, linePrefix, lineSuffix);
+  }
+  if (mode === "divider") return markdownEdit("---", 3, 3, linePrefix, lineSuffix);
+  return { text, selectionStart: 0, selectionEnd: text.length };
+}
+
+function markdownEdit(body, selectionStart, selectionEnd, prefix = "", suffix = "") {
+  return { text: `${prefix}${body}${suffix}`, selectionStart, selectionEnd };
+}
+
+function markdownInlineEdit(replacement, markerLength, contentLength) {
+  return { text: replacement, selectionStart: markerLength, selectionEnd: markerLength + contentLength };
+}
+
+function markdownPlaceholder(mode) {
+  const placeholders = {
+    h1: "큰 제목",
+    h2: "제목",
+    h3: "소제목",
+    bold: "굵게 표시할 텍스트",
+    italic: "기울일 텍스트",
+    strike: "취소할 텍스트",
+    "inline-code": "code",
+    "bullet-list": "목록 항목",
+    "number-list": "목록 항목",
+    "check-list": "할 일",
+    quote: "인용문",
+    link: "링크 텍스트",
+    table: "항목",
+    "code-block": "code",
+  };
+  return placeholders[mode] || "텍스트";
+}
+
+function listifyMarkdownLines(text, mapper) {
+  return normalizeNewlines(text)
+    .split("\n")
+    .map((line) => mapper(stripListMarker(line) || "목록 항목"))
+    .join("\n");
+}
+
+function stripListMarker(line) {
+  return String(line)
+    .replace(/^\s*-\s+\[[ xX]\]\s+/, "")
+    .replace(/^\s*[-*+]\s+/, "")
+    .replace(/^\s*\d+\.\s+/, "")
+    .trim();
+}
+
+function markdownToHtml(markdown) {
+  const source = normalizeNewlines(markdown);
+  if (!source.trim()) {
+    return `<p class="tool-note">마크다운을 입력하면 미리보기가 여기에 표시됩니다.</p>`;
+  }
+
+  const lines = source.split("\n");
+  const html = [];
+  let index = 0;
+
+  while (index < lines.length) {
+    const line = lines[index];
+    if (!line.trim()) {
+      index += 1;
+      continue;
+    }
+
+    if (/^```/.test(line.trim())) {
+      const codeLines = [];
+      index += 1;
+      while (index < lines.length && !/^```/.test(lines[index].trim())) {
+        codeLines.push(lines[index]);
+        index += 1;
+      }
+      if (index < lines.length) index += 1;
+      html.push(`<pre><code>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+      continue;
+    }
+
+    if (/^\s*\|?.+\|.+/.test(line) && index + 1 < lines.length && /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(lines[index + 1])) {
+      const tableLines = [line, lines[index + 1]];
+      index += 2;
+      while (index < lines.length && /\|/.test(lines[index]) && lines[index].trim()) {
+        tableLines.push(lines[index]);
+        index += 1;
+      }
+      html.push(renderMarkdownTable(tableLines));
+      continue;
+    }
+
+    const heading = line.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) {
+      const level = heading[1].length;
+      html.push(`<h${level}>${renderMarkdownInline(heading[2])}</h${level}>`);
+      index += 1;
+      continue;
+    }
+
+    if (/^\s*([-*_])(?:\s*\1){2,}\s*$/.test(line)) {
+      html.push("<hr>");
+      index += 1;
+      continue;
+    }
+
+    if (/^\s*-\s+\[[ xX]\]\s+/.test(line)) {
+      const items = [];
+      while (index < lines.length && /^\s*-\s+\[[ xX]\]\s+/.test(lines[index])) {
+        const checked = /^\s*-\s+\[[xX]\]\s+/.test(lines[index]);
+        const label = lines[index].replace(/^\s*-\s+\[[ xX]\]\s+/, "");
+        items.push(`<li><input type="checkbox" disabled ${checked ? "checked" : ""}> ${renderMarkdownInline(label)}</li>`);
+        index += 1;
+      }
+      html.push(`<ul class="task-list">${items.join("")}</ul>`);
+      continue;
+    }
+
+    if (/^\s*[-*+]\s+/.test(line)) {
+      const items = [];
+      while (index < lines.length && /^\s*[-*+]\s+/.test(lines[index])) {
+        items.push(`<li>${renderMarkdownInline(lines[index].replace(/^\s*[-*+]\s+/, ""))}</li>`);
+        index += 1;
+      }
+      html.push(`<ul>${items.join("")}</ul>`);
+      continue;
+    }
+
+    if (/^\s*\d+\.\s+/.test(line)) {
+      const items = [];
+      while (index < lines.length && /^\s*\d+\.\s+/.test(lines[index])) {
+        items.push(`<li>${renderMarkdownInline(lines[index].replace(/^\s*\d+\.\s+/, ""))}</li>`);
+        index += 1;
+      }
+      html.push(`<ol>${items.join("")}</ol>`);
+      continue;
+    }
+
+    if (/^\s*>\s?/.test(line)) {
+      const quoteLines = [];
+      while (index < lines.length && /^\s*>\s?/.test(lines[index])) {
+        quoteLines.push(lines[index].replace(/^\s*>\s?/, ""));
+        index += 1;
+      }
+      html.push(`<blockquote>${quoteLines.map(renderMarkdownInline).join("<br>")}</blockquote>`);
+      continue;
+    }
+
+    const paragraph = [];
+    while (index < lines.length && lines[index].trim() && !isMarkdownBlockStart(lines[index], lines[index + 1])) {
+      paragraph.push(lines[index]);
+      index += 1;
+    }
+    html.push(`<p>${paragraph.map(renderMarkdownInline).join("<br>")}</p>`);
+  }
+
+  return html.join("");
+}
+
+function isMarkdownBlockStart(line, nextLine = "") {
+  return (
+    /^```/.test(line.trim()) ||
+    /^(#{1,6})\s+/.test(line) ||
+    /^\s*([-*_])(?:\s*\1){2,}\s*$/.test(line) ||
+    /^\s*-\s+\[[ xX]\]\s+/.test(line) ||
+    /^\s*[-*+]\s+/.test(line) ||
+    /^\s*\d+\.\s+/.test(line) ||
+    /^\s*>\s?/.test(line) ||
+    (/^\s*\|?.+\|.+/.test(line) && /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(nextLine))
+  );
+}
+
+function renderMarkdownTable(lines) {
+  const rows = lines
+    .filter((line, index) => index !== 1)
+    .map((line) =>
+      line
+        .trim()
+        .replace(/^\|/, "")
+        .replace(/\|$/, "")
+        .split("|")
+        .map((cell) => cell.trim())
+    );
+
+  if (rows.length === 0) return "";
+  const head = rows[0].map((cell) => `<th>${renderMarkdownInline(cell)}</th>`).join("");
+  const body = rows
+    .slice(1)
+    .map((row) => `<tr>${row.map((cell) => `<td>${renderMarkdownInline(cell)}</td>`).join("")}</tr>`)
+    .join("");
+
+  return `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+}
+
+function renderMarkdownInline(text) {
+  const codeSpans = [];
+  let result = String(text).replace(/`([^`]+)`/g, (_, code) => {
+    const token = `@@CODE_${codeSpans.length}@@`;
+    codeSpans.push(`<code>${escapeHtml(code)}</code>`);
+    return token;
+  });
+
+  result = escapeHtml(result);
+  result = result.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  result = result.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  result = result.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+  result = result.replace(/~~([^~]+)~~/g, "<del>$1</del>");
+  result = result.replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+  result = result.replace(/(^|[^_])_([^_\n]+)_/g, "$1<em>$2</em>");
+  codeSpans.forEach((html, index) => {
+    result = result.replace(`@@CODE_${index}@@`, html);
+  });
+  return result;
+}
+
+function markdownToPlainText(markdown) {
+  return normalizeNewlines(markdown)
+    .replace(/```[\s\S]*?```/g, (match) => match.replace(/```/g, "").trim())
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^\s*-\s+\[[ xX]\]\s+/gm, "")
+    .replace(/^\s*[-*+]\s+/gm, "")
+    .replace(/^\s*\d+\.\s+/gm, "")
+    .replace(/^\s*>\s?/gm, "")
+    .replace(/^\s*[-*_]{3,}\s*$/gm, "")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/__([^_]+)__/g, "$1")
+    .replace(/~~([^~]+)~~/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/_([^_]+)_/g, "$1")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, "$1 $2")
+    .trim();
 }
 
 function wait(ms) {
