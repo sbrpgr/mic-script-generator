@@ -19,10 +19,10 @@ https://:version.mic-script-generator.pages.dev/*
   Cache-Control: public, max-age=300
 
 /*.css
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=0, must-revalidate
 
 /*.js
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=0, must-revalidate
 
 /*.svg
   Cache-Control: public, max-age=604800
