@@ -58,7 +58,8 @@ jobs:
             const payload = await response.json().catch(() => ({}));
             if (!response.ok || payload.success === false) {
               const detail = (payload.errors || []).map((error) => `${error.code || "error"} ${error.message}`).join("; ");
-              throw new Error(`${options.method || "GET"} ${url} failed: ${response.status} ${detail}`);
+              const safeUrl = url.replace(/\/zones\/[0-9a-f]{32}\//i, "/zones/[redacted]/");
+              throw new Error(`${options.method || "GET"} ${safeUrl} failed: ${response.status} ${detail}`);
             }
             return payload.result;
           }
