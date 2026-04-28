@@ -51,13 +51,15 @@ GitHub 저장소의 `Settings > Secrets and variables > Actions > Repository sec
 
 - `ads.txt`: AdSense 승인 후 실제 Publisher ID로 교체
 - `robots.txt`: 현재 `https://ko-workspace.com/sitemap.xml` 기준
-- `sitemap.xml`: 현재 `https://ko-workspace.com/` 기준
+- `sitemap.xml`: 홈과 `/tools/{slug}/` 공개 URL 기준
 - `privacy.html`: 운영자 문의처 추가
 
 ## 검색 최적화 파일
 
-- `index.html`: title, meta description, canonical, Open Graph, Twitter Card, JSON-LD
-- `sitemap.xml`: 주요 공개 URL과 `lastmod`
+- `index.html`: 플랫폼 홈 title, meta description, canonical, Open Graph
+- `tools/*/index.html`: 도구별 title, meta description, canonical, Open Graph
+- `app.js`: 현재 페이지 기준 JSON-LD 주입
+- `sitemap.xml`: 홈, 정책 페이지, 도구 페이지 URL과 `lastmod`
 - `robots.txt`: sitemap 위치 고지
 - `favicon.svg`, `site.webmanifest`: 브라우저와 검색 결과 보조 메타데이터
 
@@ -65,3 +67,10 @@ GitHub 저장소의 `Settings > Secrets and variables > Actions > Repository sec
 
 - `_headers`: Cloudflare Pages 보안 헤더
 - `.gitignore`: 로컬 브라우저 프로필과 임시 파일 제외
+
+## 현재 정적 자산 복사 범위
+
+GitHub Actions workflow는 아래 자산을 `.cloudflare-dist/`로 복사합니다.
+
+- 루트 정적 파일: `index.html`, `styles.css`, `app.js`, `privacy.html`, `terms.html`, `robots.txt`, `sitemap.xml`, `ads.txt`, `_headers`, `favicon.svg`, `site.webmanifest`
+- 도구 페이지 디렉터리: `tools/`

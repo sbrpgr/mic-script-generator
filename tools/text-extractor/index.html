@@ -1,40 +1,31 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="ko-workspace는 브라우저에서 바로 실행되는 업무용 도구 모음입니다. 텍스트 정리, 이미지 편집, PDF 처리, 자막 정리, 음성 텍스트 작성을 로그인 없이 빠르게 처리할 수 있습니다."
-    />
+    <meta name="description" content="긴 문서나 복사한 텍스트에서 이메일, URL, 전화번호만 추출해 업무용 목록으로 정리합니다." />
     <meta name="robots" content="index,follow" />
     <meta name="theme-color" content="#184c49" />
     <meta name="application-name" content="ko-workspace" />
     <meta name="apple-mobile-web-app-title" content="ko-workspace" />
-    <link rel="canonical" href="https://ko-workspace.com/" />
-    <link rel="alternate" hreflang="ko" href="https://ko-workspace.com/" />
-    <link rel="alternate" hreflang="x-default" href="https://ko-workspace.com/" />
+    <link rel="canonical" href="https://ko-workspace.com/tools/text-extractor/" />
+    <link rel="alternate" hreflang="ko" href="https://ko-workspace.com/tools/text-extractor/" />
+    <link rel="alternate" hreflang="x-default" href="https://ko-workspace.com/tools/text-extractor/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta property="og:site_name" content="ko-workspace" />
     <meta property="og:locale" content="ko_KR" />
-    <meta property="og:title" content="ko-workspace | 브라우저 기반 업무 도구" />
-    <meta
-      property="og:description"
-      content="텍스트 정리, 이미지 변환, PDF 편집, 자막 보정, 음성 텍스트 쓰기를 브라우저에서 바로 처리하는 업무용 도구 모음입니다."
-    />
+    <meta property="og:title" content="이메일 URL 전화번호 추출기 | 텍스트 데이터 정리 | ko-workspace" />
+    <meta property="og:description" content="긴 문서나 복사한 텍스트에서 이메일, URL, 전화번호만 추출해 업무용 목록으로 정리합니다." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://ko-workspace.com/" />
+    <meta property="og:url" content="https://ko-workspace.com/tools/text-extractor/" />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="ko-workspace | 브라우저 기반 업무 도구" />
-    <meta
-      name="twitter:description"
-      content="브라우저에서 바로 쓰는 텍스트, 이미지, PDF, 자막, 음성 도구 모음입니다."
-    />
-    <title>ko-workspace | 브라우저 기반 업무 도구</title>
+    <meta name="twitter:title" content="이메일 URL 전화번호 추출기 | 텍스트 데이터 정리 | ko-workspace" />
+    <meta name="twitter:description" content="긴 문서나 복사한 텍스트에서 이메일, URL, 전화번호만 추출해 업무용 목록으로 정리합니다." />
+    <title>이메일 URL 전화번호 추출기 | 텍스트 데이터 정리 | ko-workspace</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
-  <body data-page="home">
+  <body data-tool="text-extractor">
     <div class="site-layout">
       <aside class="ad-slot ad-rail ad-rail-left" data-ad-placement="left-rail" aria-label="광고 영역"></aside>
       <div class="content-column">
@@ -44,9 +35,7 @@
             <div class="hero-copy">
               <p class="eyebrow" id="heroEyebrow">Browser-side Office Utilities</p>
               <h1 id="pageTitle">ko-workspace</h1>
-              <p id="pageDescription">
-                로그인 없이 브라우저에서 바로 실행되는 텍스트, 이미지, PDF, 자막, 음성 도구 모음입니다.
-              </p>
+              <p id="pageDescription">로그인 없이 브라우저에서 바로 실행되는 텍스트, 이미지, PDF, 자막, 음성 도구 모음입니다.</p>
             </div>
             <div class="hero-meta">
               <div class="status-group">
@@ -79,11 +68,9 @@
 
             <section class="workspace-stack">
               <section id="toolOverview" class="panel overview-panel" aria-live="polite"></section>
-
               <section class="panel workspace-panel">
                 <div id="toolWorkspace" class="tool-workspace"></div>
               </section>
-
               <section class="info-grid">
                 <article class="panel guide-panel">
                   <div class="section-heading">
@@ -94,7 +81,6 @@
                   </div>
                   <ol id="toolGuideList" class="guide-list"></ol>
                 </article>
-
                 <article class="panel related-panel">
                   <div class="section-heading">
                     <div>
@@ -103,9 +89,7 @@
                     </div>
                   </div>
                   <div id="relatedTools" class="related-tools"></div>
-                  <p class="privacy-note">
-                    모든 초기 도구는 브라우저 안에서 즉시 처리되며, 입력 텍스트와 파일은 서버에 저장하지 않습니다.
-                  </p>
+                  <p class="privacy-note">모든 초기 도구는 브라우저 안에서 즉시 처리되며, 입력 텍스트와 파일은 서버에 저장하지 않습니다.</p>
                 </article>
               </section>
             </section>
@@ -130,9 +114,7 @@
             <p class="eyebrow">Service Principles</p>
             <h2 id="helpTitle">서비스 원칙</h2>
           </div>
-          <button id="helpCloseBtn" class="help-close" type="button" aria-label="닫기" title="닫기">
-            ×
-          </button>
+          <button id="helpCloseBtn" class="help-close" type="button" aria-label="닫기" title="닫기">×</button>
         </header>
         <ol class="help-steps">
           <li>

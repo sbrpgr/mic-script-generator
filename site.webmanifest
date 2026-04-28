@@ -1,13 +1,13 @@
 {
-  "name": "음성으로 텍스트 쓰기",
-  "short_name": "음성텍스트",
-  "description": "한국어 음성을 텍스트로 변환하고 대본 형식으로 정리하는 브라우저 기반 음성 텍스트 작성 도구입니다.",
+  "name": "ko-workspace",
+  "short_name": "ko-workspace",
+  "description": "브라우저에서 바로 쓰는 텍스트, 이미지, PDF, 자막, 음성 업무 도구 모음입니다.",
   "lang": "ko-KR",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#f6f7f2",
-  "theme_color": "#146c5d",
+  "background_color": "#eff2e8",
+  "theme_color": "#184c49",
   "icons": [
     {
       "src": "/favicon.svg",

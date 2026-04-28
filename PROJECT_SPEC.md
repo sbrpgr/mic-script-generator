@@ -1,99 +1,108 @@
-# ko-workspace 제품 명세
+# ko-workspace Product Spec
 
-## 제품 방향
+## Product Direction
 
-`ko-workspace`는 일상 업무에서 자주 쓰는 사무용 웹 도구를 모아 제공하는 플랫폼입니다. PDF 변환, 텍스트 정리, 문서 작성 보조, 파일 변환, 추출, 요약 같은 작은 기능들을 각각 독립 도구로 만들고, 최종적으로 하나의 작업 공간 안에서 찾고 실행할 수 있게 확장합니다.
+`ko-workspace` is a static office utility platform for Korean users and general browser-based work. It is designed to host many small, high-frequency tools that solve day-to-day text, image, PDF, subtitle, and voice tasks without requiring account creation or server-side storage.
 
-현재 배포된 기능은 첫 번째 도구인 `음성으로 텍스트 쓰기`입니다.
+## Current Shipping Scope
 
-## 현재 도구: 음성으로 텍스트 쓰기
+The current deployment targets Cloudflare Pages and keeps all initial tools inside a browser-only execution model.
 
-### 목적
+Core constraints:
 
-사용자가 한국어로 말한 내용을 브라우저에서 텍스트로 받아 적고, 입력된 내용을 대본이나 회의 요약 형태로 빠르게 정리할 수 있게 합니다.
+- No backend server for core tools
+- No database or persistent user storage
+- No paid external API required for baseline execution
+- No private API key exposed to client-side JavaScript
+- Tool pages must be directly deployable as static pages
 
-### 주요 사용자
+## Implemented Tools
 
-- 회의 내용을 빠르게 받아 적고 싶은 사용자
-- 유튜브 영상 대본 초안을 만들고 싶은 사용자
-- 발표문이나 강의 원고를 말로 먼저 작성하는 사용자
-- 긴 문장을 키보드로 입력하기보다 말로 초안을 만들고 싶은 사용자
+### Voice
 
-### 핵심 기능
+- `음성으로 텍스트 쓰기`
+  - Real-time Korean speech recognition
+  - Automatic reconnect handling
+  - Transcript cleanup
+  - Script generation for general, YouTube, presentation, and meeting formats
+  - Copy and TXT export
 
-- 한국어 음성 인식
-- 녹음 시작, 일시정지, 종료
-- 음성 텍스트 영역에 인식 결과 누적
-- 일반 대본, 유튜브 영상, 발표문, 회의 요약 형식 지원
-- 군더더기 말 정리 옵션
-- 문단 제목 추가 옵션
-- 완성 대본 복사
-- TXT 저장
-- 텍스트 드래그 선택 시 `선택 복사` 버튼 표시
-- 제목 옆 `?` 사용법 버튼과 간단한 안내 모달
-- 향후 AdSense 삽입을 위한 상단, 하단, 좌측, 우측 광고 슬롯 구조
+### Text
 
-### 브라우저 조건
+- `AI 복붙 서식 정리`
+- `글자수 세기`
+- `줄바꿈·공백 정리`
+- `이메일·URL·전화번호 추출기`
+- `중복 줄 제거`
+- `찾기 및 바꾸기`
+- `대소문자 변환`
+- `텍스트 비교기`
 
-- Chrome 또는 Edge 권장
-- Web Speech API 지원 필요
-- 마이크 권한 허용 필요
-- 일부 환경에서는 브라우저 음성 인식 서비스 연결을 위해 인터넷이 필요할 수 있음
+### Image
 
-### 데이터 처리 원칙
+- `QR 코드 생성기`
+- `이미지 크기 조절`
+- `이미지 형식 변환`
+- `이미지 용량 압축`
 
-- 자체 서버에 입력 텍스트를 저장하지 않음
-- 마이크 권한은 브라우저 권한 체계를 사용
-- 배포 자동화 토큰과 외부 서비스 키는 GitHub Secrets로만 관리
-- AdSense Publisher ID는 공개 식별자이지만, Cloudflare/GitHub API Token은 저장소에 커밋하지 않음
+### PDF
 
-## 광고 레이아웃 원칙
+- `PDF 합치기`
+- `PDF 분할`
+- `PDF 페이지 추출`
+- `이미지 PDF 변환`
+- `PDF 이미지 변환`
 
-현재 광고 코드는 삽입하지 않았고, 빈 광고 슬롯만 구조로 준비했습니다. 슬롯이 비어 있을 때는 화면에 표시되지 않습니다.
+### Subtitle
 
-준비된 슬롯:
+- `SRT 자막 정리`
+- `SRT ↔ VTT 변환`
+- `자막 시간 보정`
 
-- `top-banner`: 앱 상단 배너
-- `bottom-banner`: 앱 하단 배너
-- `left-rail`: 데스크톱 좌측 레일
-- `right-rail`: 데스크톱 우측 레일
+## URL Strategy
 
-향후 AdSense를 넣을 때는 inline script를 추가하지 않고, 외부 AdSense 스크립트와 `app.js`의 슬롯 초기화 흐름을 사용합니다. 이렇게 하면 현재 CSP에서 `unsafe-inline`을 추가하지 않아도 됩니다.
+- Home: `/`
+- Tool pages: `/tools/{slug}/`
+- Policy pages: `/privacy`, `/terms`
 
-## 현재 URL 구조
+Each tool page should have:
 
-- 앱: `https://ko-workspace.com/`
-- 개인정보처리방침: `https://ko-workspace.com/privacy`
-- 이용약관: `https://ko-workspace.com/terms`
-- Sitemap: `https://ko-workspace.com/sitemap.xml`
-- Robots: `https://ko-workspace.com/robots.txt`
-- AdSense 파일: `https://ko-workspace.com/ads.txt`
+- Unique title
+- Unique meta description
+- Canonical URL
+- Dedicated Open Graph URL
+- Browser-side app shell driven by `app.js`
 
-## 플랫폼 확장 방향
+## Frontend Structure
 
-향후 `ko-workspace`에는 여러 도구가 들어갈 예정입니다. 현재 단일 도구 구조이지만, 다음 단계에서는 도구 목록/홈 화면과 개별 도구 라우팅을 분리하는 구조가 필요합니다.
+- `index.html`: platform home shell
+- `tools/*/index.html`: static tool entry pages
+- `styles.css`: shared platform and tool styles
+- `app.js`: tool registry, page rendering, and browser-side tool logic
 
-예상 도구 범주:
+## Deployment Model
 
-- 문서 변환 도구
-- 텍스트 정리 도구
-- 회의/업무 기록 도구
-- 파일 정리 및 추출 도구
-- 간단한 계산/생성 도구
+- GitHub Actions prepares `.cloudflare-dist/`
+- Root files are copied into `.cloudflare-dist/`
+- The `tools/` directory is copied recursively into `.cloudflare-dist/`
+- Cloudflare Pages deploys `.cloudflare-dist/`
 
-향후 구조 전환 시 고려 사항:
+## Security Rules
 
-- 루트 `/`를 도구 목록 또는 대표 홈으로 전환할지 결정
-- 현재 `음성으로 텍스트 쓰기`를 `/voice-to-text` 같은 별도 경로로 이동할지 결정
-- 기존 검색 색인을 보존하기 위한 canonical/redirect 전략 수립
-- 각 도구별 SEO title, description, sitemap URL 분리
-- 공통 헤더, 공통 푸터, 공통 정책 페이지 재사용
-- 도구별 본문과 광고 슬롯을 분리해 광고 삽입 시 작업 UI가 흔들리지 않도록 유지
+- CSP is managed in `_headers`
+- External runtime libraries are limited to browser-side tool libraries loaded from CDN
+- Tool inputs and uploaded files are processed in the browser and not sent to an application server
+- Deployment secrets remain in GitHub Actions Secrets or Cloudflare settings only
 
-## 남은 운영 작업
+## Ad Layout Principle
 
-- `www.ko-workspace.com` DNS CNAME 추가
-- Google Search Console 등록 및 sitemap 제출
-- AdSense Publisher ID 발급 후 `ads.txt` 교체
-- 개인정보처리방침의 운영자 문의처 확정
-- 향후 도구가 늘어날 때 플랫폼형 내비게이션 설계
+Ad slots are pre-separated from the work surface.
+
+Prepared slot positions:
+
+- `top-banner`
+- `bottom-banner`
+- `left-rail`
+- `right-rail`
+
+When ad slots are empty, they remain hidden.

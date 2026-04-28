@@ -1,42 +1,52 @@
-# 음성으로 텍스트 쓰기
+# ko-workspace
 
-`ko-workspace`의 첫 번째 사무용 웹 도구입니다. 마이크로 말하면 한국어 음성을 텍스트로 받아 적고, 입력된 내용을 대본 형식으로 정리합니다.
+`ko-workspace` is a browser-first office utility platform deployed on Cloudflare Pages.
 
-`ko-workspace`는 앞으로 변환, 정리, 작성, 추출, 자동화처럼 일상 업무에서 자주 쓰는 여러 도구를 한곳에 모으는 플랫폼으로 확장할 계획입니다. 현재 이 저장소의 기능은 그중 첫 번째 도구인 `음성으로 텍스트 쓰기`입니다.
+The current product ships as a static multi-tool site focused on tasks that can run fully in the browser without a backend server, database, or private API key.
 
-## 실행
+## Current Tool Categories
 
-폴더 안의 `대본생성기_실행.bat` 또는 `start.bat`을 더블클릭하면 됩니다.
+- Voice: `음성으로 텍스트 쓰기`
+- Text: `AI 복붙 서식 정리`, `글자수 세기`, `줄바꿈·공백 정리`, `이메일·URL·전화번호 추출기`, `중복 줄 제거`, `찾기 및 바꾸기`, `대소문자 변환`, `텍스트 비교기`
+- Image: `QR 코드 생성기`, `이미지 크기 조절`, `이미지 형식 변환`, `이미지 용량 압축`
+- PDF: `PDF 합치기`, `PDF 분할`, `PDF 페이지 추출`, `이미지 PDF 변환`, `PDF 이미지 변환`
+- Subtitle: `SRT 자막 정리`, `SRT ↔ VTT 변환`, `자막 시간 보정`
 
-브라우저가 열리면 마이크 권한을 허용하고 `녹음 시작`을 누르면 됩니다. Chrome 또는 Edge 권장입니다.
+## Product Rules
 
-## 기능
+- No login required
+- Browser-side processing first
+- No backend server for core tools
+- No private API keys in client code
+- Ad slots are separated from the work surface
 
-- 한국어 음성 실시간 텍스트 변환
-- 일반 대본, 유튜브 영상, 발표문, 회의 요약 형식 지원
-- 군더더기 말 정리
-- 복사 및 TXT 저장
+## URL Structure
 
-## 검색 최적화
+- Home: `https://ko-workspace.com/`
+- Tool pages: `https://ko-workspace.com/tools/{slug}/`
+- Policy pages: `/privacy`, `/terms`
 
-- Canonical URL: `https://ko-workspace.com/`
-- Sitemap: `https://ko-workspace.com/sitemap.xml`
-- Robots: `https://ko-workspace.com/robots.txt`
-- 기본 메타 설명, Open Graph, Twitter Card, 구조화 데이터, 웹 앱 manifest 포함
+## Deployment
 
-## 배포
+The site is deployed with GitHub Actions to Cloudflare Pages.
 
-이 프로젝트는 빌드 과정이 없는 정적 웹앱입니다. 현재는 Cloudflare Pages의 기존 Direct Upload 프로젝트(`mic-script-generator`)로 배포되어 있고, GitHub에 올린 뒤 GitHub Actions가 Wrangler로 자동 배포하도록 준비되어 있습니다.
-
-- GitHub branch: `main`
-- Cloudflare Pages project: `mic-script-generator`
+- Branch: `main`
+- Pages project: `mic-script-generator`
 - Production domain: `https://ko-workspace.com/`
-- GitHub Secrets 필요: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`
 
-새 Cloudflare Pages 프로젝트를 만들 때는 Git integration을 선택해도 됩니다. 단, 이미 Direct Upload로 만든 Pages 프로젝트는 나중에 Git integration 프로젝트로 전환할 수 없으므로 기존 프로젝트를 유지하려면 현재 GitHub Actions 방식이 적합합니다.
+The workflow copies root assets plus the `tools/` directory into `.cloudflare-dist/` and deploys that directory.
 
-## 참고
+## Security Notes
 
-브라우저의 음성 인식 기능을 사용하므로 일부 환경에서는 인터넷 연결이 필요할 수 있습니다. 마이크 권한 요청이 뜨면 허용해 주세요.
+- Tokens are stored only in GitHub Actions Secrets and Cloudflare settings.
+- Client-side scripts do not contain Cloudflare, GitHub, Google, or AI API secrets.
+- CSP is configured in `_headers`.
+- Initial tools do not upload text or files to an application server.
 
-상세 명세와 작업 기록은 `PROJECT_SPEC.md`, `WORK_LOG.md`, `DEPLOYMENT.md`, `SECURITY.md`를 확인하세요.
+## Related Docs
+
+- `ROADMAP.md`
+- `PROJECT_SPEC.md`
+- `DEPLOYMENT.md`
+- `SECURITY.md`
+- `WORK_LOG.md`
