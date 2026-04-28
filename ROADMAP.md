@@ -193,7 +193,7 @@ Each tool page should include:
 - Search-focused but natural title.
 - Meta description that says what the tool does, whether it is free, and whether it works in the browser.
 - Visible usage guide with 3-5 short steps.
-- FAQ section with real user questions.
+- Collapsed FAQ and usage-example section below Quick Flow, with real user questions.
 - Related tools section.
 - Tool-specific structured data where appropriate.
 - Canonical URL.
@@ -238,7 +238,16 @@ Rules:
 - Do not add inline AdSense scripts.
 - Keep CSP strict and add only the minimum required ad domains.
 
-## 5A. Monetization And Membership Direction
+## 5A. Analytics Rules
+
+GA/GTM events should measure tool usage without collecting user content.
+
+- Use the event contract in `ANALYTICS.md`.
+- Track only tool id, category, action, control id, output format, and help section names.
+- Never send entered text, uploaded file names, extracted email/URL/phone data, or recording contents.
+- Treat analytics changes as product-policy changes, not incidental UI work.
+
+## 5B. Monetization And Membership Direction
 
 Near-term monetization should stay simple:
 

@@ -45,3 +45,10 @@
 - Clarified that the current public tools do not require membership or first-party personal-data collection
 - Added advertising, collaboration, and partnership inquiry guidance to use `dayway.ict@gmail.com`
 - Updated the product specification with remaining operational, SEO, analytics, and monetization tasks
+
+### SEO FAQ And Analytics
+
+- Added collapsed usage examples and FAQ content below Quick Flow for every tool page
+- Added dynamic FAQPage structured data from the same visible FAQ content
+- Added privacy-safe GTM `dataLayer` events for tool open, run, copy, download, permission request, and FAQ opening
+- Documented analytics allowlists in `ANALYTICS.md` so no input text, file names, extracted data, or recording contents are sent

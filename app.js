@@ -432,6 +432,221 @@ const TOOL_VISUALS = {
   "subtitle-timing": { icon: "\u23F1\uFE0F", tone: "cyan", copy: "\uc790\ub9c9 \uc2f1\ud06c\ub97c \uc55e\ub4a4\ub85c \uc77c\uad04 \ubcf4\uc815\ud569\ub2c8\ub2e4." },
 };
 
+const TOOL_USE_EXAMPLES = {
+  "voice-to-text": [
+    "회의 중 말한 내용을 바로 받아 적고 회의록 초안으로 정리합니다.",
+    "강의, 발표, 유튜브 영상의 대본 초안을 빠르게 작성합니다.",
+  ],
+  "webcam-recorder": [
+    "웹캠 발표 영상이나 교육 안내 영상을 브라우저에서 바로 녹화합니다.",
+    "면접 연습, 자기소개 영상, 온라인 제출용 녹화 파일을 만듭니다.",
+  ],
+  "ai-text-cleaner": [
+    "AI 답변을 메일이나 한글 문서에 붙여넣기 전에 별표와 마크다운을 정리합니다.",
+    "블로그 초안, 보고서 초안, 메신저 공유용 텍스트를 깔끔하게 바꿉니다.",
+  ],
+  "character-counter": [
+    "자기소개서, 과제, 블로그 원고의 공백 포함/제외 글자수를 확인합니다.",
+    "SNS 문구, 광고 문안, 보고서 요약문의 분량을 빠르게 점검합니다.",
+  ],
+  "line-break-cleaner": [
+    "PDF나 웹페이지에서 복사한 글의 어색한 줄바꿈을 문단 형태로 정리합니다.",
+    "메신저나 메일에 붙여넣기 좋은 형태로 공백과 빈 줄을 줄입니다.",
+  ],
+  "markdown-editor": [
+    "일반 텍스트 초안을 제목, 목록, 표가 있는 마크다운 문서로 정리합니다.",
+    "README, 업무 메모, 블로그 초안을 미리보며 작성합니다.",
+  ],
+  "text-extractor": [
+    "문의 메일, 고객 메모, 공지문에서 이메일 주소와 전화번호만 뽑아냅니다.",
+    "긴 문서 안의 URL 목록을 정리해 공유하거나 검토합니다.",
+  ],
+  "duplicate-line-remover": [
+    "키워드 목록, 이메일 목록, URL 목록에서 중복 항목을 제거합니다.",
+    "스프레드시트에 붙여넣기 전 리스트 데이터를 정리합니다.",
+  ],
+  "find-replace": [
+    "문서 전체에서 제품명, 담당자명, 날짜 표현을 한 번에 바꿉니다.",
+    "자막이나 메모의 반복 오타를 빠르게 일괄 수정합니다.",
+  ],
+  "case-converter": [
+    "파일명, 변수명, 태그를 camelCase, snake_case, kebab-case로 바꿉니다.",
+    "영문 제목이나 문장을 대문자, 소문자, 제목형으로 정리합니다.",
+  ],
+  "text-diff": [
+    "계약 문구, 보고서, 안내문 수정 전후 차이를 줄 단위로 확인합니다.",
+    "프롬프트나 자막의 변경된 부분을 빠르게 검토합니다.",
+  ],
+  "qr-code-generator": [
+    "행사 안내 URL, 설문 링크, 지도 링크를 QR 코드로 만들어 배포합니다.",
+    "사무실 또는 매장 Wi-Fi 접속 정보를 QR 코드로 정리합니다.",
+  ],
+  "image-resizer": [
+    "블로그, 쇼핑몰, 지원서 업로드 기준에 맞게 이미지 크기를 줄입니다.",
+    "썸네일이나 첨부 이미지의 가로세로 비율을 유지하며 조정합니다.",
+  ],
+  "image-converter": [
+    "PNG 이미지를 JPG 또는 WEBP로 바꿔 웹 업로드에 맞춥니다.",
+    "브라우저에서 지원되는 이미지 형식으로 빠르게 변환합니다.",
+  ],
+  "image-compressor": [
+    "메일 첨부, 사이트 업로드, 공공기관 제출용 이미지 용량을 줄입니다.",
+    "원본을 서버에 올리지 않고 브라우저에서 압축 결과를 확인합니다.",
+  ],
+  "pdf-merge": [
+    "여러 견적서, 계약서, 첨부문서를 하나의 PDF로 합칩니다.",
+    "제출용 파일을 순서대로 묶어 하나의 문서로 정리합니다.",
+  ],
+  "pdf-split": [
+    "긴 PDF를 페이지 단위로 나누어 필요한 부분만 별도 파일로 만듭니다.",
+    "스캔본이나 자료집을 일정 페이지 간격으로 분할합니다.",
+  ],
+  "pdf-extract-pages": [
+    "PDF에서 필요한 페이지 범위만 골라 별도 문서로 저장합니다.",
+    "자료집, 계약서, 보고서에서 공유할 부분만 추출합니다.",
+  ],
+  "image-to-pdf": [
+    "여러 장의 사진, 스캔 이미지, 캡처 이미지를 하나의 PDF로 묶습니다.",
+    "제출용 이미지 자료를 PDF 문서 형태로 정리합니다.",
+  ],
+  "pdf-to-image": [
+    "PDF 페이지를 PNG 이미지로 바꿔 썸네일이나 미리보기 자료로 사용합니다.",
+    "문서 일부를 이미지로 저장해 메신저나 프레젠테이션에 넣습니다.",
+  ],
+  "srt-cleaner": [
+    "번호가 꼬이거나 공백이 많은 SRT 자막을 안정적인 형식으로 정리합니다.",
+    "영상 편집 전에 자막 파일의 기본 구조를 빠르게 다듬습니다.",
+  ],
+  "subtitle-converter": [
+    "YouTube, 플레이어, 편집툴에 맞춰 SRT와 VTT 자막 형식을 바꿉니다.",
+    "자막 텍스트를 붙여넣고 필요한 포맷으로 바로 저장합니다.",
+  ],
+  "subtitle-timing": [
+    "영상보다 자막이 빠르거나 늦을 때 전체 싱크를 한 번에 보정합니다.",
+    "초 단위 오프셋을 적용해 SRT/VTT 자막 시간을 일괄 수정합니다.",
+  ],
+};
+
+const TOOL_EXTRA_FAQS = {
+  "voice-to-text": {
+    question: "음성 인식이 계속 끊길 때는 어떻게 하나요?",
+    answer: "Chrome 또는 Edge에서 HTTPS 주소로 접속하고, 브라우저의 마이크 권한이 허용되어 있는지 확인하세요. 브라우저가 음성 인식을 중단하면 도구가 재연결을 시도합니다.",
+  },
+  "webcam-recorder": {
+    question: "녹화 파일은 어떤 형식으로 저장되나요?",
+    answer: "기본은 WebM이며, 브라우저가 지원하는 환경에서는 MP4 옵션도 선택할 수 있습니다. 배경 효과와 사용자 배경 이미지는 브라우저에서 처리됩니다.",
+  },
+  "ai-text-cleaner": {
+    question: "AI 답변의 별표나 제목 표시를 제거할 수 있나요?",
+    answer: "네. 별표, 마크다운 제목, 링크, 코드블록, 과한 줄바꿈을 정리해 일반 문서에 붙여넣기 좋은 형태로 바꿀 수 있습니다.",
+  },
+  "character-counter": {
+    question: "공백 제외 글자수도 계산되나요?",
+    answer: "네. 공백 포함 글자수와 공백 제외 글자수, 단어 수, 줄 수, 바이트 수를 함께 확인할 수 있습니다.",
+  },
+  "line-break-cleaner": {
+    question: "마침표 기준으로 문장을 정리할 수 있나요?",
+    answer: "문장 중간 줄바꿈을 합치고 문단 단위로 정리할 수 있습니다. 마침표 뒤 줄바꿈이 필요한 경우 옵션을 조정해 문장 흐름에 맞게 사용할 수 있습니다.",
+  },
+  "markdown-editor": {
+    question: "빈 문서에서도 버튼만 눌러 마크다운을 작성할 수 있나요?",
+    answer: "네. 제목, 목록, 체크리스트, 표, 코드블록 같은 기본 문법을 버튼으로 넣고 바로 편집할 수 있습니다.",
+  },
+  "text-extractor": {
+    question: "이메일, URL, 전화번호를 따로 복사할 수 있나요?",
+    answer: "네. 비정형 텍스트에서 항목별로 추출해 필요한 목록만 복사할 수 있도록 정리합니다.",
+  },
+  "duplicate-line-remover": {
+    question: "대소문자나 앞뒤 공백이 다른 중복도 정리되나요?",
+    answer: "옵션을 사용하면 앞뒤 공백을 정리하고 대소문자 기준을 맞춰 중복 줄을 제거할 수 있습니다.",
+  },
+  "find-replace": {
+    question: "여러 번 반복되는 단어를 한 번에 바꿀 수 있나요?",
+    answer: "네. 찾을 값과 바꿀 값을 입력하면 문서 안의 일치 항목을 일괄 치환할 수 있습니다.",
+  },
+  "case-converter": {
+    question: "camelCase나 snake_case도 만들 수 있나요?",
+    answer: "네. 영문 문장이나 키워드를 camelCase, snake_case, kebab-case 등 업무와 개발에 자주 쓰는 형태로 변환할 수 있습니다.",
+  },
+  "text-diff": {
+    question: "두 문서의 수정된 부분만 확인할 수 있나요?",
+    answer: "두 텍스트를 줄 단위로 비교해 추가, 삭제, 유지된 부분을 시각적으로 나누어 보여줍니다.",
+  },
+  "qr-code-generator": {
+    question: "Wi-Fi 접속 정보도 QR로 만들 수 있나요?",
+    answer: "네. URL, 일반 텍스트, Wi-Fi 접속 정보를 QR 코드로 만들고 SVG 파일로 저장할 수 있습니다.",
+  },
+  "image-resizer": {
+    question: "비율을 유지하면서 이미지 크기를 바꿀 수 있나요?",
+    answer: "네. 가로세로 비율 유지 옵션으로 이미지가 찌그러지지 않게 크기를 조정할 수 있습니다.",
+  },
+  "image-converter": {
+    question: "JPG, PNG, WEBP 사이 변환이 가능한가요?",
+    answer: "브라우저가 지원하는 범위에서 JPG, PNG, WEBP 형식으로 변환할 수 있습니다.",
+  },
+  "image-compressor": {
+    question: "압축하면 화질을 조정할 수 있나요?",
+    answer: "네. 품질과 최대 너비를 조정해 용량과 화질의 균형을 맞출 수 있습니다.",
+  },
+  "pdf-merge": {
+    question: "PDF 파일은 서버로 업로드되나요?",
+    answer: "아니요. 선택한 PDF는 브라우저에서 합쳐지며 코워크스페이스 자체 서버에 저장하지 않습니다.",
+  },
+  "pdf-split": {
+    question: "몇 페이지마다 PDF를 나눌 수 있나요?",
+    answer: "페이지 묶음 기준을 입력해 원하는 간격으로 PDF를 여러 파일로 분할할 수 있습니다.",
+  },
+  "pdf-extract-pages": {
+    question: "1-3,5,9 같은 페이지 범위 입력이 가능한가요?",
+    answer: "네. 필요한 페이지 범위를 입력해 해당 페이지만 새 PDF로 추출할 수 있습니다.",
+  },
+  "image-to-pdf": {
+    question: "여러 이미지를 하나의 PDF로 만들 수 있나요?",
+    answer: "네. 여러 장의 이미지를 선택한 순서대로 PDF 페이지로 묶을 수 있습니다.",
+  },
+  "pdf-to-image": {
+    question: "PDF 페이지를 이미지로 저장할 수 있나요?",
+    answer: "네. PDF 페이지를 브라우저에서 렌더링한 뒤 PNG 이미지로 저장할 수 있습니다.",
+  },
+  "srt-cleaner": {
+    question: "SRT 번호를 다시 정리할 수 있나요?",
+    answer: "네. 자막 블록 번호를 다시 매기고 과한 공백과 줄바꿈을 정리할 수 있습니다.",
+  },
+  "subtitle-converter": {
+    question: "SRT와 VTT를 서로 변환할 수 있나요?",
+    answer: "네. SRT를 VTT로, VTT를 SRT로 변환해 영상 플랫폼이나 플레이어에 맞게 사용할 수 있습니다.",
+  },
+  "subtitle-timing": {
+    question: "전체 자막 시간을 한 번에 밀 수 있나요?",
+    answer: "네. 초 단위 값을 입력해 전체 자막 시간을 앞이나 뒤로 일괄 보정할 수 있습니다.",
+  },
+};
+
+const ANALYTICS_CONTROL_EVENTS = {
+  startBtn: { event: "permission_request", action: "voice_start" },
+  requestCameraPermissionBtn: { event: "permission_request", action: "camera_permission" },
+  startCameraBtn: { event: "permission_request", action: "camera_start" },
+  startRecordingBtn: { event: "tool_run", action: "record_start" },
+  makeScriptBtn: { event: "tool_run", action: "make_script" },
+  cleanBtn: { event: "tool_run", action: "clean" },
+  runBtn: { event: "tool_run", action: "run" },
+  extractBtn: { event: "tool_run", action: "extract" },
+  makeBtn: { event: "tool_run", action: "make" },
+  convertBtn: { event: "tool_run", action: "convert" },
+  compressBtn: { event: "tool_run", action: "compress" },
+  mergeBtn: { event: "tool_run", action: "merge" },
+  splitBtn: { event: "tool_run", action: "split" },
+  renderBtn: { event: "tool_run", action: "render" },
+  shiftBtn: { event: "tool_run", action: "shift" },
+  copyBtn: { event: "result_copy", action: "copy" },
+  copyMarkdownBtn: { event: "result_copy", action: "copy_markdown" },
+  copyPlainBtn: { event: "result_copy", action: "copy_plain" },
+  downloadBtn: { event: "file_download", action: "download" },
+  downloadAllBtn: { event: "file_download", action: "download_all" },
+  downloadVideoBtn: { event: "file_download", action: "download_video" },
+  downloadMarkdownBtn: { event: "file_download", action: "download_markdown" },
+};
+
 const HOME_CATEGORY_META = {
   "\uC74C\uC131": {
     label: "Core",
@@ -480,6 +695,7 @@ const libraryCache = {};
 
 const appState = {
   category: "전체",
+  activeToolId: "",
   quickOffset: 0,
   quickMotion: "",
   quickMotionTimerId: null,
@@ -542,6 +758,7 @@ function bindGlobalEvents() {
   document.addEventListener("keyup", queueSelectionCheck);
   document.addEventListener("mouseup", queueSelectionCheck);
   document.addEventListener("input", queueSelectionCheck, true);
+  document.addEventListener("click", handleAnalyticsClick, true);
   window.addEventListener("scroll", hideSelectionCopyButton, true);
   window.addEventListener("resize", hideSelectionCopyButton);
 }
@@ -638,6 +855,7 @@ function renderSidebarTools() {
 }
 
 function renderHomePage() {
+  appState.activeToolId = "";
   setPageMode("home");
   setHeroCopy(
     BRAND_NAME_EN,
@@ -674,10 +892,12 @@ function renderHomePage() {
 
   bindHomeToolSearch();
   renderGuideList([]);
+  renderToolDetailAccordion(null);
   renderQuickToolDock(null);
 }
 
 function renderToolPage(tool) {
+  appState.activeToolId = tool.id;
   setPageMode("tool");
   setHeroCopy("무료 온라인 도구", tool.title, tool.summary);
   setDocumentMeta({
@@ -698,7 +918,9 @@ function renderToolPage(tool) {
   `;
 
   renderGuideList(tool.guide);
+  renderToolDetailAccordion(tool);
   renderQuickToolDock(tool);
+  trackToolEvent("tool_open", tool);
 
   const renderer = TOOL_RENDERERS[tool.id];
   if (!renderer) {
@@ -800,8 +1022,89 @@ function renderGuideList(steps) {
     .join("");
 }
 
+function renderToolDetailAccordion(tool) {
+  const guidePanel = els.toolGuideList?.closest(".guide-panel");
+  if (!guidePanel) return;
+
+  guidePanel.querySelector("#toolDetailAccordion")?.remove();
+  if (!tool) return;
+
+  const detail = buildToolDetailContent(tool);
+  const wrapper = document.createElement("details");
+  wrapper.id = "toolDetailAccordion";
+  wrapper.className = "tool-detail-accordion";
+  wrapper.innerHTML = `
+    <summary>
+      <span>사용 예시와 자주 묻는 질문</span>
+      <small>도움말</small>
+    </summary>
+    <div class="tool-detail-body">
+      <section>
+        <h3>${escapeHtml(tool.title)} 사용 예시</h3>
+        <ul class="tool-example-list">
+          ${detail.examples.map((example) => `<li>${escapeHtml(example)}</li>`).join("")}
+        </ul>
+      </section>
+      <section>
+        <h3>자주 묻는 질문</h3>
+        <div class="tool-faq-list">
+          ${detail.faq
+            .map(
+              (item) => `
+                <article>
+                  <h4>${escapeHtml(item.question)}</h4>
+                  <p>${escapeHtml(item.answer)}</p>
+                </article>
+              `
+            )
+            .join("")}
+        </div>
+      </section>
+    </div>
+  `;
+
+  wrapper.addEventListener("toggle", () => {
+    if (wrapper.open) {
+      trackToolEvent("tool_help_open", tool, { section: "faq_examples" });
+    }
+  });
+
+  els.toolGuideList.insertAdjacentElement("afterend", wrapper);
+}
+
+function buildToolDetailContent(tool) {
+  const examples = TOOL_USE_EXAMPLES[tool.id] || [
+    `${tool.title}로 반복되는 업무 자료를 브라우저에서 바로 정리합니다.`,
+    `${tool.title} 결과를 복사하거나 필요한 파일로 저장해 다음 작업에 사용합니다.`,
+  ];
+  const extraFaq = TOOL_EXTRA_FAQS[tool.id] || {
+    question: `${tool.title}는 어떤 상황에서 사용하면 좋나요?`,
+    answer: examples.join(" "),
+  };
+
+  return {
+    examples,
+    faq: [
+      {
+        question: `${tool.title}는 무료로 사용할 수 있나요?`,
+        answer: `네. ${tool.title}는 로그인 없이 무료로 사용할 수 있는 코워크스페이스의 브라우저 기반 업무 도구입니다.`,
+      },
+      {
+        question: `${tool.title}에서 입력한 내용은 저장되나요?`,
+        answer: "아니요. 현재 도구는 작업 데이터를 코워크스페이스 자체 서버에 저장하지 않고 브라우저 안에서 처리하도록 설계되어 있습니다.",
+      },
+      extraFaq,
+      {
+        question: `${tool.title}는 어떤 작업에 활용하면 좋나요?`,
+        answer: examples.join(" "),
+      },
+    ],
+  };
+}
+
 function injectStructuredData(tool) {
   document.querySelectorAll('script[data-schema="dynamic"]').forEach((node) => node.remove());
+  injectFaqStructuredData(tool);
   if (document.querySelector(tool ? 'script[data-schema="static-tool"]' : 'script[data-schema="static-site"]')) {
     return;
   }
@@ -864,6 +1167,85 @@ function injectStructuredData(tool) {
   }
 
   document.head.appendChild(script);
+}
+
+function injectFaqStructuredData(tool) {
+  document.querySelectorAll('script[data-schema="dynamic-faq"]').forEach((node) => node.remove());
+  if (!tool) return;
+
+  const detail = buildToolDetailContent(tool);
+  if (!detail.faq.length) return;
+
+  const script = document.createElement("script");
+  script.type = "application/ld+json";
+  script.dataset.schema = "dynamic-faq";
+  script.textContent = JSON.stringify(
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: detail.faq.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
+    },
+    null,
+    2
+  );
+  document.head.appendChild(script);
+}
+
+function handleAnalyticsClick(event) {
+  const control = event.target.closest("button");
+  if (!control?.id) return;
+
+  const config = ANALYTICS_CONTROL_EVENTS[control.id];
+  if (!config) return;
+
+  const tool = TOOL_MAP[appState.activeToolId] || getActiveTool();
+  if (!tool) return;
+
+  trackToolEvent(config.event, tool, {
+    action: config.action,
+    control_id: control.id,
+    output_format: readSafeOutputFormat(control.id),
+  });
+}
+
+function readSafeOutputFormat(controlId) {
+  if (!/^download|^record|^convert|^make/.test(controlId)) return "";
+  const formatSelect = document.querySelector("#recordFormat, #outputFormat, #targetFormat, #subtitleFormat");
+  return formatSelect ? String(formatSelect.value || "").slice(0, 32) : "";
+}
+
+function trackToolEvent(eventName, tool, params = {}) {
+  if (!tool || typeof window === "undefined") return;
+
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: eventName,
+    tool_id: tool.id,
+    tool_category: tool.category,
+    action: sanitizeAnalyticsValue(params.action),
+    control_id: sanitizeAnalyticsValue(params.control_id),
+    section: sanitizeAnalyticsValue(params.section),
+    output_format: sanitizeAnalyticsValue(params.output_format),
+  });
+}
+
+function sanitizeAnalyticsValue(value) {
+  if (value === undefined || value === null) return "";
+  return String(value).replace(/[^\w.-]/g, "_").slice(0, 64);
+}
+
+function trackToolError(tool, error, action = "unknown") {
+  trackToolEvent("tool_error", tool, {
+    action,
+    control_id: error?.name || "error",
+  });
 }
 
 const TOOL_RENDERERS = {

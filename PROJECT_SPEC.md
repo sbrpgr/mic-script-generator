@@ -18,6 +18,7 @@ Core constraints:
 - No private API key exposed to client-side JavaScript
 - Tool pages must be directly deployable as static pages
 - User work data should be handled as 100% browser-side processing unless a future spec explicitly changes the architecture
+- Analytics must be event-only and privacy-safe; do not send input text, file names, extracted data, or recording contents
 
 ## Implemented Tools
 
@@ -84,6 +85,7 @@ Each tool page should have:
 - Canonical URL
 - Dedicated Open Graph URL
 - Browser-side app shell driven by `app.js`
+- Collapsed usage examples and FAQ below Quick Flow for SEO and user help
 
 ## Frontend Structure
 
@@ -107,6 +109,7 @@ Each tool page should have:
 - The service copy should communicate clearly that work data is not stored by our server and is processed in the user's browser
 - The current product does not operate login, membership, or first-party personal-data collection
 - Deployment secrets remain in GitHub Actions Secrets or Cloudflare settings only
+- GA/GTM events must follow `ANALYTICS.md` and use only allowlisted, non-content parameters
 
 ## Public Contact Copy
 
@@ -120,9 +123,7 @@ Footer and policy pages should expose the same operator information:
 ## Remaining Work
 
 - Run manual camera and microphone checks on real Chrome/Edge devices after each media-tool change
-- Add compact FAQ sections to high-value tool pages for SEO without crowding the work surface
-- Create category landing pages for text, PDF, image, subtitle, voice, and video tools
-- Add privacy-friendly analytics events for tool open, run, copy, and download actions
+- Create category landing pages for text, PDF, image, subtitle, voice, and video tools on a separate rollback branch
 - Tune AdSense placements after approval and keep ads outside editor/upload/drop zones
 - Monitor MediaPipe background-effect load failures and add a local fallback if CDN reliability becomes a problem
 - Request indexing for new or materially changed tool pages in Search Console

@@ -21,6 +21,7 @@ The current product ships as a static multi-tool site focused on tasks that can 
 - No private API keys in client code
 - Ad slots are separated from the work surface
 - Advertising, collaboration, and partnership inquiries go to `dayway.ict@gmail.com`
+- Analytics events are privacy-safe and must not include user-entered content, file names, extracted data, or recording contents
 
 ## URL Structure
 
@@ -46,6 +47,7 @@ Google Tag Manager uses container `GTM-W3MF6BSN`.
 - `npm run apply:site-tags`: inserts or refreshes the GTM `<head>` snippet, `<body>` noscript iframe, and CSP allowlist entries.
 - `npm run check`: validates JavaScript and confirms all managed page tags are present.
 - GitHub Actions runs `npm run apply:site-tags` before packaging, so newly added HTML pages under `tools/` are automatically tagged during deployment.
+- Event names and allowed parameters are defined in `ANALYTICS.md`.
 
 ## Security Notes
 
@@ -63,3 +65,4 @@ Google Tag Manager uses container `GTM-W3MF6BSN`.
 - `DEPLOYMENT.md`
 - `SECURITY.md`
 - `WORK_LOG.md`
+- `ANALYTICS.md`
