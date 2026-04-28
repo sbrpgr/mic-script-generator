@@ -2949,6 +2949,15 @@ body.tool-mode .markdown-toolbar button::before {
   min-width: 0;
 }
 
+.quick-tool-item {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  color: #172033;
+  text-align: center;
+  text-decoration: none;
+}
+
 .quick-tool-icon,
 .quick-tool-arrow {
   width: 100%;
@@ -2963,9 +2972,6 @@ body.tool-mode .markdown-toolbar button::before {
   border: 1px solid #e3e8f0;
   background: #f8fafc;
   color: #172033;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 800;
   transition:
     transform 0.16s ease,
     border-color 0.16s ease,
@@ -2973,11 +2979,35 @@ body.tool-mode .markdown-toolbar button::before {
     background 0.16s ease;
 }
 
-.quick-tool-icon:hover {
+.quick-tool-symbol {
+  display: grid;
+  place-items: center;
+  line-height: 1;
+  font-size: 1.16rem;
+  font-weight: 800;
+}
+
+.quick-tool-label {
+  display: block;
+  min-width: 0;
+  color: #4b5565;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quick-tool-item:hover .quick-tool-icon {
   transform: translateY(-1px);
   border-color: rgba(229, 50, 45, 0.3);
   background: #fff6f5;
   box-shadow: 0 10px 20px rgba(23, 27, 38, 0.08);
+}
+
+.quick-tool-item:hover .quick-tool-label {
+  color: #172033;
 }
 
 .quick-tool-arrow {
@@ -3174,6 +3204,10 @@ body.tool-mode .subtitle-textarea {
   .quick-tool-icons {
     grid-template-columns: repeat(5, minmax(34px, 1fr));
     gap: 6px;
+  }
+
+  .quick-tool-label {
+    font-size: 0.68rem;
   }
 
   .quick-tool-head {

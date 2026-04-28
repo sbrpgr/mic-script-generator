@@ -3793,8 +3793,11 @@ function renderQuickToolIcon(tool) {
   };
 
   return `
-    <a class="quick-tool-icon" href="${tool.path}" data-tone="${escapeHtml(visual.tone)}" title="${escapeHtml(tool.title)}" aria-label="${escapeHtml(tool.title)} 열기">
-      <span aria-hidden="true">${escapeHtml(visual.icon)}</span>
+    <a class="quick-tool-item" href="${tool.path}" data-tone="${escapeHtml(visual.tone)}" title="${escapeHtml(tool.title)}" aria-label="${escapeHtml(tool.title)} 열기">
+      <span class="quick-tool-icon" aria-hidden="true">
+        <span class="quick-tool-symbol">${escapeHtml(visual.icon)}</span>
+      </span>
+      <span class="quick-tool-label">${escapeHtml(tool.title)}</span>
     </a>
   `;
 }
