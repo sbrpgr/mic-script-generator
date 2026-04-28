@@ -2571,3 +2571,210 @@ body.tool-mode .mode-btn {
     padding: 16px;
   }
 }
+
+/* Interaction polish: quieter panels, clearer controls */
+.tool-seo-panel {
+  display: none;
+}
+
+body.tool-mode .workspace-panel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.98));
+}
+
+body.tool-mode .editor-card,
+body.tool-mode .result-card,
+body.tool-mode .input-card,
+body.tool-mode .action-card,
+body.tool-mode .stats-card,
+body.tool-mode .preview-card,
+body.tool-mode .upload-card {
+  border-color: #e1e7f0;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 10px 26px rgba(26, 31, 43, 0.045);
+}
+
+body.tool-mode .section-heading {
+  min-height: 44px;
+}
+
+body.tool-mode button,
+body.tool-mode label.secondary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 8px;
+  letter-spacing: 0;
+  transition:
+    background-color 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    color 0.16s ease,
+    transform 0.16s ease;
+}
+
+body.tool-mode button:not(.primary-action),
+body.tool-mode label.secondary-action {
+  border-color: #dce3ed;
+  background: #ffffff;
+  color: #313947;
+  box-shadow: 0 1px 2px rgba(26, 31, 43, 0.04);
+}
+
+body.tool-mode button:not(.primary-action):hover:not(:disabled),
+body.tool-mode label.secondary-action:hover {
+  border-color: #cbd5e2;
+  background: #f7f9fc;
+  box-shadow: 0 8px 18px rgba(26, 31, 43, 0.08);
+  transform: translateY(-1px);
+}
+
+body.tool-mode .primary-action {
+  border-color: #d82f2a;
+  background: linear-gradient(180deg, #f0443f 0%, #d92f2a 100%);
+  color: #ffffff;
+  box-shadow: 0 10px 18px rgba(229, 50, 45, 0.18);
+}
+
+body.tool-mode .primary-action:hover:not(:disabled) {
+  border-color: #c72722;
+  background: linear-gradient(180deg, #e53934 0%, #c92722 100%);
+  box-shadow: 0 12px 22px rgba(229, 50, 45, 0.24);
+  transform: translateY(-1px);
+}
+
+body.tool-mode button::before,
+body.tool-mode label.secondary-action::before {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+body.tool-mode button:not(.primary-action)::before,
+body.tool-mode label.secondary-action::before {
+  background: #eef2f7;
+  color: #566173;
+}
+
+body.tool-mode .primary-action::before {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+body.tool-mode .primary-action::before {
+  content: "→";
+}
+
+body.tool-mode #startBtn::before {
+  content: "●";
+}
+
+body.tool-mode #pauseBtn::before {
+  content: "Ⅱ";
+}
+
+body.tool-mode #stopBtn::before {
+  content: "■";
+}
+
+body.tool-mode #clearBtn::before {
+  content: "↺";
+}
+
+body.tool-mode #copyBtn::before,
+body.tool-mode .copy-block::before {
+  content: "⧉";
+}
+
+body.tool-mode #downloadBtn::before,
+body.tool-mode #downloadAllBtn::before {
+  content: "↓";
+}
+
+body.tool-mode #cleanBtn::before {
+  content: "✓";
+}
+
+body.tool-mode #runBtn::before {
+  content: "↔";
+}
+
+body.tool-mode #extractBtn::before {
+  content: "@";
+}
+
+body.tool-mode #makeBtn::before,
+body.tool-mode #makeScriptBtn::before {
+  content: "+";
+}
+
+body.tool-mode #applyBtn::before,
+body.tool-mode #convertBtn::before {
+  content: "↗";
+}
+
+body.tool-mode #compressBtn::before {
+  content: "−";
+}
+
+body.tool-mode #mergeBtn::before {
+  content: "∪";
+}
+
+body.tool-mode #splitBtn::before {
+  content: "÷";
+}
+
+body.tool-mode #shiftBtn::before {
+  content: "↔";
+}
+
+body.tool-mode #renderBtn::before {
+  content: "□";
+}
+
+body.tool-mode label.secondary-action::before {
+  content: "↑";
+}
+
+body.tool-mode .mode-btn::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #98a2b3;
+}
+
+body.tool-mode .mode-btn:hover::before {
+  background: var(--primary);
+}
+
+body.tool-mode .check-item {
+  box-shadow: 0 1px 2px rgba(26, 31, 43, 0.03);
+}
+
+body.tool-mode .check-item:hover {
+  border-color: #d4dce8;
+  background: #fbfcff;
+}
+
+body.tool-mode .field label,
+body.tool-mode .sidebar-search label {
+  color: #3d4654;
+}
+
+body.tool-mode .upload-box label {
+  font-size: 1rem;
+}
+
+body.tool-mode .toast button::before,
+body.tool-mode .help-close::before {
+  content: none;
+}
