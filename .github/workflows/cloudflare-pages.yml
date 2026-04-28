@@ -62,7 +62,14 @@ jobs:
           async function main() {
             const domainsUrl = `https://api.cloudflare.com/client/v4/accounts/${accountId}/pages/projects/${projectName}/domains`;
             const existing = await cloudflare(domainsUrl);
-            const existingNames = new Set((Array.isArray(existing) ? existing : []).map((domain) => domain.name));
+            const pageDomains = Array.isArray(existing) ? existing : [];
+            const existingNames = new Set(pageDomains.map((domain) => domain.name));
+            console.log(JSON.stringify(pageDomains.map((domain) => ({
+              name: domain.name,
+              status: domain.status,
+              zone_tag: domain.zone_tag,
+              zone_id: domain.zone_id,
+            }))));
 
             for (const name of domains) {
               if (existingNames.has(name)) {
@@ -76,14 +83,30 @@ jobs:
               console.log(`${name} attached`);
             }
 
-            const zones = await cloudflare(`https://api.cloudflare.com/client/v4/zones?name=${encodeURIComponent(zoneName)}`);
-            const zone = Array.isArray(zones) ? zones[0] : null;
-            if (!zone?.id) {
-              throw new Error(`Cloudflare zone not found: ${zoneName}`);
+            try {
+              await ensureWwwDns(pageDomains);
+            } catch (error) {
+              console.warn(`DNS automation skipped: ${error.message}`);
             }
+          }
 
+          async function ensureWwwDns(pageDomains) {
             const recordName = `www.${zoneName}`;
             const target = `${projectName}.pages.dev`;
+            const pageDomainZoneId = pageDomains
+              .map((domain) => domain.zone_tag || domain.zone_id || domain.zoneId)
+              .find(Boolean);
+            let zone = pageDomainZoneId ? { id: pageDomainZoneId } : null;
+
+            if (!zone) {
+              const zones = await cloudflare(`https://api.cloudflare.com/client/v4/zones?name=${encodeURIComponent(zoneName)}`);
+              zone = Array.isArray(zones) ? zones[0] : null;
+            }
+
+            if (!zone?.id) {
+              throw new Error(`Cloudflare zone not found or token cannot read zones: ${zoneName}`);
+            }
+
             const dnsUrl = `https://api.cloudflare.com/client/v4/zones/${zone.id}/dns_records`;
             const records = await cloudflare(`${dnsUrl}?name=${encodeURIComponent(recordName)}`);
             const cname = (Array.isArray(records) ? records : []).find((record) => record.type === "CNAME");
