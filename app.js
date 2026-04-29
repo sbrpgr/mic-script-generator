@@ -6464,8 +6464,35 @@ function shouldIncludeSupportContact(message) {
   return SUPPORT_ERROR_PATTERNS.some((pattern) => pattern.test(message));
 }
 
-function handleGlobalAppError() {
+function handleGlobalAppError(event) {
+  if (shouldIgnoreGlobalAppError(event)) {
+    event?.preventDefault?.();
+    return;
+  }
   showToast(`예상하지 못한 오류가 발생했습니다. ${SUPPORT_CONTACT_MESSAGE}`);
+}
+
+function shouldIgnoreGlobalAppError(event) {
+  if (!event) return false;
+
+  if (event.type === "unhandledrejection" && event.reason === undefined) {
+    return true;
+  }
+
+  const sourceUrl = event.filename || event.reason?.fileName || event.reason?.sourceURL || "";
+  const message = String(event.message || event.reason?.message || event.reason || "");
+  if (/adsbygoogle|googlesyndication|doubleclick|pagead/i.test(`${sourceUrl} ${message}`)) {
+    return true;
+  }
+
+  if (!sourceUrl) return false;
+
+  try {
+    const source = new URL(sourceUrl, window.location.href);
+    return source.origin !== window.location.origin;
+  } catch {
+    return false;
+  }
 }
 
 function handleSelectionPointerDown(event) {
