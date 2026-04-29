@@ -263,7 +263,7 @@ const TOOL_DEFS = [
       "브라우저에서 이미지 크기를 픽셀 단위로 조절하고 결과 이미지를 바로 저장합니다.",
     keywords: ["리사이즈", "사진", "픽셀", "크기"],
     guide: [
-      { title: "이미지 업로드", text: "JPG, PNG, WEBP 이미지를 선택합니다." },
+      { title: "이미지 업로드", text: "JPG, PNG, WEBP 이미지를 선택하거나 업로드 영역에 끌어다 놓습니다." },
       { title: "가로세로 지정", text: "원하는 크기를 입력하고 비율 유지 여부를 고릅니다." },
       { title: "미리보기 저장", text: "결과 이미지를 확인한 뒤 저장합니다." },
     ],
@@ -280,7 +280,7 @@ const TOOL_DEFS = [
       "JPG, PNG, WEBP 이미지를 원하는 형식으로 브라우저에서 변환하는 무료 도구입니다.",
     keywords: ["JPG", "PNG", "WEBP", "변환"],
     guide: [
-      { title: "원본 선택", text: "변환할 이미지를 업로드합니다." },
+      { title: "원본 선택", text: "변환할 이미지를 선택하거나 업로드 영역에 끌어다 놓습니다." },
       { title: "형식 지정", text: "대상 형식과 품질 값을 선택합니다." },
       { title: "변환 저장", text: "미리보기와 파일 크기를 확인하고 결과 파일을 저장합니다." },
     ],
@@ -297,7 +297,7 @@ const TOOL_DEFS = [
       "브라우저에서 JPG, PNG, WEBP 이미지 용량을 줄이고 압축 결과를 바로 내려받는 도구입니다.",
     keywords: ["압축", "용량", "사진", "업로드"],
     guide: [
-      { title: "이미지 업로드", text: "메일 첨부, 웹 업로드, 제출용으로 줄일 JPG, PNG, WEBP 이미지를 선택합니다." },
+      { title: "이미지 업로드", text: "메일 첨부, 웹 업로드, 제출용으로 줄일 이미지를 선택하거나 업로드 영역에 끌어다 놓습니다." },
       { title: "용량과 품질 조정", text: "품질과 최대 너비를 조절하면서 파일 크기 변화를 확인합니다." },
       { title: "압축본 저장", text: "원본은 그대로 두고 브라우저에서 생성된 압축 이미지만 내려받습니다." },
     ],
@@ -332,7 +332,7 @@ const TOOL_DEFS = [
       "브라우저에서 여러 PDF 파일을 하나로 병합하는 무료 도구입니다. 업로드 파일은 서버에 저장하지 않습니다.",
     keywords: ["PDF", "병합", "합치기", "문서"],
     guide: [
-      { title: "PDF 선택", text: "견적서, 계약서, 첨부자료처럼 하나로 묶을 PDF 파일을 순서대로 선택합니다." },
+      { title: "PDF 선택", text: "견적서, 계약서, 첨부자료처럼 하나로 묶을 PDF 파일을 선택하거나 업로드 영역에 끌어다 놓습니다." },
       { title: "순서 확인", text: "업로드된 파일 순서를 확인한 뒤 병합을 실행합니다." },
       { title: "결과 저장", text: "브라우저 안에서 만들어진 병합 PDF를 바로 내려받습니다." },
     ],
@@ -349,7 +349,7 @@ const TOOL_DEFS = [
       "브라우저에서 PDF를 페이지 수 기준으로 여러 파일로 분할하는 도구입니다.",
     keywords: ["PDF", "분할", "나누기", "페이지"],
     guide: [
-      { title: "파일 업로드", text: "분할할 PDF 파일 한 개를 선택합니다." },
+      { title: "파일 업로드", text: "분할할 PDF 파일 한 개를 선택하거나 업로드 영역에 끌어다 놓습니다." },
       { title: "기준 입력", text: "몇 페이지마다 새 파일을 만들지 지정합니다." },
       { title: "순차 다운로드", text: "분할된 PDF가 브라우저 다운로드로 순차 저장됩니다." },
     ],
@@ -366,7 +366,7 @@ const TOOL_DEFS = [
       "PDF에서 필요한 페이지 범위만 추출해 별도 파일로 저장하는 브라우저 도구입니다.",
     keywords: ["PDF", "추출", "범위", "특정 페이지"],
     guide: [
-      { title: "파일 선택", text: "원본 PDF를 업로드합니다." },
+      { title: "파일 선택", text: "원본 PDF를 선택하거나 업로드 영역에 끌어다 놓습니다." },
       { title: "범위 입력", text: "예: 1-3,5,9 같은 형식으로 추출할 페이지를 입력합니다." },
       { title: "새 파일 저장", text: "선택한 페이지로 구성된 새 PDF를 저장합니다." },
     ],
@@ -383,7 +383,7 @@ const TOOL_DEFS = [
       "브라우저에서 이미지 여러 장을 PDF로 변환하는 무료 도구입니다.",
     keywords: ["JPG PDF", "PNG PDF", "사진", "문서"],
     guide: [
-      { title: "이미지 업로드", text: "PDF로 묶을 이미지를 여러 장 선택합니다." },
+      { title: "이미지 업로드", text: "PDF로 묶을 이미지를 여러 장 선택하거나 업로드 영역에 끌어다 놓습니다." },
       { title: "순서 확인", text: "선택한 순서대로 페이지가 만들어집니다." },
       { title: "PDF 생성", text: "결과 PDF를 브라우저에서 바로 내려받습니다." },
     ],
@@ -400,7 +400,7 @@ const TOOL_DEFS = [
       "브라우저에서 PDF 페이지를 이미지로 렌더링하고 PNG 파일로 저장하는 도구입니다.",
     keywords: ["PDF PNG", "PDF 이미지", "렌더링", "페이지"],
     guide: [
-      { title: "PDF 업로드", text: "이미지로 바꿀 PDF를 한 개 선택합니다." },
+      { title: "PDF 업로드", text: "이미지로 바꿀 PDF를 선택하거나 업로드 영역에 끌어다 놓습니다." },
       { title: "배율 조정", text: "렌더링 배율을 조정해 선명도를 맞춥니다." },
       { title: "페이지별 저장", text: "페이지마다 생성된 PNG를 원하는 것만 저장합니다." },
     ],
@@ -782,7 +782,7 @@ const CATEGORY_PAGE_DEFS = [
     keywords: ["PDF 합치기", "PDF 분할", "PDF 페이지 추출", "PDF 변환"],
     categories: ["PDF"],
     guide: [
-      { title: "파일 선택", text: "처리할 PDF나 이미지를 브라우저에서 선택합니다." },
+      { title: "파일 선택", text: "처리할 PDF나 이미지를 선택하거나 업로드 영역에 끌어다 놓습니다." },
       { title: "옵션 설정", text: "합치기, 분할 기준, 페이지 범위, 변환 형식을 지정합니다." },
       { title: "파일 저장", text: "완성된 결과 파일을 PC에 다운로드합니다." },
     ],
@@ -798,7 +798,7 @@ const CATEGORY_PAGE_DEFS = [
     keywords: ["이미지 크기 조절", "이미지 변환", "이미지 압축", "EXIF 제거", "QR 코드"],
     categories: ["이미지"],
     guide: [
-      { title: "이미지 선택", text: "사진, 캡처, 웹 업로드용 이미지를 선택합니다." },
+      { title: "이미지 선택", text: "사진, 캡처, 웹 업로드용 이미지를 선택하거나 업로드 영역에 끌어다 놓습니다." },
       { title: "작업 적용", text: "크기, 형식, 품질, EXIF 제거, QR 생성 또는 QR 판독을 업무 목적에 맞게 처리합니다." },
       { title: "결과 다운로드", text: "브라우저에서 처리된 결과물을 바로 저장합니다." },
     ],
@@ -4214,7 +4214,7 @@ function renderImageResizer(container) {
           <div class="upload-box">
             <label for="imageFile">이미지 업로드</label>
             <input id="imageFile" type="file" accept="image/*" />
-            <p>JPG, PNG, WEBP 이미지를 선택합니다.</p>
+            <p>JPG, PNG, WEBP 이미지를 선택하거나 이 영역에 끌어다 놓으세요.</p>
           </div>
           <div class="field-row">
             <div class="field"><label for="resizeWidth">가로</label><input id="resizeWidth" type="number" min="1" /></div>
@@ -4300,7 +4300,7 @@ function renderImageConverter(container) {
           <div class="upload-box">
             <label for="imageFile">이미지 업로드</label>
             <input id="imageFile" type="file" accept="image/*" />
-            <p>원본 이미지를 선택한 뒤 변환 형식을 고릅니다.</p>
+            <p>원본 이미지를 선택하거나 이 영역에 끌어다 놓은 뒤 변환 형식을 고릅니다.</p>
           </div>
           <div class="field-row">
             <div class="field">
@@ -4390,7 +4390,7 @@ function renderImageCompressor(container) {
           <div class="upload-box">
             <label for="imageFile">이미지 업로드</label>
             <input id="imageFile" type="file" accept="image/*" />
-            <p>업로드용으로 줄일 이미지를 선택합니다.</p>
+            <p>업로드용으로 줄일 이미지를 선택하거나 이 영역에 끌어다 놓으세요.</p>
           </div>
           <div class="field-row">
             <div class="field"><label for="quality">품질</label><input id="quality" type="range" min="0.3" max="1" step="0.05" value="0.75" /></div>
@@ -4605,7 +4605,7 @@ function renderPdfMerge(container) {
         <div class="upload-box">
           <label for="pdfFiles">PDF 여러 개 선택</label>
           <input id="pdfFiles" type="file" accept="application/pdf" multiple />
-          <p>선택한 순서대로 병합됩니다.</p>
+          <p>PDF 파일을 선택하거나 이 영역에 끌어다 놓으면 선택한 순서대로 병합됩니다.</p>
         </div>
         <div id="fileList" class="file-list"></div>
         <div class="action-row">
@@ -4663,7 +4663,7 @@ function renderPdfSplit(container) {
         <div class="upload-box">
           <label for="pdfFile">PDF 선택</label>
           <input id="pdfFile" type="file" accept="application/pdf" />
-          <p>페이지 수 기준으로 여러 PDF로 나눕니다.</p>
+          <p>PDF 파일을 선택하거나 이 영역에 끌어다 놓은 뒤 페이지 수 기준으로 나눕니다.</p>
         </div>
         <div class="field-row">
           <div class="field"><label for="pagesPerFile">파일당 페이지 수</label><input id="pagesPerFile" type="number" min="1" value="1" /></div>
@@ -4723,7 +4723,7 @@ function renderPdfExtractPages(container) {
         <div class="upload-box">
           <label for="pdfFile">PDF 선택</label>
           <input id="pdfFile" type="file" accept="application/pdf" />
-          <p>예: 1-3,5,8 같은 형식으로 필요한 페이지를 추출합니다.</p>
+          <p>PDF 파일을 선택하거나 이 영역에 끌어다 놓은 뒤 예: 1-3,5,8 형식으로 필요한 페이지를 추출합니다.</p>
         </div>
         <div class="field-row">
           <div class="field"><label for="pageRanges">페이지 범위</label><input id="pageRanges" type="text" placeholder="1-3,5" /></div>
@@ -4777,7 +4777,7 @@ function renderImageToPdf(container) {
         <div class="upload-box">
           <label for="imageFiles">이미지 여러 장 선택</label>
           <input id="imageFiles" type="file" accept="image/*" multiple />
-          <p>선택한 이미지 순서대로 PDF 페이지를 만듭니다.</p>
+          <p>이미지를 선택하거나 이 영역에 끌어다 놓으면 선택한 순서대로 PDF 페이지를 만듭니다.</p>
         </div>
         <div id="fileList" class="file-list"></div>
         <div class="action-row">
@@ -4845,7 +4845,7 @@ function renderPdfToImage(container) {
         <div class="upload-box">
           <label for="pdfFile">PDF 선택</label>
           <input id="pdfFile" type="file" accept="application/pdf" />
-          <p>페이지를 PNG로 렌더링합니다.</p>
+          <p>PDF 파일을 선택하거나 이 영역에 끌어다 놓으면 페이지를 PNG로 렌더링합니다.</p>
         </div>
         <div class="field">
           <label for="renderScale">렌더링 배율</label>
