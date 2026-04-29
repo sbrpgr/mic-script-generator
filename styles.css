@@ -1625,12 +1625,13 @@ body.home-mode .tool-workspace {
   right: 16px;
   bottom: 16px;
   z-index: 20;
-  max-width: min(360px, calc(100vw - 32px));
+  max-width: min(520px, calc(100vw - 32px));
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #16201d;
   color: #ffffff;
   box-shadow: var(--shadow);
+  line-height: 1.55;
   padding: 12px 14px;
   font-weight: 800;
 }

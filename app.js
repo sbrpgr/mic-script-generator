@@ -6,6 +6,25 @@ const BRAND_NAME_EN = "ko-workspace";
 const BRAND_DISPLAY_NAME = `${BRAND_NAME} (${BRAND_NAME_EN})`;
 const BRAND_DESCRIPTION =
   "코워크스페이스(ko-workspace)는 로그인 없이 브라우저에서 바로 실행되는 텍스트, 이미지, PDF, 자막, 음성, 영상 업무 도구 모음입니다.";
+const SUPPORT_EMAIL = "dayway.ict@gmail.com";
+const SUPPORT_CONTACT_MESSAGE = `문제가 계속되면 ${SUPPORT_EMAIL}으로 연락해 주세요.`;
+const SUPPORT_ERROR_PATTERNS = [
+  /오류/,
+  /실패/,
+  /못했습니다/,
+  /완료하지 못/,
+  /만들지 못/,
+  /읽지 못/,
+  /불러오지 못/,
+  /찾지 못/,
+  /시작하지 못/,
+  /지원하지 않습니다/,
+  /미지원/,
+  /허용하지 않았습니다/,
+  /허용해야/,
+  /차단되었습니다/,
+  /차단되어/,
+];
 
 const TOOL_DEFS = [
   {
@@ -893,6 +912,8 @@ function bindGlobalEvents() {
   document.addEventListener("click", handleAnalyticsClick, true);
   window.addEventListener("scroll", hideSelectionCopyButton, true);
   window.addEventListener("resize", hideSelectionCopyButton);
+  window.addEventListener("error", handleGlobalAppError);
+  window.addEventListener("unhandledrejection", handleGlobalAppError);
 }
 
 function openHelpDialog() {
@@ -5936,9 +5957,24 @@ function showToast(message) {
   if (existing) existing.remove();
   const toast = document.createElement("div");
   toast.className = "toast";
-  toast.textContent = message;
+  const notice = formatUserNotice(message);
+  toast.textContent = notice;
   document.body.appendChild(toast);
-  window.setTimeout(() => toast.remove(), 3200);
+  window.setTimeout(() => toast.remove(), notice.includes(SUPPORT_EMAIL) ? 6400 : 3200);
+}
+
+function formatUserNotice(message) {
+  const text = String(message || "").trim();
+  if (!text || text.includes(SUPPORT_EMAIL)) return text;
+  return shouldIncludeSupportContact(text) ? `${text} ${SUPPORT_CONTACT_MESSAGE}` : text;
+}
+
+function shouldIncludeSupportContact(message) {
+  return SUPPORT_ERROR_PATTERNS.some((pattern) => pattern.test(message));
+}
+
+function handleGlobalAppError() {
+  showToast(`예상하지 못한 오류가 발생했습니다. ${SUPPORT_CONTACT_MESSAGE}`);
 }
 
 function handleSelectionPointerDown(event) {

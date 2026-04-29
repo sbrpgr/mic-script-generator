@@ -25,6 +25,7 @@ function main() {
     ...auditToolPages(),
     ...auditCategoryPages(),
     ...auditLibraryCsp(),
+    ...auditSupportContact(),
   ];
 
   if (problems.length) {
@@ -149,6 +150,26 @@ function auditLibraryCsp() {
     if (!headers.includes(origin)) {
       problems.push(`_headers: CSP does not allow ${origin}`);
     }
+  }
+
+  return problems;
+}
+
+function auditSupportContact() {
+  const problems = [];
+  const app = read(path.join(ROOT, "app.js"));
+  const playbook = read(path.join(ROOT, "CHANGE_PLAYBOOK.md"));
+
+  if (!app.includes("dayway.ict@gmail.com")) {
+    problems.push("app.js: missing user-facing support email");
+  }
+
+  if (!app.includes("SUPPORT_ERROR_PATTERNS") || !app.includes("formatUserNotice")) {
+    problems.push("app.js: missing support contact error notice helpers");
+  }
+
+  if (!playbook.includes("dayway.ict@gmail.com")) {
+    problems.push("CHANGE_PLAYBOOK.md: missing support email guidance");
   }
 
   return problems;
