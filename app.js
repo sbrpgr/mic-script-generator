@@ -3880,13 +3880,7 @@ function renderQrLinkExtractor(container) {
     await loadQrImage(file);
   });
 
-  container.addEventListener("paste", async (event) => {
-    const item = Array.from(event.clipboardData?.items || []).find((entry) => entry.type.startsWith("image/"));
-    if (!item) return;
-    event.preventDefault();
-    const file = item.getAsFile();
-    if (file) await loadQrImage(file);
-  });
+  document.addEventListener("paste", handleQrPaste);
 
   container.querySelector("#readQrBtn").addEventListener("click", async () => {
     if (!state.image) {
@@ -3942,6 +3936,19 @@ function renderQrLinkExtractor(container) {
       status.textContent = "이미지를 불러오지 못했습니다. 다른 캡처 이미지로 다시 시도해 주세요.";
       showToast("QR 이미지를 읽지 못했습니다.");
     }
+  }
+
+  async function handleQrPaste(event) {
+    if (!container.isConnected || getActiveTool()?.id !== "qr-link-extractor") {
+      document.removeEventListener("paste", handleQrPaste);
+      return;
+    }
+
+    const file = getClipboardImageFile(event.clipboardData);
+    if (!file) return;
+
+    event.preventDefault();
+    await loadQrImage(file);
   }
 
   async function decodeCurrentQr() {
@@ -5406,6 +5413,16 @@ function buildQrPayload(container, mode) {
 
   const value = container.querySelector("#qrText").value.trim();
   return value;
+}
+
+function getClipboardImageFile(clipboardData) {
+  if (!clipboardData) return null;
+
+  const file = Array.from(clipboardData.files || []).find((item) => item.type.startsWith("image/"));
+  if (file) return file;
+
+  const imageItem = Array.from(clipboardData.items || []).find((item) => item.type.startsWith("image/"));
+  return imageItem?.getAsFile() || null;
 }
 
 function analyzeQrContent(value) {

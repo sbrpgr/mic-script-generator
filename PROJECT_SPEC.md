@@ -14,7 +14,7 @@ Current production baseline:
 - Production domain: `https://ko-workspace.com/`
 - Cloudflare Pages project: `mic-script-generator`
 - Latest AdSense/SEO readiness commit: `580c060 Improve AdSense SEO readiness`
-- Current static asset cache version: `20260429-17`
+- Current static asset cache version: `20260429-18`
 - Category landing pages, privacy policy updates, sitemap updates, and core FAQ copy were deployed on 2026-04-29
 
 Core constraints:
@@ -215,6 +215,8 @@ Before committing or deploying broad platform changes:
 - For privacy changes, verify production `/privacy` contains the updated Google advertising/cookie language
 
 ## Open Source Fallback Rule
+
+For feature additions, removals, analytics, ads, SEO, privacy, and deployment hygiene, follow `CHANGE_PLAYBOOK.md`. Keep `npm.cmd run check` green before committing because it runs the automated project audit.
 
 When a browser-side feature fails functional testing, do not keep expanding fragile custom code by default. First check whether a mature open-source browser library can solve the failing area with less risk.
 

@@ -3,8 +3,9 @@
   "private": true,
   "scripts": {
     "apply:site-tags": "node scripts/site-tags.js",
+    "audit": "node scripts/project-audit.js",
     "check:site-tags": "node scripts/site-tags.js --check",
-    "check": "node --check app.js && node --check scripts/site-tags.js && npm run check:site-tags"
+    "check": "node --check app.js && node --check scripts/site-tags.js && node --check scripts/project-audit.js && npm run check:site-tags && npm run audit"
   },
   "devDependencies": {}
 }
