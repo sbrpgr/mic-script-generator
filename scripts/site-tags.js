@@ -4,20 +4,8 @@ const path = require("node:path");
 const childProcess = require("node:child_process");
 
 const ROOT = path.resolve(__dirname, "..");
-const GTM_ID = "GTM-W3MF6BSN";
 const GA4_ID = "G-8S4R46L9Q0";
 const CHECK_ONLY = process.argv.includes("--check");
-
-const GTM_SCRIPT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${GTM_ID}');`;
-
-const GTM_HEAD = `    <!-- Google Tag Manager -->
-    <script>${GTM_SCRIPT}</script>
-    <!-- End Google Tag Manager -->
-`;
 
 const GTAG_SCRIPT = `window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -31,24 +19,13 @@ const GTAG_HEAD = `    <!-- Google tag (gtag.js) -->
     <!-- End Google tag (gtag.js) -->
 `;
 
-const MANAGED_HEAD = `${GTM_HEAD}${GTAG_HEAD}`;
-
-const GTM_BODY = `    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_ID}"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-`;
-
 const HEAD_BLOCK_RE = /[ \t]*<!-- Google Tag Manager -->\r?\n[ \t]*<script>[\s\S]*?<\/script>\r?\n[ \t]*<!-- End Google Tag Manager -->\r?\n/;
 const GTAG_BLOCK_RE = /[ \t]*<!-- Google tag \(gtag\.js\) -->\r?\n[ \t]*<script async src="https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=[^"]+"><\/script>\r?\n[ \t]*<script>[\s\S]*?<\/script>\r?\n[ \t]*<!-- End Google tag \(gtag\.js\) -->\r?\n/;
 const BODY_BLOCK_RE = /[ \t]*<!-- Google Tag Manager \(noscript\) -->\r?\n[ \t]*<noscript>[\s\S]*?<\/noscript>\r?\n[ \t]*<!-- End Google Tag Manager \(noscript\) -->\r?\n/;
-const HEAD_POSITION_RE = /<head>\s*<!-- Google Tag Manager -->[\s\S]*?<!-- Google tag \(gtag\.js\) -->/;
-const BODY_POSITION_RE = /<body[^>]*>\s*<!-- Google Tag Manager \(noscript\) -->/;
+const HEAD_POSITION_RE = /<head>\s*<!-- Google tag \(gtag\.js\) -->/;
 
-const GTM_HASH = `sha256-${crypto.createHash("sha256").update(GTM_SCRIPT).digest("base64")}`;
 const GTAG_HASH = `sha256-${crypto.createHash("sha256").update(GTAG_SCRIPT).digest("base64")}`;
 const REQUIRED_SCRIPT_SOURCES = [
-  `'${GTM_HASH}'`,
   `'${GTAG_HASH}'`,
   "https://www.googletagmanager.com",
   "https://www.google-analytics.com",
@@ -142,19 +119,12 @@ function ensureHtmlTags(file) {
 
   next = next.replace(HEAD_BLOCK_RE, "");
   next = next.replace(GTAG_BLOCK_RE, "");
-  next = next.replace(/<head>\r?\n/, (match) => `${match}${MANAGED_HEAD}`);
-
-  if (BODY_BLOCK_RE.test(next)) {
-    next = next.replace(BODY_BLOCK_RE, GTM_BODY);
-  } else {
-    next = next.replace(/<body[^>]*>\r?\n/, (match) => `${match}${GTM_BODY}`);
-  }
+  next = next.replace(BODY_BLOCK_RE, "");
+  next = next.replace(/<head>\r?\n/, (match) => `${match}${GTAG_HEAD}`);
 
   const problems = [];
-  if (!next.includes(GTM_ID)) problems.push(`${relative}: missing ${GTM_ID}`);
   if (!next.includes(GA4_ID)) problems.push(`${relative}: missing ${GA4_ID}`);
-  if (!HEAD_POSITION_RE.test(next)) problems.push(`${relative}: managed head tags are not directly after <head>`);
-  if (!BODY_POSITION_RE.test(next)) problems.push(`${relative}: GTM noscript is not directly after <body>`);
+  if (!HEAD_POSITION_RE.test(next)) problems.push(`${relative}: Google tag is not directly after <head>`);
 
   const changes = [];
   if (next !== original) {
