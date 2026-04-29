@@ -62,6 +62,7 @@ Google Tag Manager uses container `GTM-W3MF6BSN`.
 
 ## Related Docs
 
+- `AGENT_OPERATING_SPEC.md`
 - `ROADMAP.md`
 - `PROJECT_SPEC.md`
 - `DEPLOYMENT.md`
