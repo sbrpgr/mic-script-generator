@@ -14,7 +14,7 @@ Current production baseline:
 - Production domain: `https://ko-workspace.com/`
 - Cloudflare Pages project: `mic-script-generator`
 - Latest AdSense/SEO readiness commit: `580c060 Improve AdSense SEO readiness`
-- Current static asset cache version: `20260429-20`
+- Current static asset cache version: `20260429-21`
 - Category landing pages, privacy policy updates, sitemap updates, and core FAQ copy were deployed on 2026-04-29
 
 Core constraints:
@@ -72,6 +72,10 @@ Core constraints:
 - `이미지 크기 조절`
 - `이미지 형식 변환`
 - `이미지 용량 압축`
+- `EXIF 메타데이터 제거`
+  - Browser-side removal for privacy-sensitive EXIF, XMP, IPTC, comment, and text metadata
+  - Supported formats: JPG/JPEG, PNG, and WEBP
+  - Files remain local and are not uploaded to an application server
 
 ### PDF
 
@@ -133,6 +137,7 @@ Important frontend implementation notes:
 - The current category pages intentionally hide the left tool sidebar and show a wider category tool grid.
 - When `app.js` or `styles.css` changes, bump the query-string cache version in every HTML entry and `site.webmanifest`.
 - Run `npm.cmd run apply:site-tags` after adding or changing HTML pages so GTM tags and CSP hashes remain managed.
+- File upload tools should support both direct file selection and drag-and-drop on `.upload-box` where browser APIs allow it.
 
 ## Deployment Model
 

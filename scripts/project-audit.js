@@ -26,6 +26,7 @@ function main() {
     ...auditCategoryPages(),
     ...auditLibraryCsp(),
     ...auditSupportContact(),
+    ...auditUploadDropSupport(),
   ];
 
   if (problems.length) {
@@ -170,6 +171,26 @@ function auditSupportContact() {
 
   if (!playbook.includes("dayway.ict@gmail.com")) {
     problems.push("CHANGE_PLAYBOOK.md: missing support email guidance");
+  }
+
+  return problems;
+}
+
+function auditUploadDropSupport() {
+  const problems = [];
+  const app = read(path.join(ROOT, "app.js"));
+  const playbook = read(path.join(ROOT, "CHANGE_PLAYBOOK.md"));
+
+  if (!app.includes("function bindUploadBoxDrops") || !app.includes("bindUploadBoxDrops(els.toolWorkspace)")) {
+    problems.push("app.js: missing shared upload-box drag-and-drop binding");
+  }
+
+  if (!app.includes("matchesFileAccept")) {
+    problems.push("app.js: missing upload drop accept validation");
+  }
+
+  if (!playbook.includes("드래그 앤 드롭")) {
+    problems.push("CHANGE_PLAYBOOK.md: missing upload drag-and-drop guidance");
   }
 
   return problems;

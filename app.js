@@ -303,6 +303,24 @@ const TOOL_DEFS = [
     ],
   },
   {
+    id: "exif-metadata-remover",
+    path: "/tools/exif-metadata-remover/",
+    category: "이미지",
+    title: "EXIF 메타데이터 제거",
+    summary:
+      "사진 파일에 남아 있는 위치정보, 촬영 기기, 편집 정보 같은 메타데이터를 브라우저 안에서 제거합니다.",
+    seoTitle: "EXIF 메타데이터 제거 | 사진 위치정보 삭제",
+    seoDescription:
+      "JPG, PNG, WEBP 이미지의 EXIF, XMP, IPTC 같은 개인정보성 메타데이터를 서버 업로드 없이 브라우저에서 제거하는 무료 도구입니다.",
+    keywords: ["EXIF 제거", "메타데이터 삭제", "사진 위치정보", "개인정보 보호"],
+    guide: [
+      { title: "사진 선택", text: "JPG, PNG, WEBP 이미지를 선택하거나 업로드 영역에 끌어다 놓습니다." },
+      { title: "메타데이터 확인", text: "파일 안에서 감지된 EXIF, XMP, IPTC, 텍스트 메타데이터 항목을 확인합니다." },
+      { title: "제거 실행", text: "브라우저 안에서 개인정보성 메타데이터 청크를 제거하고 결과 파일을 준비합니다." },
+      { title: "결과 저장", text: "정리된 이미지를 내려받아 블로그, 메신저, 제출 자료에 사용합니다." },
+    ],
+  },
+  {
     id: "pdf-merge",
     path: "/tools/pdf-merge/",
     category: "PDF",
@@ -459,6 +477,7 @@ const TOOL_VISUALS = {
   "image-resizer": { icon: "\u2194", tone: "orange", copy: "\uc0ac\uc9c4 \ud06c\uae30\ub97c \ud53d\uc140\uc774\ub098 \ube44\uc728\ub85c \uc870\uc808\ud569\ub2c8\ub2e4." },
   "image-converter": { icon: "\uD83D\uDDBC\uFE0F", tone: "pink", copy: "JPG, PNG, WEBP \ud615\uc2dd\uc744 \ubcc0\ud658\ud569\ub2c8\ub2e4." },
   "image-compressor": { icon: "\uD83D\uDDDC\uFE0F", tone: "yellow", copy: "\uc5c5\ub85c\ub4dc\uc6a9 \uc774\ubbf8\uc9c0 \uc6a9\ub7c9\uc744 \uc904\uc785\ub2c8\ub2e4." },
+  "exif-metadata-remover": { icon: "EX", tone: "emerald", copy: "\uc0ac\uc9c4\uc758 EXIF, XMP, IPTC \uba54\ud0c0\ub370\uc774\ud130\ub97c \uc81c\uac70\ud569\ub2c8\ub2e4." },
   "pdf-merge": { icon: "\uD83D\uDCCE", tone: "red", copy: "\uc5ec\ub7ec PDF\ub97c \ud558\ub098\uc758 \ubb38\uc11c\ub85c \ud569\uce69\ub2c8\ub2e4." },
   "pdf-split": { icon: "\u2702", tone: "blue", copy: "PDF\ub97c \ud398\uc774\uc9c0 \ub2e8\uc704\ub85c \ub098\ub215\ub2c8\ub2e4." },
   "pdf-extract-pages": { icon: "\uD83D\uDCC4", tone: "teal", copy: "\ud544\uc694\ud55c PDF \ud398\uc774\uc9c0\ub9cc \ucd94\ucd9c\ud569\ub2c8\ub2e4." },
@@ -538,6 +557,11 @@ const TOOL_USE_EXAMPLES = {
     "메일 첨부, 사이트 업로드, 공공기관 제출용 이미지 용량을 줄입니다.",
     "원본을 서버에 올리지 않고 브라우저에서 압축 결과를 확인합니다.",
     "쇼핑몰 상품 이미지나 블로그 삽입 이미지를 적당한 품질과 크기로 줄입니다.",
+  ],
+  "exif-metadata-remover": [
+    "블로그나 메신저에 사진을 공유하기 전에 GPS 위치정보와 촬영 기기 정보를 제거합니다.",
+    "업무 제출용 이미지에서 편집 프로그램, 작성자, 설명 같은 숨은 메타데이터를 정리합니다.",
+    "서버 업로드 없이 브라우저에서 파일 내부의 EXIF, XMP, IPTC 항목을 제거합니다.",
   ],
   "pdf-merge": [
     "여러 견적서, 계약서, 첨부문서를 하나의 PDF로 합칩니다.",
@@ -638,6 +662,10 @@ const TOOL_EXTRA_FAQS = {
   "image-compressor": {
     question: "압축하면 화질을 조정할 수 있나요?",
     answer: "네. 품질과 최대 너비를 조정해 용량과 화질의 균형을 맞출 수 있습니다. 결과 이미지는 브라우저에서 생성되며 원본 파일은 자체 서버에 저장하지 않습니다.",
+  },
+  "exif-metadata-remover": {
+    question: "사진 위치정보가 서버로 업로드되나요?",
+    answer: "아니요. JPG, PNG, WEBP 파일을 브라우저 안에서 읽고 개인정보성 메타데이터 청크를 제거합니다. 결과 파일을 내려받기 전까지 이미지와 메타데이터는 자체 서버로 전송되지 않습니다.",
   },
   "pdf-merge": {
     question: "PDF 파일은 서버로 업로드되나요?",
@@ -764,14 +792,14 @@ const CATEGORY_PAGE_DEFS = [
     path: "/tools/image/",
     title: "이미지 업무 도구",
     eyebrow: "Image Tools",
-    description: "이미지 크기 조절, 형식 변환, 용량 압축, QR 생성 작업을 브라우저 안에서 빠르게 처리합니다.",
+    description: "이미지 크기 조절, 형식 변환, 용량 압축, EXIF 제거, QR 생성 작업을 브라우저 안에서 빠르게 처리합니다.",
     metaDescription:
-      "코워크스페이스 이미지 업무 도구 모음입니다. 이미지 크기 조절, JPG PNG WEBP 변환, 이미지 압축, QR 코드 생성과 QR 링크 추출을 무료로 사용할 수 있습니다.",
-    keywords: ["이미지 크기 조절", "이미지 변환", "이미지 압축", "QR 코드", "QR 링크"],
+      "코워크스페이스 이미지 업무 도구 모음입니다. 이미지 크기 조절, JPG PNG WEBP 변환, 이미지 압축, EXIF 메타데이터 제거, QR 코드 생성과 QR 링크 추출을 무료로 사용할 수 있습니다.",
+    keywords: ["이미지 크기 조절", "이미지 변환", "이미지 압축", "EXIF 제거", "QR 코드"],
     categories: ["이미지"],
     guide: [
       { title: "이미지 선택", text: "사진, 캡처, 웹 업로드용 이미지를 선택합니다." },
-      { title: "작업 적용", text: "크기, 형식, 품질, QR 생성 또는 QR 판독을 업무 목적에 맞게 처리합니다." },
+      { title: "작업 적용", text: "크기, 형식, 품질, EXIF 제거, QR 생성 또는 QR 판독을 업무 목적에 맞게 처리합니다." },
       { title: "결과 다운로드", text: "브라우저에서 처리된 결과물을 바로 저장합니다." },
     ],
   },
@@ -1133,6 +1161,7 @@ function renderToolPage(tool) {
   }
 
   renderer(els.toolWorkspace);
+  bindUploadBoxDrops(els.toolWorkspace);
 }
 
 function setPageMode(mode) {
@@ -1563,6 +1592,7 @@ const TOOL_RENDERERS = {
   "image-resizer": renderImageResizer,
   "image-converter": renderImageConverter,
   "image-compressor": renderImageCompressor,
+  "exif-metadata-remover": renderExifMetadataRemover,
   "pdf-merge": renderPdfMerge,
   "pdf-split": renderPdfSplit,
   "pdf-extract-pages": renderPdfExtractPages,
@@ -4436,6 +4466,138 @@ function renderImageCompressor(container) {
   });
 }
 
+function renderExifMetadataRemover(container) {
+  container.innerHTML = `
+    <div class="tool-section">
+      <div class="tool-grid">
+        <aside class="action-card">
+          <div class="upload-box">
+            <label for="exifImageFile">사진 파일 선택</label>
+            <input id="exifImageFile" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" />
+            <p>JPG, PNG, WEBP 이미지를 선택하거나 이 영역에 끌어다 놓으세요.</p>
+          </div>
+          <div id="metadataList" class="file-list"></div>
+          <div class="action-row">
+            <button id="cleanBtn" class="primary-action" type="button" disabled>메타데이터 제거</button>
+            <button id="downloadBtn" type="button" disabled>정리된 이미지 저장</button>
+          </div>
+          <p id="status" class="tool-note">사진을 선택하면 감지 가능한 메타데이터 항목을 확인합니다.</p>
+          <p class="tool-note">이미지 내용은 서버로 전송되지 않습니다. 결과는 브라우저 안에서 만들어집니다.</p>
+        </aside>
+        <article class="preview-card">
+          <div class="section-heading">
+            <div>
+              <h2>미리보기</h2>
+              <p class="tool-note">현재 브라우저가 표시할 수 있는 이미지 기준으로 보여줍니다.</p>
+            </div>
+          </div>
+          <div class="canvas-frame"><canvas id="previewCanvas"></canvas></div>
+        </article>
+      </div>
+    </div>
+  `;
+
+  const state = {
+    file: null,
+    bytes: null,
+    kind: null,
+    cleanedBlob: null,
+    cleanedName: "",
+    canvas: container.querySelector("#previewCanvas"),
+  };
+  const fileInput = container.querySelector("#exifImageFile");
+  const metadataList = container.querySelector("#metadataList");
+  const status = container.querySelector("#status");
+  const cleanBtn = container.querySelector("#cleanBtn");
+  const downloadBtn = container.querySelector("#downloadBtn");
+
+  fileInput.addEventListener("change", async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    await loadExifSource(file);
+  });
+
+  cleanBtn.addEventListener("click", () => {
+    if (!state.file || !state.bytes || !state.kind) {
+      showToast("먼저 JPG, PNG, WEBP 이미지를 선택해 주세요.");
+      return;
+    }
+
+    try {
+      const result = removeImageMetadata(state.bytes, state.kind);
+      state.cleanedBlob = new Blob([result.bytes], { type: state.kind.mime });
+      state.cleanedName = buildImageName(state.file.name, "metadata-cleaned", state.kind.ext);
+      downloadBtn.disabled = false;
+      renderMetadataList(metadataList, result.removedLabels, result.bytes.length, state.file.size, true);
+      status.textContent = result.removedLabels.length
+        ? `정리 완료 · ${describeMetadataLabels(result.removedLabels)} 제거 · ${formatBytes(state.file.size)} → ${formatBytes(result.bytes.length)}`
+        : `정리 완료 · 감지된 메타데이터는 없었습니다. ${formatBytes(result.bytes.length)}`;
+    } catch (error) {
+      status.textContent = "메타데이터 제거 중 오류가 발생했습니다.";
+      showToast("메타데이터 제거를 완료하지 못했습니다. 다른 이미지 파일로 다시 시도해 주세요.");
+      trackToolError(getActiveTool(), error, "remove_metadata");
+    }
+  });
+
+  downloadBtn.addEventListener("click", () => {
+    if (!state.cleanedBlob) {
+      showToast("먼저 메타데이터 제거를 실행해 주세요.");
+      return;
+    }
+    downloadBlob(state.cleanedBlob, state.cleanedName);
+  });
+
+  async function loadExifSource(file) {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    const kind = detectMetadataImageKind(file, bytes);
+    if (!kind) {
+      resetExifState();
+      showToast("현재는 JPG, PNG, WEBP 이미지 파일만 지원합니다.");
+      return;
+    }
+
+    state.file = file;
+    state.bytes = bytes;
+    state.kind = kind;
+    state.cleanedBlob = null;
+    state.cleanedName = "";
+    cleanBtn.disabled = false;
+    downloadBtn.disabled = true;
+
+    const labels = inspectImageMetadata(bytes, kind);
+    renderMetadataList(metadataList, labels, bytes.length, file.size, false);
+    status.textContent = labels.length
+      ? `${file.name} · ${describeMetadataLabels(labels)} 감지 · ${formatBytes(file.size)}`
+      : `${file.name} · 감지된 개인정보성 메타데이터가 없습니다. ${formatBytes(file.size)}`;
+
+    try {
+      const loaded = await loadImageFromFile(file);
+      const width = loaded.image.naturalWidth;
+      const height = loaded.image.naturalHeight;
+      const maxEdge = 1200;
+      const scale = Math.min(1, maxEdge / Math.max(width, height));
+      drawImageToCanvas(state.canvas, loaded.image, Math.round(width * scale), Math.round(height * scale));
+    } catch {
+      state.canvas.width = 0;
+      state.canvas.height = 0;
+    }
+  }
+
+  function resetExifState() {
+    state.file = null;
+    state.bytes = null;
+    state.kind = null;
+    state.cleanedBlob = null;
+    state.cleanedName = "";
+    cleanBtn.disabled = true;
+    downloadBtn.disabled = true;
+    metadataList.innerHTML = "";
+    state.canvas.width = 0;
+    state.canvas.height = 0;
+    status.textContent = "사진을 선택하면 감지 가능한 메타데이터 항목을 확인합니다.";
+  }
+}
+
 function renderPdfMerge(container) {
   container.innerHTML = `
     <div class="tool-section">
@@ -5541,6 +5703,66 @@ function normalizeHttpUrl(value) {
   }
 }
 
+function bindUploadBoxDrops(scope) {
+  scope.querySelectorAll(".upload-box").forEach((dropZone) => {
+    if (dropZone.classList.contains("qr-reader-drop") || dropZone.dataset.dropBound === "true") return;
+    const fileInput = dropZone.querySelector('input[type="file"]');
+    if (!fileInput) return;
+
+    dropZone.dataset.dropBound = "true";
+
+    ["dragenter", "dragover"].forEach((eventName) => {
+      dropZone.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        dropZone.classList.add("is-dragging");
+      });
+    });
+
+    dropZone.addEventListener("dragleave", (event) => {
+      if (event.relatedTarget && dropZone.contains(event.relatedTarget)) return;
+      dropZone.classList.remove("is-dragging");
+    });
+
+    dropZone.addEventListener("drop", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      dropZone.classList.remove("is-dragging");
+
+      const files = Array.from(event.dataTransfer?.files || []);
+      const acceptedFiles = files.filter((file) => matchesFileAccept(file, fileInput.accept));
+      if (acceptedFiles.length === 0) {
+        showToast("지원하지 않는 파일 형식입니다. 파일 형식을 확인해 주세요.");
+        return;
+      }
+
+      const nextFiles = fileInput.multiple ? acceptedFiles : acceptedFiles.slice(0, 1);
+      if (typeof DataTransfer === "undefined") {
+        showToast("이 브라우저에서는 드래그 업로드를 지원하지 않습니다. 파일 선택 버튼을 사용해 주세요.");
+        return;
+      }
+      const transfer = new DataTransfer();
+      nextFiles.forEach((file) => transfer.items.add(file));
+      fileInput.files = transfer.files;
+      fileInput.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  });
+}
+
+function matchesFileAccept(file, accept) {
+  if (!accept) return true;
+  const filename = file.name.toLowerCase();
+  const mime = (file.type || "").toLowerCase();
+  return accept
+    .split(",")
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean)
+    .some((rule) => {
+      if (rule.startsWith(".")) return filename.endsWith(rule);
+      if (rule.endsWith("/*")) return mime.startsWith(rule.slice(0, -1));
+      return mime === rule;
+    });
+}
+
 function bindSubtitleFileInput(container, inputSelector, textareaSelector) {
   const fileInput = container.querySelector(inputSelector);
   const textarea = container.querySelector(textareaSelector);
@@ -5778,6 +6000,275 @@ async function loadLibrary(name) {
   }
 
   return libraryCache[name];
+}
+
+function detectMetadataImageKind(file, bytes) {
+  const type = (file.type || "").toLowerCase();
+  const name = file.name.toLowerCase();
+  if (isJpegBytes(bytes) || type === "image/jpeg" || /\.(jpe?g)$/.test(name)) {
+    return { id: "jpeg", mime: "image/jpeg", ext: "jpg" };
+  }
+  if (isPngBytes(bytes) || type === "image/png" || name.endsWith(".png")) {
+    return { id: "png", mime: "image/png", ext: "png" };
+  }
+  if (isWebpBytes(bytes) || type === "image/webp" || name.endsWith(".webp")) {
+    return { id: "webp", mime: "image/webp", ext: "webp" };
+  }
+  return null;
+}
+
+function inspectImageMetadata(bytes, kind) {
+  if (kind.id === "jpeg") return inspectJpegMetadata(bytes);
+  if (kind.id === "png") return inspectPngMetadata(bytes);
+  if (kind.id === "webp") return inspectWebpMetadata(bytes);
+  return [];
+}
+
+function removeImageMetadata(bytes, kind) {
+  if (kind.id === "jpeg") return stripJpegMetadata(bytes);
+  if (kind.id === "png") return stripPngMetadata(bytes);
+  if (kind.id === "webp") return stripWebpMetadata(bytes);
+  return { bytes, removedLabels: [] };
+}
+
+function renderMetadataList(container, labels, resultSize, originalSize, cleaned) {
+  const labelText = labels.length ? describeMetadataLabels(labels) : "감지된 항목 없음";
+  const rows = [
+    ["상태", cleaned ? "정리 완료" : "분석 완료"],
+    ["메타데이터", labelText],
+    ["파일 크기", cleaned ? `${formatBytes(originalSize)} → ${formatBytes(resultSize)}` : formatBytes(originalSize)],
+  ];
+
+  container.innerHTML = rows
+    .map(([label, value]) => `<div class="file-item"><span>${escapeHtml(label)}</span><span>${escapeHtml(value)}</span></div>`)
+    .join("");
+}
+
+function describeMetadataLabels(labels) {
+  return uniqueList(labels).join(", ");
+}
+
+function isJpegBytes(bytes) {
+  return bytes.length > 3 && bytes[0] === 0xff && bytes[1] === 0xd8;
+}
+
+function isPngBytes(bytes) {
+  const signature = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+  return signature.every((value, index) => bytes[index] === value);
+}
+
+function isWebpBytes(bytes) {
+  return bytes.length > 12 && readAscii(bytes, 0, 4) === "RIFF" && readAscii(bytes, 8, 4) === "WEBP";
+}
+
+function inspectJpegMetadata(bytes) {
+  return stripJpegMetadata(bytes, true).removedLabels;
+}
+
+function stripJpegMetadata(bytes, inspectOnly = false) {
+  if (!isJpegBytes(bytes)) return { bytes, removedLabels: [] };
+  const parts = inspectOnly ? [] : [bytes.slice(0, 2)];
+  const removedLabels = [];
+  let offset = 2;
+
+  while (offset < bytes.length) {
+    const markerStart = offset;
+    if (bytes[offset] !== 0xff) {
+      if (!inspectOnly) parts.push(bytes.slice(offset));
+      break;
+    }
+
+    while (bytes[offset] === 0xff) offset += 1;
+    const marker = bytes[offset];
+    offset += 1;
+
+    if (marker === 0xda || marker === 0xd9) {
+      if (!inspectOnly) parts.push(bytes.slice(markerStart));
+      break;
+    }
+
+    if (marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) {
+      if (!inspectOnly) parts.push(bytes.slice(markerStart, offset));
+      continue;
+    }
+
+    if (offset + 2 > bytes.length) break;
+    const length = (bytes[offset] << 8) | bytes[offset + 1];
+    const segmentEnd = offset + length;
+    if (length < 2 || segmentEnd > bytes.length) {
+      if (!inspectOnly) parts.push(bytes.slice(markerStart));
+      break;
+    }
+
+    const data = bytes.slice(offset + 2, segmentEnd);
+    const label = classifyJpegMetadataSegment(marker, data);
+    if (label) {
+      removedLabels.push(label);
+    } else if (!inspectOnly) {
+      parts.push(bytes.slice(markerStart, segmentEnd));
+    }
+
+    offset = segmentEnd;
+  }
+
+  return {
+    bytes: inspectOnly ? bytes : concatUint8Arrays(parts),
+    removedLabels: uniqueList(removedLabels),
+  };
+}
+
+function classifyJpegMetadataSegment(marker, data) {
+  if (marker === 0xe1 && startsWithAscii(data, "Exif\0\0")) return "EXIF";
+  if (marker === 0xe1 && startsWithAscii(data, "http://ns.adobe.com/xap/1.0/")) return "XMP";
+  if (marker === 0xed && startsWithAscii(data, "Photoshop 3.0")) return "IPTC";
+  if (marker === 0xfe) return "Comment";
+  return "";
+}
+
+function inspectPngMetadata(bytes) {
+  return stripPngMetadata(bytes, true).removedLabels;
+}
+
+function stripPngMetadata(bytes, inspectOnly = false) {
+  if (!isPngBytes(bytes)) return { bytes, removedLabels: [] };
+  const parts = inspectOnly ? [] : [bytes.slice(0, 8)];
+  const removedLabels = [];
+  let offset = 8;
+  const removable = new Set(["eXIf", "tEXt", "zTXt", "iTXt", "tIME"]);
+  const labels = {
+    eXIf: "EXIF",
+    tEXt: "Text",
+    zTXt: "Compressed text",
+    iTXt: "International text",
+    tIME: "Timestamp",
+  };
+
+  while (offset + 12 <= bytes.length) {
+    const length = readUint32be(bytes, offset);
+    const type = readAscii(bytes, offset + 4, 4);
+    const chunkEnd = offset + 12 + length;
+    if (chunkEnd > bytes.length) break;
+
+    if (removable.has(type)) {
+      removedLabels.push(labels[type] || type);
+    } else if (!inspectOnly) {
+      parts.push(bytes.slice(offset, chunkEnd));
+    }
+
+    offset = chunkEnd;
+    if (type === "IEND") break;
+  }
+
+  return {
+    bytes: inspectOnly ? bytes : concatUint8Arrays(parts),
+    removedLabels: uniqueList(removedLabels),
+  };
+}
+
+function inspectWebpMetadata(bytes) {
+  return stripWebpMetadata(bytes, true).removedLabels;
+}
+
+function stripWebpMetadata(bytes, inspectOnly = false) {
+  if (!isWebpBytes(bytes)) return { bytes, removedLabels: [] };
+  const chunks = [];
+  const removedTypes = new Set();
+  const removedLabels = [];
+  let offset = 12;
+
+  while (offset + 8 <= bytes.length) {
+    const type = readAscii(bytes, offset, 4);
+    const length = readUint32le(bytes, offset + 4);
+    const dataStart = offset + 8;
+    const dataEnd = dataStart + length;
+    const paddedEnd = dataEnd + (length % 2);
+    if (dataEnd > bytes.length) break;
+
+    if (type === "EXIF" || type === "XMP ") {
+      removedTypes.add(type);
+      removedLabels.push(type === "EXIF" ? "EXIF" : "XMP");
+    } else if (!inspectOnly) {
+      chunks.push({
+        type,
+        data: bytes.slice(dataStart, dataEnd),
+        pad: length % 2 ? bytes.slice(dataEnd, paddedEnd) : new Uint8Array(0),
+      });
+    }
+
+    offset = paddedEnd;
+  }
+
+  if (inspectOnly) return { bytes, removedLabels: uniqueList(removedLabels) };
+
+  const parts = [asciiBytes("RIFF"), new Uint8Array(4), asciiBytes("WEBP")];
+  for (const chunk of chunks) {
+    let data = chunk.data;
+    if (chunk.type === "VP8X" && data.length > 0) {
+      data = data.slice();
+      if (removedTypes.has("EXIF")) data[0] &= ~0x08;
+      if (removedTypes.has("XMP ")) data[0] &= ~0x04;
+    }
+    parts.push(asciiBytes(chunk.type), writeUint32le(data.length), data);
+    if (data.length % 2) parts.push(new Uint8Array([0]));
+  }
+
+  const output = concatUint8Arrays(parts);
+  writeUint32leInto(output, 4, output.length - 8);
+  return { bytes: output, removedLabels: uniqueList(removedLabels) };
+}
+
+function readAscii(bytes, offset, length) {
+  let value = "";
+  for (let index = 0; index < length; index += 1) {
+    value += String.fromCharCode(bytes[offset + index] || 0);
+  }
+  return value;
+}
+
+function startsWithAscii(bytes, text) {
+  if (bytes.length < text.length) return false;
+  for (let index = 0; index < text.length; index += 1) {
+    if (bytes[index] !== text.charCodeAt(index)) return false;
+  }
+  return true;
+}
+
+function asciiBytes(text) {
+  const bytes = new Uint8Array(text.length);
+  for (let index = 0; index < text.length; index += 1) bytes[index] = text.charCodeAt(index);
+  return bytes;
+}
+
+function readUint32be(bytes, offset) {
+  return ((bytes[offset] << 24) | (bytes[offset + 1] << 16) | (bytes[offset + 2] << 8) | bytes[offset + 3]) >>> 0;
+}
+
+function readUint32le(bytes, offset) {
+  return (bytes[offset] | (bytes[offset + 1] << 8) | (bytes[offset + 2] << 16) | (bytes[offset + 3] << 24)) >>> 0;
+}
+
+function writeUint32le(value) {
+  const bytes = new Uint8Array(4);
+  writeUint32leInto(bytes, 0, value);
+  return bytes;
+}
+
+function writeUint32leInto(bytes, offset, value) {
+  bytes[offset] = value & 0xff;
+  bytes[offset + 1] = (value >>> 8) & 0xff;
+  bytes[offset + 2] = (value >>> 16) & 0xff;
+  bytes[offset + 3] = (value >>> 24) & 0xff;
+}
+
+function concatUint8Arrays(parts) {
+  const total = parts.reduce((sum, part) => sum + part.length, 0);
+  const output = new Uint8Array(total);
+  let offset = 0;
+  for (const part of parts) {
+    output.set(part, offset);
+    offset += part.length;
+  }
+  return output;
 }
 
 async function loadImageFromFile(file) {

@@ -1168,6 +1168,12 @@ body.home-mode .tool-workspace {
   padding: 16px;
 }
 
+.upload-box.is-dragging {
+  border-color: var(--accent);
+  background: #fff7f3;
+  box-shadow: 0 0 0 3px rgba(229, 50, 45, 0.12);
+}
+
 .upload-box p {
   color: var(--muted);
   line-height: 1.6;
