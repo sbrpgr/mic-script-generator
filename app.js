@@ -792,7 +792,9 @@ const appState = {
   quickMotion: "",
   quickMotionTimerId: null,
   selectedText: "",
+  dismissedSelectionText: "",
   lastPointer: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+  selectionPointerDown: null,
   selectionCheckTimerId: null,
 };
 
@@ -850,10 +852,8 @@ function bindGlobalEvents() {
   els.selectionCopyBtn.addEventListener("pointerdown", (event) => event.preventDefault());
   els.selectionCopyBtn.addEventListener("click", copySelectedText);
 
-  document.addEventListener("pointerup", (event) => {
-    appState.lastPointer = { x: event.clientX, y: event.clientY };
-    queueSelectionCheck();
-  });
+  document.addEventListener("pointerdown", handleSelectionPointerDown, true);
+  document.addEventListener("pointerup", handleSelectionPointerUp);
   document.addEventListener("selectionchange", queueSelectionCheck);
   document.addEventListener("keyup", queueSelectionCheck);
   document.addEventListener("mouseup", queueSelectionCheck);
@@ -5607,6 +5607,37 @@ function showToast(message) {
   window.setTimeout(() => toast.remove(), 3200);
 }
 
+function handleSelectionPointerDown(event) {
+  if (els.selectionCopyBtn.contains(event.target)) {
+    return;
+  }
+
+  appState.selectionPointerDown = { x: event.clientX, y: event.clientY };
+
+  if (els.selectionCopyBtn.hidden) {
+    return;
+  }
+
+  const info = getSelectedTextInfo();
+  appState.dismissedSelectionText = info?.text.trim() || "";
+  hideSelectionCopyButton();
+}
+
+function handleSelectionPointerUp(event) {
+  appState.lastPointer = { x: event.clientX, y: event.clientY };
+
+  const start = appState.selectionPointerDown;
+  const moved =
+    start && Math.hypot(event.clientX - start.x, event.clientY - start.y) > 6;
+  appState.selectionPointerDown = null;
+
+  if (moved) {
+    appState.dismissedSelectionText = "";
+  }
+
+  queueSelectionCheck();
+}
+
 function queueSelectionCheck() {
   if (appState.selectionCheckTimerId) {
     window.clearTimeout(appState.selectionCheckTimerId);
@@ -5621,10 +5652,18 @@ function queueSelectionCheck() {
 function updateSelectionCopyButton() {
   const info = getSelectedTextInfo();
   if (!info || !info.text.trim()) {
+    appState.dismissedSelectionText = "";
     hideSelectionCopyButton();
     return;
   }
 
+  const selectedText = info.text.trim();
+  if (appState.dismissedSelectionText && selectedText === appState.dismissedSelectionText) {
+    hideSelectionCopyButton();
+    return;
+  }
+
+  appState.dismissedSelectionText = "";
   appState.selectedText = info.text;
   positionSelectionCopyButton(info);
   els.selectionCopyBtn.hidden = false;
