@@ -793,6 +793,7 @@ const appState = {
   quickMotionTimerId: null,
   selectedText: "",
   dismissedSelectionText: "",
+  selectionDismissedByPointer: false,
   lastPointer: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
   selectionPointerDown: null,
   selectionCheckTimerId: null,
@@ -855,7 +856,7 @@ function bindGlobalEvents() {
   document.addEventListener("pointerdown", handleSelectionPointerDown, true);
   document.addEventListener("pointerup", handleSelectionPointerUp);
   document.addEventListener("selectionchange", queueSelectionCheck);
-  document.addEventListener("keyup", queueSelectionCheck);
+  document.addEventListener("keyup", handleSelectionKeyUp);
   document.addEventListener("mouseup", queueSelectionCheck);
   document.addEventListener("input", queueSelectionCheck, true);
   document.addEventListener("click", handleAnalyticsClick, true);
@@ -5619,7 +5620,9 @@ function handleSelectionPointerDown(event) {
   }
 
   const info = getSelectedTextInfo();
+  appState.selectionDismissedByPointer = true;
   appState.dismissedSelectionText = info?.text.trim() || "";
+  clearCurrentSelection();
   hideSelectionCopyButton();
 }
 
@@ -5633,8 +5636,23 @@ function handleSelectionPointerUp(event) {
 
   if (moved) {
     appState.dismissedSelectionText = "";
+    appState.selectionDismissedByPointer = false;
+    queueSelectionCheck();
+    return;
   }
 
+  if (appState.selectionDismissedByPointer) {
+    appState.selectionDismissedByPointer = false;
+    hideSelectionCopyButton();
+    return;
+  }
+
+  queueSelectionCheck();
+}
+
+function handleSelectionKeyUp() {
+  appState.dismissedSelectionText = "";
+  appState.selectionDismissedByPointer = false;
   queueSelectionCheck();
 }
 
@@ -5653,20 +5671,40 @@ function updateSelectionCopyButton() {
   const info = getSelectedTextInfo();
   if (!info || !info.text.trim()) {
     appState.dismissedSelectionText = "";
+    appState.selectionDismissedByPointer = false;
     hideSelectionCopyButton();
     return;
   }
 
   const selectedText = info.text.trim();
+  if (appState.selectionDismissedByPointer) {
+    hideSelectionCopyButton();
+    return;
+  }
+
   if (appState.dismissedSelectionText && selectedText === appState.dismissedSelectionText) {
     hideSelectionCopyButton();
     return;
   }
 
   appState.dismissedSelectionText = "";
+  appState.selectionDismissedByPointer = false;
   appState.selectedText = info.text;
   positionSelectionCopyButton(info);
   els.selectionCopyBtn.hidden = false;
+}
+
+function clearCurrentSelection() {
+  const active = document.activeElement;
+  if (active && (active.tagName === "TEXTAREA" || isTextInput(active))) {
+    const caret = active.selectionEnd ?? active.value.length;
+    active.setSelectionRange(caret, caret);
+  }
+
+  const selection = window.getSelection();
+  if (selection && selection.rangeCount > 0) {
+    selection.removeAllRanges();
+  }
 }
 
 function getSelectedTextInfo() {
