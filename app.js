@@ -923,10 +923,13 @@ function getActiveCategoryPage() {
 }
 
 function bindGlobalEvents() {
+  ensureBookmarkPromptButton();
   els.toolSearch.addEventListener("input", renderSidebarTools);
   els.helpBtn.addEventListener("click", openHelpDialog);
   els.helpCloseBtn.addEventListener("click", closeHelpDialog);
   els.helpDialog.addEventListener("click", closeHelpDialogFromBackdrop);
+  els.pageTitle.addEventListener("click", handlePageTitleReload);
+  els.pageTitle.addEventListener("keydown", handlePageTitleReloadKeydown);
 
   els.selectionCopyBtn.addEventListener("pointerdown", (event) => event.preventDefault());
   els.selectionCopyBtn.addEventListener("click", copySelectedText);
@@ -942,6 +945,37 @@ function bindGlobalEvents() {
   window.addEventListener("resize", hideSelectionCopyButton);
   window.addEventListener("error", handleGlobalAppError);
   window.addEventListener("unhandledrejection", handleGlobalAppError);
+}
+
+function ensureBookmarkPromptButton() {
+  const links = document.querySelector(".topbar-links");
+  if (!links || links.querySelector(".topbar-favorite")) return;
+
+  const button = document.createElement("button");
+  button.className = "topbar-favorite";
+  button.type = "button";
+  button.setAttribute("aria-label", "즐겨찾기 추가 안내");
+  button.title = "즐겨찾기 추가";
+  button.innerHTML = '<span aria-hidden="true">★</span><span>즐겨찾기 추가</span>';
+  button.addEventListener("click", showBookmarkPrompt);
+  links.appendChild(button);
+}
+
+function showBookmarkPrompt() {
+  const isAppleDevice = /Mac|iPhone|iPad|iPod/i.test(navigator.platform || "");
+  const shortcut = isAppleDevice ? "Cmd+D" : "Ctrl+D";
+  showToast(`브라우저 즐겨찾기는 ${shortcut}로 추가할 수 있습니다.`);
+}
+
+function handlePageTitleReload() {
+  if (!appState.activeToolId) return;
+  window.location.reload();
+}
+
+function handlePageTitleReloadKeydown(event) {
+  if (!appState.activeToolId || !["Enter", " "].includes(event.key)) return;
+  event.preventDefault();
+  window.location.reload();
 }
 
 function openHelpDialog() {
@@ -1050,6 +1084,7 @@ function renderHomePage() {
     description: BRAND_DESCRIPTION,
     url: `${TOOL_ORIGIN}/`,
   });
+  setPageTitleReloadState(null);
 
   els.toolOverview.innerHTML = `
     <section class="home-toolbar" aria-label="도구 검색">
@@ -1084,6 +1119,7 @@ function renderCategoryPage(categoryPage) {
   appState.categoryPageId = categoryPage.id;
   setPageMode("category");
   setHeroCopy(categoryPage.eyebrow, categoryPage.title, categoryPage.description);
+  setPageTitleReloadState(null);
   setDocumentMeta({
     title: `${categoryPage.title} | 무료 온라인 도구 - ${BRAND_NAME}`,
     description: categoryPage.metaDescription,
@@ -1132,6 +1168,7 @@ function renderToolPage(tool) {
   appState.categoryPageId = "";
   setPageMode("tool");
   setHeroCopy("무료 온라인 도구", tool.title, tool.summary);
+  setPageTitleReloadState(tool.title);
   setDocumentMeta({
     title: `${tool.seoTitle} | ${BRAND_NAME}`,
     description: tool.seoDescription,
@@ -1237,6 +1274,23 @@ function setHeroCopy(kicker, title, description) {
   els.heroEyebrow.textContent = kicker;
   els.pageTitle.textContent = title;
   els.pageDescription.textContent = description;
+}
+
+function setPageTitleReloadState(toolTitle) {
+  const isToolPage = Boolean(toolTitle);
+  els.pageTitle.classList.toggle("is-reloadable", isToolPage);
+  if (isToolPage) {
+    els.pageTitle.tabIndex = 0;
+    els.pageTitle.setAttribute("role", "button");
+    els.pageTitle.setAttribute("aria-label", `${toolTitle} 새 작업 시작`);
+    els.pageTitle.title = "새 작업 시작";
+    return;
+  }
+
+  els.pageTitle.removeAttribute("tabindex");
+  els.pageTitle.removeAttribute("role");
+  els.pageTitle.removeAttribute("aria-label");
+  els.pageTitle.removeAttribute("title");
 }
 
 function setDocumentMeta({ title, description, url }) {

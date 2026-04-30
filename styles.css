@@ -2000,20 +2000,44 @@ body.tool-mode .site-layout {
   gap: 4px;
 }
 
-.topbar-links a {
+.topbar-links a,
+.topbar-favorite {
   display: inline-flex;
   align-items: center;
   min-height: 34px;
+  border: 0;
   border-radius: 8px;
+  background: transparent;
   color: #3d414b;
+  font: inherit;
   font-size: 0.9rem;
   font-weight: 800;
+  letter-spacing: 0;
   text-decoration: none;
+  white-space: nowrap;
   padding: 0 11px;
 }
 
-.topbar-links a:hover {
+.topbar-favorite {
+  gap: 5px;
+  cursor: pointer;
+}
+
+.topbar-favorite span[aria-hidden="true"] {
+  color: #f5a400;
+  font-size: 0.98rem;
+  line-height: 1;
+}
+
+.topbar-links a:hover,
+.topbar-favorite:hover {
   background: #f2f3f5;
+}
+
+.topbar-favorite:focus-visible,
+.hero-copy h1.is-reloadable:focus-visible {
+  outline: 3px solid rgba(43, 98, 217, 0.28);
+  outline-offset: 3px;
 }
 
 .platform-hero,
@@ -2060,6 +2084,17 @@ body.home-mode .hero-copy {
   font-size: clamp(2rem, 4vw, 3.35rem);
   line-height: 1.05;
   letter-spacing: 0;
+}
+
+.hero-copy h1.is-reloadable {
+  width: fit-content;
+  max-width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.hero-copy h1.is-reloadable:hover {
+  color: var(--primary-strong);
 }
 
 body.tool-mode .hero-copy h1 {
