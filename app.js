@@ -5397,7 +5397,7 @@ function breakBySentencePunctuation(text) {
     .map((paragraph) =>
       paragraph
         .replace(/([.!?。！？])\s+(?=\S)/g, "$1\n")
-        .replace(/([.!?。！？])(?=[가-힣A-Za-z])/g, "$1\n")
+        .replace(/([.!?。！？])(?=[가-힣A-Za-z「『“‘《〈([{])/g, "$1\n")
         .split("\n")
         .map((line) => line.trim())
         .filter(Boolean)
@@ -5410,9 +5410,43 @@ function breakBySentencePunctuation(text) {
 function joinParagraphLines(text) {
   return text
     .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.replace(/\s*\n\s*/g, " ").replace(/[ \t]{2,}/g, " ").trim())
+    .map((paragraph) => {
+      const lines = paragraph
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean);
+
+      return lines
+        .reduce((joined, line, index) => {
+          if (index === 0) return line;
+          const previousLine = lines[index - 1];
+          const separator = shouldJoinKoreanLineWithoutSpace(previousLine, line) ? "" : " ";
+          return `${joined}${separator}${line}`;
+        }, "")
+        .replace(/[ \t]{2,}/g, " ")
+        .trim();
+    })
     .filter(Boolean)
     .join("\n\n");
+}
+
+function shouldJoinKoreanLineWithoutSpace(leftLine, rightLine) {
+  const leftText = leftLine.trimEnd();
+  const rightText = rightLine.trimStart();
+  const leftChar = leftText.slice(-1);
+  const rightChar = rightText.slice(0, 1);
+
+  if (!/[가-힣]/.test(leftChar) || !/[가-힣]/.test(rightChar)) {
+    return false;
+  }
+
+  return (
+    /^으로/.test(rightText) ||
+    (leftText.endsWith("으") && rightText.startsWith("로")) ||
+    /^(?:은|는|이|가|을|를|의|에|에서|에게|께|께서|와|과|도|만|까지|부터|처럼|보다|마다|조차|마저|로서|로써)(?=[가-힣]|$)/.test(
+      rightText
+    )
+  );
 }
 
 function extractContacts(text) {

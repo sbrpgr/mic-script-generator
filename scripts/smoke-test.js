@@ -236,6 +236,27 @@ function buildLogicTests(api) {
       });
       assert(result === "A B\n\nC", "line break cleanup failed");
     }),
+    test("line break cleaner joins Korean particle line wraps without extra spaces", () => {
+      const result = api.cleanLineBreaks("소상공인이기업으\n로성장할수있도록", {
+        trimLines: true,
+        joinLines: true,
+        collapseBlank: true,
+        collapseSpaces: true,
+        sentenceBreak: false,
+      });
+      assert(result === "소상공인이기업으로성장할수있도록", "Korean particle wrap cleanup failed");
+    }),
+    test("line break cleaner breaks sentences before Korean opening quotes", () => {
+      const result = api.cleanLineBreaks("육성하고있습니다.「2026년\n소상공인도약지원사업」", {
+        trimLines: true,
+        joinLines: true,
+        collapseBlank: true,
+        collapseSpaces: true,
+        sentenceBreak: true,
+      });
+      assert(result.includes("육성하고있습니다.\n「2026년"), "opening quote sentence break failed");
+      assert(!result.includes("육성하고있습니다.「2026년"), "opening quote remained on same line");
+    }),
     test("AI text cleaner removes markdown markers", () => {
       const result = api.cleanAiText("## Title\n\n**Bold** [Link](https://example.com)", {
         stripHtml: true,
