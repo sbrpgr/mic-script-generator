@@ -2464,9 +2464,11 @@ function cleanAudioTranscriptDraft(text) {
   const normalized = String(text || "").replace(/\s+/g, " ").trim();
   if (!normalized) return "";
 
-  const parts = normalized.match(/[^.!?。！？]+[.!?。！？]?/g) || [normalized];
+  const phraseCleaned = cleanRepeatedAudioPhrases(normalized);
+  const parts = phraseCleaned.match(/[^.!?。！？]+[.!?。！？]?/g) || [phraseCleaned];
   const kept = [];
   let previousKey = "";
+  let repeatCount = 0;
 
   parts.forEach((part) => {
     const sentence = part.replace(/\s+/g, " ").trim();
@@ -2474,19 +2476,91 @@ function cleanAudioTranscriptDraft(text) {
 
     const key = normalizeAudioRepeatUnit(sentence);
     if (key && key === previousKey && key.length <= 24) {
+      repeatCount += 1;
       return;
     }
 
+    finishRepeatedAudioSentence(kept, repeatCount);
     kept.push(sentence);
     previousKey = key;
+    repeatCount = 0;
   });
 
+  finishRepeatedAudioSentence(kept, repeatCount);
   return kept.join(" ").replace(/\s+/g, " ").trim();
+}
+
+function cleanRepeatedAudioPhrases(text) {
+  const normalized = String(text || "").trim();
+  if (!normalized) return "";
+
+  const segments = normalized.match(/[^.!?。！？]+[.!?。！？]?/g) || [normalized];
+  return segments
+    .map(cleanRepeatedAudioPhraseSegment)
+    .filter(Boolean)
+    .join(" ")
+    .replace(/\s+([,，、.!?。！？])/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function cleanRepeatedAudioPhraseSegment(text) {
+  const tokens = String(text || "")
+    .split(/([,，、])/)
+    .map((token) => token.trim())
+    .filter(Boolean);
+  if (tokens.length < 3) return String(text || "").trim();
+
+  const output = [];
+  let previousPhraseKey = "";
+  let repeatCount = 0;
+
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index];
+    if (/^[,，、]$/.test(token)) {
+      if (output.length && !/[.!?。！？,，、]$/.test(output[output.length - 1])) {
+        output[output.length - 1] = `${output[output.length - 1]},`;
+      }
+      continue;
+    }
+
+    const key = normalizeAudioRepeatUnit(token);
+    const isShortRepeat = key && key === previousPhraseKey && key.length <= 28;
+    if (isShortRepeat) {
+      repeatCount += 1;
+      continue;
+    }
+
+    finishRepeatedAudioPhrase(output, repeatCount);
+
+    output.push(token);
+    previousPhraseKey = key;
+    repeatCount = 0;
+  }
+
+  finishRepeatedAudioPhrase(output, repeatCount);
+
+  return output.join(" ").replace(/\s+([,，、.!?。！？])/g, "$1").replace(/\s+/g, " ").trim();
+}
+
+function finishRepeatedAudioSentence(items, repeatCount) {
+  if (repeatCount >= 2 && items.length) {
+    items.pop();
+  }
+}
+
+function finishRepeatedAudioPhrase(items, repeatCount) {
+  if (!repeatCount || !items.length) return;
+  if (repeatCount >= 2) {
+    items.pop();
+    return;
+  }
+  items[items.length - 1] = items[items.length - 1].replace(/[,，、]\s*$/, "");
 }
 
 function normalizeAudioRepeatUnit(text) {
   return String(text || "")
-    .replace(/[.!?。！？'"“”‘’()[\]{}<>《》「」]/g, "")
+    .replace(/[,.!?，、。！？'"“”‘’()[\]{}<>《》「」]/g, "")
     .replace(/\s+/g, "")
     .trim()
     .toLowerCase();

@@ -327,7 +327,16 @@ function buildLogicTests(api) {
     }),
     test("audio transcript cleaner removes consecutive repeated hallucination sentences", () => {
       const result = api.cleanAudioTranscriptDraft("너 말고 누굴 밀었다는거에요? 정중국은? 정중국은? 정중국은? 일단 알았다.");
-      assert(result === "너 말고 누굴 밀었다는거에요? 정중국은? 일단 알았다.", "audio repeated sentence cleanup failed");
+      assert(result === "너 말고 누굴 밀었다는거에요? 일단 알았다.", "audio repeated sentence cleanup failed");
+    }),
+    test("audio transcript cleaner removes comma-separated repeated hallucination phrases", () => {
+      const result = api.cleanAudioTranscriptDraft(
+        "너 안 밀었다는 건 뭔 소리야? 너 말고 누구를 밀었다는 거야? 정승호의 인상, 정승호의 인상, 정승호의 인상, 정승호의 인상, 정승호의 그 틈에 됐어?"
+      );
+      assert(
+        result === "너 안 밀었다는 건 뭔 소리야? 너 말고 누구를 밀었다는 거야? 정승호의 그 틈에 됐어?",
+        "audio comma-separated repeated phrase cleanup failed"
+      );
     }),
     test("audio preprocessing trims long silence and normalizes quiet speech", () => {
       const sampleRate = 16000;
