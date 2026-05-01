@@ -1209,6 +1209,22 @@ body.home-mode .tool-workspace {
   margin-top: 6px;
 }
 
+.tool-beta-label {
+  color: #e5322d;
+  font-size: 0.72em;
+  font-weight: 900;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+.tool-launch-card .tool-beta-label {
+  font-size: 0.78em;
+}
+
+.audio-file-tool .field-grid.compact-grid {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
 .audio-break-option {
   margin-top: 2px;
 }

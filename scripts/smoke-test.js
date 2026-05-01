@@ -23,6 +23,9 @@ const API_NAMES = [
   "convertSubtitle",
   "shiftSubtitleTimings",
   "parsePageRanges",
+  "AUDIO_TRANSCRIPTION_MODEL_PROFILES",
+  "AUDIO_TRANSCRIPTION_DEFAULT_PROFILE",
+  "getAudioModelProfile",
   "getAudioTranscriberCandidates",
   "formatAudioTranscriptionError",
   "breakAudioTranscriptSentences",
@@ -303,6 +306,12 @@ function buildLogicTests(api) {
       assert(cpuQualityCandidates[0].dtype === "fp32", "CPU quality mode should opt into fp32 first");
       assert(lightweightCandidates[0].dtype.decoder_model_merged === "fp16", "lightweight mode should keep mixed precision first");
       assert(lightweightCandidates.length === 1, "lightweight mode should not try heavier fp32 by default");
+    }),
+    test("audio transcription exposes quality and fast model profiles", () => {
+      assert(api.AUDIO_TRANSCRIPTION_DEFAULT_PROFILE === "quality", "quality model should be the default profile");
+      assert(api.AUDIO_TRANSCRIPTION_MODEL_PROFILES.quality.model === "onnx-community/whisper-base", "quality profile should use whisper-base");
+      assert(api.AUDIO_TRANSCRIPTION_MODEL_PROFILES.fast.model === "onnx-community/whisper-tiny", "fast profile should use whisper-tiny");
+      assert(api.getAudioModelProfile("missing").id === "quality", "missing model profile should fall back to quality");
     }),
     test("audio transcription fetch failures explain network and model loading", () => {
       const result = api.formatAudioTranscriptionError(new Error("Failed to fetch"));

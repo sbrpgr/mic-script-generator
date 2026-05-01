@@ -50,6 +50,7 @@ const TOOL_DEFS = [
     path: "/tools/audio-file-transcription/",
     category: "\uC74C\uC131",
     title: "녹음 파일 텍스트 변환",
+    beta: true,
     summary:
       "휴대폰 녹음 파일을 브라우저 안에서 불러와 Whisper 기반 모델로 저장 없는 검토용 텍스트 초안을 만듭니다.",
     seoTitle: "녹음 파일 텍스트 변환 | 휴대폰 녹음 STT 도구",
@@ -1213,7 +1214,7 @@ function renderToolPage(tool) {
   els.toolOverview.innerHTML = `
     <div class="overview-header">
       <p class="eyebrow">${escapeHtml(tool.category)}</p>
-      <h2>${escapeHtml(tool.title)}</h2>
+      <h2>${renderToolTitle(tool)}</h2>
       <p>${escapeHtml(tool.summary)}</p>
     </div>
     <div class="overview-meta">
@@ -1284,12 +1285,16 @@ function renderToolLaunchCard(tool) {
     <a class="tool-launch-card" href="${tool.path}" data-tone="${escapeHtml(visual.tone)}" data-search="${escapeHtml(searchText)}" aria-label="${escapeHtml(tool.title)} 열기">
       <span class="tool-launch-icon" aria-hidden="true">${escapeHtml(visual.icon)}</span>
       <span class="tool-launch-body">
-        <strong>${escapeHtml(tool.title)}</strong>
+        <strong>${renderToolTitle(tool)}</strong>
         <span>${escapeHtml(visual.copy)}</span>
       </span>
       <span class="tool-launch-arrow" aria-hidden="true">&rsaquo;</span>
     </a>
   `;
+}
+
+function renderToolTitle(tool) {
+  return `${escapeHtml(tool.title)}${tool.beta ? ' <span class="tool-beta-label">(베타)</span>' : ""}`;
 }
 
 function bindHomeToolSearch() {
@@ -1693,7 +1698,25 @@ const TOOL_RENDERERS = {
   "subtitle-timing": renderSubtitleTiming,
 };
 
-const AUDIO_TRANSCRIPTION_MODEL = "onnx-community/whisper-tiny";
+const AUDIO_TRANSCRIPTION_MODEL_PROFILES = Object.freeze({
+  quality: Object.freeze({
+    id: "quality",
+    model: "onnx-community/whisper-base",
+    label: "정확도 우선",
+    beamCount: 5,
+    hint:
+      "정확도 우선 모델은 더 큰 Whisper 모델을 사용해 한국어 짧은 녹음의 인식률을 높입니다. 첫 실행 다운로드와 변환 시간이 더 오래 걸릴 수 있습니다.",
+  }),
+  fast: Object.freeze({
+    id: "fast",
+    model: "onnx-community/whisper-tiny",
+    label: "빠른 변환",
+    beamCount: 3,
+    hint:
+      "빠른 변환 모델은 가볍게 동작하지만 통화 녹음, 잡음, 여러 사람이 섞인 녹음에서는 누락이나 오인식이 더 생길 수 있습니다.",
+  }),
+});
+const AUDIO_TRANSCRIPTION_DEFAULT_PROFILE = "quality";
 const AUDIO_TRANSCRIPTION_WASM_BALANCED_DTYPE = Object.freeze({
   encoder_model: "q8",
   decoder_model_merged: "fp16",
@@ -1712,8 +1735,8 @@ function renderAudioFileTranscription(container) {
       <div class="section-heading">
         <div>
           <p class="eyebrow">Local Audio STT</p>
-          <h2>녹음 파일 텍스트 변환</h2>
-          <p class="tool-note audio-tool-intro">녹음 파일을 저장하지 않는 브라우저 변환 기능입니다. 품질 우선으로 먼저 시도하고, 기기와 맞지 않으면 CPU 경량/호환 모드로 낮출 수 있습니다.</p>
+          <h2>녹음 파일 텍스트 변환 <span class="tool-beta-label">(베타)</span></h2>
+          <p class="tool-note audio-tool-intro">녹음 파일을 저장하지 않는 브라우저 변환 기능입니다. 서버형 대형 STT보다 품질이 낮을 수 있어, 짧은 파일은 정확도 우선으로 먼저 확인해 주세요.</p>
         </div>
         <div class="status-group" aria-live="polite">
           <span id="audioModelStatus" class="status-pill">모델 대기</span>
@@ -1724,7 +1747,7 @@ function renderAudioFileTranscription(container) {
       <div class="upload-box audio-upload-box">
         <label for="audioFile">휴대폰 녹음 파일 선택</label>
         <input id="audioFile" type="file" accept="audio/*,.m4a,.mp3,.wav,.aac,.webm,.ogg" />
-        <p>m4a, mp3, wav, aac, webm, ogg 형식을 지원합니다. 파일은 코워크스페이스 서버로 업로드하지 않고 브라우저 안에서 처리합니다.</p>
+        <p>m4a, mp3, wav, aac, webm, ogg 형식을 지원합니다. 파일은 코워크스페이스 서버로 업로드하지 않고 브라우저 안에서 처리합니다. 비저장 방식이라 전문 서버형 음성 인식보다 품질이 좋지 않을 수 있습니다.</p>
       </div>
 
       <div class="tool-grid">
@@ -1737,6 +1760,13 @@ function renderAudioFileTranscription(container) {
           </div>
           <audio id="audioPreview" class="audio-preview" controls hidden></audio>
           <div class="field-grid compact-grid">
+            <div class="field">
+              <label for="audioModelProfile">인식 모델</label>
+              <select id="audioModelProfile">
+                <option value="quality" selected>정확도 우선(느림)</option>
+                <option value="fast">빠른 변환(가벼움)</option>
+              </select>
+            </div>
             <div class="field">
               <label for="audioLanguage">인식 언어</label>
               <select id="audioLanguage">
@@ -1787,8 +1817,8 @@ function renderAudioFileTranscription(container) {
       </div>
 
       <article class="notice-card">
-        <strong>브라우저 안에서 처리하는 베타 도구입니다.</strong>
-        <span>녹음 내용은 서버로 업로드하지 않지만, 모델 파일은 외부 CDN과 Hugging Face에서 내려받습니다. 품질 우선 모드는 더 큰 모델 파일을 사용할 수 있습니다. 통화녹음이나 민감한 녹음은 관련 법과 상대방 동의 여부를 확인한 뒤 사용해 주세요.</span>
+        <strong>비저장 브라우저 변환 베타입니다.</strong>
+        <span>녹음 내용은 서버로 업로드하지 않지만, 모델 파일은 외부 CDN과 Hugging Face에서 내려받습니다. 이 방식은 개인 녹음 파일을 플랫폼 서버에 남기지 않는 대신 브라우저에서 실행 가능한 모델만 사용하므로, 긴 회의나 통화 녹음에서는 누락·오인식·반복 문장이 생길 수 있습니다. 중요한 내용은 반드시 사람이 다시 확인해 주세요.</span>
       </article>
     </div>
   `;
@@ -1807,6 +1837,7 @@ function renderAudioFileTranscription(container) {
     fileInput: container.querySelector("#audioFile"),
     fileMeta: container.querySelector("#audioFileMeta"),
     audioPreview: container.querySelector("#audioPreview"),
+    modelProfile: container.querySelector("#audioModelProfile"),
     language: container.querySelector("#audioLanguage"),
     deviceMode: container.querySelector("#audioDeviceMode"),
     sentenceBreaks: container.querySelector("#audioSentenceBreaks"),
@@ -1824,6 +1855,8 @@ function renderAudioFileTranscription(container) {
   nodes.fileInput.addEventListener("change", () => handleAudioFileSelection());
   nodes.transcribeBtn.addEventListener("click", transcribeAudioFile);
   nodes.clearBtn.addEventListener("click", clearAudioTool);
+  nodes.modelProfile.addEventListener("change", updateAudioModelHint);
+  nodes.deviceMode.addEventListener("change", updateAudioModelHint);
   nodes.sentenceBreaks.addEventListener("change", renderAudioTranscriptOutput);
   nodes.output.addEventListener("input", () => {
     state.rawTranscript = nodes.output.value;
@@ -1847,6 +1880,7 @@ function renderAudioFileTranscription(container) {
   });
 
   syncAudioButtons();
+  updateAudioModelHint();
   updateOutputMeta();
 
   async function handleAudioFileSelection() {
@@ -1884,21 +1918,23 @@ function renderAudioFileTranscription(container) {
     }
 
     state.isRunning = true;
+    const profile = getAudioModelProfile(nodes.modelProfile.value);
+    const deviceMode = nodes.deviceMode.value;
     syncAudioButtons();
     nodes.modelStatus.textContent = "모델 준비 중";
-    nodes.runMeta.textContent = "모델과 음성 인식 파이프라인을 준비하고 있습니다.";
-    setAudioProcessing(true, "모델 파일과 음성 인식 파이프라인을 준비하고 있습니다.");
+    nodes.runMeta.textContent = `${profile.label} 모델과 음성 인식 파이프라인을 준비하고 있습니다.`;
+    setAudioProcessing(true, `${profile.label} 모델 파일과 음성 인식 파이프라인을 준비하고 있습니다.`);
     state.rawTranscript = "";
     nodes.output.value = "";
     updateOutputMeta();
 
     const objectUrl = URL.createObjectURL(state.file);
     try {
-      const transcriber = await getAudioTranscriber(nodes.deviceMode.value, (progress) => {
+      const transcriber = await getAudioTranscriber(profile.id, deviceMode, (progress) => {
         const label = formatModelProgress(progress);
         if (label) {
           nodes.modelStatus.textContent = label;
-          setAudioProcessing(true, `${label} · 처음 실행이면 다운로드 시간이 걸릴 수 있습니다.`);
+          setAudioProcessing(true, `${profile.label} ${label} · 처음 실행이면 다운로드 시간이 걸릴 수 있습니다.`);
         }
       });
 
@@ -1915,7 +1951,7 @@ function renderAudioFileTranscription(container) {
         compression_ratio_threshold: 2.4,
         logprob_threshold: -1,
         no_speech_threshold: 0.6,
-        num_beams: nodes.deviceMode.value === "lightweight" ? 1 : 3,
+        num_beams: deviceMode === "lightweight" ? 1 : profile.beamCount,
       };
       if (nodes.language.value) options.language = nodes.language.value;
 
@@ -1944,7 +1980,7 @@ function renderAudioFileTranscription(container) {
     clearSelectedFile();
     nodes.modelStatus.textContent = "모델 대기";
     setAudioProcessing(false);
-    nodes.runMeta.textContent = "품질 우선 모드는 처음 실행할 때 더 큰 모델 파일을 내려받을 수 있습니다. 모바일에서는 CPU 경량/호환 모드가 더 안정적일 수 있습니다.";
+    updateAudioModelHint();
     updateOutputMeta();
   }
 
@@ -1967,6 +2003,8 @@ function renderAudioFileTranscription(container) {
     nodes.transcribeBtn.textContent = state.isRunning ? "변환 중..." : "텍스트 변환";
     nodes.clearBtn.disabled = state.isRunning;
     nodes.fileInput.disabled = state.isRunning;
+    nodes.modelProfile.disabled = state.isRunning;
+    nodes.deviceMode.disabled = state.isRunning;
     nodes.sentenceBreaks.disabled = state.isRunning;
   }
 
@@ -1985,6 +2023,12 @@ function renderAudioFileTranscription(container) {
   function updateOutputMeta() {
     const chars = nodes.output.value.trim().length;
     nodes.outputMeta.textContent = `${chars.toLocaleString("ko-KR")}자`;
+  }
+
+  function updateAudioModelHint() {
+    if (state.isRunning) return;
+    const profile = getAudioModelProfile(nodes.modelProfile.value);
+    nodes.runMeta.textContent = `${profile.hint} ${describeAudioDeviceMode(nodes.deviceMode.value)}`;
   }
 }
 
@@ -2037,6 +2081,17 @@ function validateAudioFile(file, metadata) {
   return "";
 }
 
+function getAudioModelProfile(profileId) {
+  return AUDIO_TRANSCRIPTION_MODEL_PROFILES[profileId] || AUDIO_TRANSCRIPTION_MODEL_PROFILES[AUDIO_TRANSCRIPTION_DEFAULT_PROFILE];
+}
+
+function describeAudioDeviceMode(deviceMode) {
+  if (deviceMode === "webgpu") return "WebGPU를 사용할 수 있으면 더 높은 정밀도로 시도합니다.";
+  if (deviceMode === "wasm") return "CPU 고품질은 더 느리지만 WebGPU 없이도 높은 정밀도를 먼저 시도합니다.";
+  if (deviceMode === "lightweight") return "CPU 경량/호환은 안정성을 우선하지만 인식 품질은 더 낮을 수 있습니다.";
+  return "자동 실행은 가능한 경우 고품질 경로를 먼저 쓰고, 기기와 맞지 않으면 호환 경로로 낮춥니다.";
+}
+
 function formatDuration(seconds) {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
   const total = Math.round(seconds);
@@ -2049,7 +2104,8 @@ function formatDuration(seconds) {
   return `${minutes}:${String(remain).padStart(2, "0")}`;
 }
 
-async function getAudioTranscriber(deviceMode, progressCallback) {
+async function getAudioTranscriber(profileId, deviceMode, progressCallback) {
+  const profile = getAudioModelProfile(profileId);
   const transformers = await loadLibrary("transformers");
   if (!transformers?.pipeline) {
     throw new Error("Transformers.js 파이프라인을 불러오지 못했습니다.");
@@ -2058,12 +2114,12 @@ async function getAudioTranscriber(deviceMode, progressCallback) {
   let lastError = null;
   const canUseWebGpu = await canUseAudioWebGpu();
   for (const candidate of getAudioTranscriberCandidates(deviceMode, canUseWebGpu)) {
-    const key = `${AUDIO_TRANSCRIPTION_MODEL}:${candidate.device}:${formatAudioDtypeKey(candidate.dtype)}`;
+    const key = `${profile.model}:${candidate.device}:${formatAudioDtypeKey(candidate.dtype)}`;
     if (!audioTranscriberCache.has(key)) {
       audioTranscriberCache.set(
         key,
         transformers
-          .pipeline("automatic-speech-recognition", AUDIO_TRANSCRIPTION_MODEL, {
+          .pipeline("automatic-speech-recognition", profile.model, {
             device: candidate.device,
             dtype: candidate.dtype,
             progress_callback: progressCallback,
