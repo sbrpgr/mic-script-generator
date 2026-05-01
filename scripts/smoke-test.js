@@ -338,7 +338,14 @@ function buildLogicTests(api) {
         "audio comma-separated repeated phrase cleanup failed"
       );
     }),
-    test("audio preprocessing trims long silence and normalizes quiet speech", () => {
+    test("audio transcript cleaner removes space-separated dominant hallucination fragments", () => {
+      const result = api.cleanAudioTranscriptDraft(
+        "너 안 밀었다는 건 뭔 소리야? 너 말고 누굴 밀었다는 거야? 정승호의 인상 정승호의 인상의 인상의 인상의 인상의 인상의 인상의 인상의 인 네. 네 쪽에서 이야기했다."
+      );
+      assert(!result.includes("정승호의 인상"), "audio dominant repeated fragment cleanup failed");
+      assert(result.includes("네 쪽에서 이야기했다."), "audio cleanup should keep the next non-repeated sentence");
+    }),
+    test("audio preprocessing trims edge silence and normalizes quiet speech", () => {
       const sampleRate = 16000;
       const samples = new Float32Array(sampleRate * 3);
       for (let index = sampleRate; index < sampleRate * 2; index += 1) {
@@ -346,12 +353,25 @@ function buildLogicTests(api) {
       }
       const result = api.preprocessAudioPcm(samples, sampleRate);
       assert(result.sampleRate === 16000, "audio preprocessing should output 16kHz PCM");
-      assert(result.samples.length < samples.length, "audio preprocessing should shorten long silence");
-      assert(result.stats.removedSeconds > 0.5, "audio preprocessing should report removed silence");
+      assert(result.samples.length < samples.length, "audio preprocessing should trim edge silence");
+      assert(result.stats.removedSeconds > 0.5, "audio preprocessing should report trimmed edge silence");
       assert(result.stats.gain > 1, "audio preprocessing should amplify quiet speech");
       const wav = api.encodePcm16Wav(result.samples, result.sampleRate);
       assert(wav.byteLength === 44 + result.samples.length * 2, "wav encoding size is invalid");
       assert(api.formatAudioPreprocessSummary(result.stats).includes("전처리 완료"), "preprocess summary missing");
+    }),
+    test("audio preprocessing preserves internal pauses around quiet speech", () => {
+      const sampleRate = 16000;
+      const samples = new Float32Array(sampleRate * 4);
+      for (let index = Math.floor(sampleRate * 0.2); index < Math.floor(sampleRate * 0.6); index += 1) {
+        samples[index] = Math.sin((index / sampleRate) * Math.PI * 2 * 330) * 0.012;
+      }
+      for (let index = Math.floor(sampleRate * 2.2); index < Math.floor(sampleRate * 2.6); index += 1) {
+        samples[index] = Math.sin((index / sampleRate) * Math.PI * 2 * 330) * 0.012;
+      }
+      const result = api.preprocessAudioPcm(samples, sampleRate);
+      assert(result.stats.processedSeconds > 3, "audio preprocessing should preserve internal low-volume pauses");
+      assert(result.stats.gain > 4, "audio preprocessing should lift quiet conversational speech");
     }),
     test("audio transcription fetch failures explain network and model loading", () => {
       const result = api.formatAudioTranscriptionError(new Error("Failed to fetch"));
