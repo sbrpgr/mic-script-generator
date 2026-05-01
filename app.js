@@ -1756,7 +1756,7 @@ function renderAudioFileTranscription(container) {
         <div>
           <p class="eyebrow">Local Audio STT</p>
           <h2>${renderBetaToolTitle("녹음 파일 텍스트 변환")}</h2>
-          <p class="tool-note audio-tool-intro">녹음 파일을 저장하지 않는 브라우저 변환 기능입니다. 정확도 우선 모델과 대화 흐름을 유지하는 볼륨 보정으로 작은 목소리와 ARS 문구 인식을 개선합니다.</p>
+          <p class="tool-note audio-tool-intro">녹음 파일을 저장하지 않는 브라우저 변환 기능입니다. 파일을 서버에 업로드하지 않고 브라우저 안에서 처리하므로 작업 시간이 오래 걸리거나 인식 품질이 좋지 않을 수 있는 베타 버전입니다.</p>
         </div>
         <div class="status-group" aria-live="polite">
           <span id="audioModelStatus" class="status-pill">모델 대기</span>
