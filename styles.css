@@ -427,22 +427,6 @@ body.home-mode .hero-copy {
   padding: 18px;
 }
 
-.sidebar-header {
-  display: grid;
-  gap: 5px;
-}
-
-.sidebar-copy {
-  color: var(--muted);
-  line-height: 1.55;
-}
-
-.sidebar-search {
-  display: grid;
-  gap: 7px;
-}
-
-.sidebar-search label,
 .field label {
   font-size: 0.9rem;
   font-weight: 800;
@@ -2257,7 +2241,38 @@ body.tool-mode .site-layout {
 .topbar-links {
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.topbar-search {
+  flex: 1 1 320px;
+  max-width: 430px;
+  min-width: 220px;
+}
+
+.topbar-search input {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid #dbe3ef;
+  border-radius: 999px;
+  background: #f7f9fc;
+  color: #20242d;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0 15px;
+}
+
+.topbar-search input::placeholder {
+  color: #8b96a7;
+  opacity: 0.68;
+}
+
+.topbar-search input:focus {
+  border-color: var(--primary);
+  background: #ffffff;
 }
 
 .topbar-links a,
@@ -2609,7 +2624,13 @@ body.tool-mode .info-grid {
 
   .topbar-links {
     width: 100%;
-    overflow-x: auto;
+    overflow: visible;
+  }
+
+  .topbar-search {
+    flex: 1 1 100%;
+    max-width: none;
+    min-width: 0;
   }
 
   body.tool-mode .platform-hero {
@@ -3992,8 +4013,7 @@ body.tool-mode .check-item:hover {
   background: #fbfcff;
 }
 
-body.tool-mode .field label,
-body.tool-mode .sidebar-search label {
+body.tool-mode .field label {
   color: #3d4654;
 }
 
