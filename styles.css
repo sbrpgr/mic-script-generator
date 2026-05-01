@@ -1211,9 +1211,10 @@ body.home-mode .tool-workspace {
 
 .tool-beta-label {
   color: #e5322d;
+  display: inline;
   font-size: 0.72em;
   font-weight: 900;
-  margin-left: 6px;
+  margin-left: 0;
   white-space: nowrap;
 }
 

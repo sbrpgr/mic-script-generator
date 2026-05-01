@@ -25,6 +25,7 @@ const API_NAMES = [
   "parsePageRanges",
   "AUDIO_TRANSCRIPTION_MODEL_PROFILES",
   "AUDIO_TRANSCRIPTION_DEFAULT_PROFILE",
+  "renderToolTitle",
   "getAudioModelProfile",
   "getAudioTranscriberCandidates",
   "formatAudioTranscriptionError",
@@ -312,6 +313,10 @@ function buildLogicTests(api) {
       assert(api.AUDIO_TRANSCRIPTION_MODEL_PROFILES.quality.model === "onnx-community/whisper-base", "quality profile should use whisper-base");
       assert(api.AUDIO_TRANSCRIPTION_MODEL_PROFILES.fast.model === "onnx-community/whisper-tiny", "fast profile should use whisper-tiny");
       assert(api.getAudioModelProfile("missing").id === "quality", "missing model profile should fall back to quality");
+    }),
+    test("beta tool title attaches beta label without a whitespace break", () => {
+      const title = api.renderToolTitle({ title: "녹음 파일 텍스트 변환", beta: true });
+      assert(title === '녹음 파일 텍스트 변환<span class="tool-beta-label">(베타)</span>', "beta label should be attached without leading whitespace");
     }),
     test("audio transcription fetch failures explain network and model loading", () => {
       const result = api.formatAudioTranscriptionError(new Error("Failed to fetch"));

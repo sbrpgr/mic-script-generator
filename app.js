@@ -1294,7 +1294,7 @@ function renderToolLaunchCard(tool) {
 }
 
 function renderToolTitle(tool) {
-  return `${escapeHtml(tool.title)}${tool.beta ? ' <span class="tool-beta-label">(베타)</span>' : ""}`;
+  return `${escapeHtml(tool.title)}${tool.beta ? '<span class="tool-beta-label">(베타)</span>' : ""}`;
 }
 
 function bindHomeToolSearch() {
@@ -1735,7 +1735,7 @@ function renderAudioFileTranscription(container) {
       <div class="section-heading">
         <div>
           <p class="eyebrow">Local Audio STT</p>
-          <h2>녹음 파일 텍스트 변환 <span class="tool-beta-label">(베타)</span></h2>
+          <h2>녹음 파일 텍스트 변환<span class="tool-beta-label">(베타)</span></h2>
           <p class="tool-note audio-tool-intro">녹음 파일을 저장하지 않는 브라우저 변환 기능입니다. 서버형 대형 STT보다 품질이 낮을 수 있어, 짧은 파일은 정확도 우선으로 먼저 확인해 주세요.</p>
         </div>
         <div class="status-group" aria-live="polite">
