@@ -987,7 +987,7 @@ function bindGlobalEvents() {
 }
 
 function ensureBookmarkPromptButton() {
-  const links = document.querySelector(".topbar-links");
+  const links = document.querySelector(".topbar-policy-links") || document.querySelector(".topbar-links");
   if (!links || links.querySelector(".topbar-favorite")) return;
 
   const button = document.createElement("button");
