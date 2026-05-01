@@ -455,19 +455,117 @@ body.home-mode .hero-copy {
   gap: 8px;
 }
 
+.chip-row button,
+.tool-link,
+.tool-launch-card,
+.home-category-links a {
+  --category-accent: #6f7b86;
+  --category-ink: #3f4a56;
+  --category-soft: #f4f6f8;
+  --category-border: #dde4ec;
+}
+
+.chip-row button[data-category="음성"],
+.tool-link[data-category="음성"],
+.tool-launch-card[data-category="음성"],
+.home-category-links a[data-category="음성"] {
+  --category-accent: #0f8a78;
+  --category-ink: #0d6659;
+  --category-soft: #e8f7f4;
+  --category-border: #b9e3db;
+}
+
+.chip-row button[data-category="영상"],
+.tool-link[data-category="영상"],
+.tool-launch-card[data-category="영상"],
+.home-category-links a[data-category="영상"] {
+  --category-accent: #c64f42;
+  --category-ink: #9f3d34;
+  --category-soft: #fff0ee;
+  --category-border: #f4c7c1;
+}
+
+.chip-row button[data-category="텍스트"],
+.tool-link[data-category="텍스트"],
+.tool-launch-card[data-category="텍스트"],
+.home-category-links a[data-category="텍스트"] {
+  --category-accent: #2563c9;
+  --category-ink: #1f4f9f;
+  --category-soft: #eef5ff;
+  --category-border: #c9dcff;
+}
+
+.chip-row button[data-category="이미지"],
+.tool-link[data-category="이미지"],
+.tool-launch-card[data-category="이미지"],
+.home-category-links a[data-category="이미지"] {
+  --category-accent: #b15b12;
+  --category-ink: #8e470e;
+  --category-soft: #fff6e8;
+  --category-border: #f3d4aa;
+}
+
+.chip-row button[data-category="PDF"],
+.tool-link[data-category="PDF"],
+.tool-launch-card[data-category="PDF"],
+.home-category-links a[data-category="PDF"] {
+  --category-accent: #6750c9;
+  --category-ink: #5140a0;
+  --category-soft: #f1eeff;
+  --category-border: #d6cffc;
+}
+
+.chip-row button[data-category="자막"],
+.tool-link[data-category="자막"],
+.tool-launch-card[data-category="자막"],
+.home-category-links a[data-category="자막"] {
+  --category-accent: #1f8a52;
+  --category-ink: #17683e;
+  --category-soft: #effaf3;
+  --category-border: #c6e9d1;
+}
+
 .chip-row button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   min-height: 34px;
+  border-color: var(--category-border);
   border-radius: 999px;
-  background: #f3f6f3;
+  background: linear-gradient(180deg, #ffffff 0%, var(--category-soft) 100%);
+  color: var(--category-ink);
   padding: 0 13px;
   font-size: 0.85rem;
   font-weight: 800;
 }
 
+.chip-row button::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--category-accent);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.72);
+  flex: 0 0 auto;
+}
+
+.chip-row button small {
+  color: inherit;
+  font-size: 0.72rem;
+  font-weight: 900;
+  opacity: 0.72;
+}
+
 .chip-row button.is-active {
-  border-color: var(--primary);
-  background: var(--primary);
+  border-color: var(--category-accent);
+  background: var(--category-accent);
   color: #ffffff;
+  box-shadow: 0 10px 20px rgba(20, 24, 33, 0.1);
+}
+
+.chip-row button.is-active::before {
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.22);
 }
 
 .tool-list {
@@ -476,29 +574,59 @@ body.home-mode .hero-copy {
 }
 
 .tool-link {
+  position: relative;
   display: grid;
   gap: 8px;
-  border: 1px solid var(--line);
+  overflow: hidden;
+  border: 1px solid var(--category-border);
   border-radius: 8px;
-  background: #fbfcfa;
+  background: linear-gradient(90deg, var(--category-soft) 0, #ffffff 36%);
   color: inherit;
   text-decoration: none;
-  padding: 14px;
+  padding: 14px 14px 14px 16px;
   transition:
     transform 0.16s ease,
     border-color 0.16s ease,
     box-shadow 0.16s ease;
 }
 
+.tool-link::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--category-accent);
+}
+
 .tool-link:hover,
 .tool-link.is-active {
-  border-color: #9ab0a2;
+  border-color: var(--category-accent);
   box-shadow: var(--shadow-soft);
   transform: translateY(-1px);
 }
 
 .tool-link.is-active {
-  background: #f1f7f5;
+  background: linear-gradient(90deg, var(--category-soft) 0, #ffffff 48%);
+}
+
+.tool-link-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tool-link-category {
+  display: inline-flex;
+  align-items: center;
+  min-height: 25px;
+  border: 1px solid var(--category-border);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--category-ink);
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 0 9px;
 }
 
 .tool-link strong {
@@ -522,8 +650,8 @@ body.home-mode .hero-copy {
   align-items: center;
   min-height: 26px;
   border-radius: 999px;
-  background: #eef3f1;
-  color: var(--primary);
+  background: rgba(255, 255, 255, 0.72);
+  color: #566372;
   font-size: 0.78rem;
   font-weight: 800;
   padding: 0 10px;
@@ -737,13 +865,15 @@ body.home-mode .tool-workspace {
 }
 
 .tool-launch-card {
+  position: relative;
   display: grid;
   align-content: start;
   gap: 11px;
   min-height: 194px;
-  border: 1px solid var(--line);
+  overflow: hidden;
+  border: 1px solid var(--category-border);
   border-radius: 8px;
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, var(--category-soft) 140%);
   color: inherit;
   text-decoration: none;
   padding: 16px;
@@ -754,8 +884,16 @@ body.home-mode .tool-workspace {
     background-color 0.16s ease;
 }
 
+.tool-launch-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--category-accent);
+}
+
 .tool-launch-card:hover {
-  border-color: #aebbd0;
+  border-color: var(--category-accent);
   background: #ffffff;
   box-shadow: var(--shadow-soft);
   transform: translateY(-2px);
@@ -816,6 +954,12 @@ body.home-mode .tool-workspace {
   border-color: rgba(18, 111, 153, 0.2);
   background: #e8f6fb;
   color: #126f99;
+}
+
+.tool-launch-card[data-category] .tool-launch-icon {
+  border-color: var(--category-border);
+  background: var(--category-soft);
+  color: var(--category-ink);
 }
 
 .tool-launch-action {
@@ -2371,14 +2515,14 @@ body.tool-mode .workspace-panel {
 
 .tool-launch-card {
   min-height: 184px;
-  border-color: #eceef2;
-  background: #ffffff;
+  border-color: var(--category-border);
+  background: linear-gradient(180deg, #ffffff 0%, var(--category-soft) 150%);
   padding: 18px;
 }
 
 .tool-launch-card:hover {
-  border-color: #ffc4c1;
-  box-shadow: 0 16px 30px rgba(229, 50, 45, 0.11);
+  border-color: var(--category-accent);
+  box-shadow: 0 16px 30px rgba(20, 24, 33, 0.1);
 }
 
 .tool-launch-icon {
@@ -2414,6 +2558,11 @@ body.tool-mode .workspace-panel {
 .tool-launch-card[data-category="자막"] .tool-launch-icon {
   background: #effaf3;
   color: #1f8a52;
+}
+
+.tool-launch-card[data-category] .tool-launch-icon {
+  background: var(--category-soft);
+  color: var(--category-ink);
 }
 
 .tool-launch-action {
@@ -2682,9 +2831,9 @@ body.home-mode .hero-copy h1 {
 .tool-launch-card {
   position: relative;
   min-height: 218px;
-  border-color: #e4e7ee;
+  border-color: var(--category-border);
   border-radius: 8px;
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, var(--category-soft) 145%);
   padding: 20px;
   overflow: hidden;
 }
@@ -2694,8 +2843,8 @@ body.home-mode .hero-copy h1 {
   position: absolute;
   inset: 0 0 auto;
   height: 4px;
-  background: var(--primary);
-  opacity: 0;
+  background: var(--category-accent);
+  opacity: 0.9;
   transition: opacity 0.16s ease;
 }
 
@@ -2704,7 +2853,7 @@ body.home-mode .hero-copy h1 {
 }
 
 .tool-launch-card:hover {
-  border-color: #ffb8b4;
+  border-color: var(--category-accent);
   box-shadow: 0 18px 38px rgba(31, 31, 40, 0.11);
 }
 
@@ -3180,12 +3329,14 @@ body.home-mode .overview-panel {
 }
 
 .home-category-links a {
+  position: relative;
   display: grid;
   gap: 4px;
+  overflow: hidden;
   min-height: 72px;
-  border: 1px solid #e6e9ef;
+  border: 1px solid var(--category-border);
   border-radius: 8px;
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, var(--category-soft) 150%);
   color: #20242d;
   padding: 13px 14px;
   text-decoration: none;
@@ -3195,14 +3346,22 @@ body.home-mode .overview-panel {
     transform 0.16s ease;
 }
 
+.home-category-links a::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--category-accent);
+}
+
 .home-category-links a:hover {
-  border-color: #d6dbe5;
+  border-color: var(--category-accent);
   box-shadow: 0 12px 26px rgba(23, 27, 38, 0.08);
   transform: translateY(-1px);
 }
 
 .home-category-links span {
-  color: var(--muted);
+  color: var(--category-ink);
   font-size: 0.75rem;
   font-weight: 900;
 }
@@ -3227,19 +3386,24 @@ body.home-mode .overview-panel {
   align-items: center;
   gap: 15px;
   min-height: 132px;
-  border: 1px solid #e3e7ef;
+  border: 1px solid var(--category-border);
   border-radius: 8px;
-  background: #ffffff;
+  background: linear-gradient(90deg, #ffffff 0%, var(--category-soft) 155%);
   box-shadow: 0 10px 24px rgba(23, 27, 38, 0.045);
   padding: 18px;
 }
 
 .home-directory .tool-launch-card::before {
-  display: none;
+  display: block;
+  inset: 0 auto 0 0;
+  width: 4px;
+  height: auto;
+  background: var(--category-accent);
+  opacity: 0.9;
 }
 
 .home-directory .tool-launch-card:hover {
-  border-color: #d6dbe5;
+  border-color: var(--category-accent);
   box-shadow: 0 16px 34px rgba(23, 27, 38, 0.1);
   transform: translateY(-2px);
 }
@@ -3343,6 +3507,11 @@ body.home-mode .overview-panel {
 .tool-launch-card[data-tone="slate"] .tool-launch-icon {
   background: #f1f4f8;
   color: #465364;
+}
+
+.tool-launch-card[data-category] .tool-launch-icon {
+  background: var(--category-soft);
+  color: var(--category-ink);
 }
 
 body.home-mode .platform-hero .hero-meta,

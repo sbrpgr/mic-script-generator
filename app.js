@@ -1055,7 +1055,14 @@ function initAdSlots() {
 function renderCategoryFilters() {
   els.categoryFilters.innerHTML = CATEGORY_ORDER.map((category) => {
     const activeClass = category === appState.category ? "is-active" : "";
-    return `<button class="${activeClass}" type="button" data-category="${category}">${category}</button>`;
+    const count =
+      category === "전체" ? TOOL_DEFS.length : TOOL_DEFS.filter((tool) => tool.category === category).length;
+    return `
+      <button class="${activeClass}" type="button" data-category="${category}" aria-pressed="${category === appState.category}">
+        <span>${category}</span>
+        <small>${count}</small>
+      </button>
+    `;
   }).join("");
 
   els.categoryFilters.querySelectorAll("button").forEach((button) => {
@@ -1095,8 +1102,11 @@ function renderSidebarTools() {
         .map((keyword) => `<span>${escapeHtml(keyword)}</span>`)
         .join("");
       return `
-        <a class="tool-link ${activeClass}" href="${tool.path}">
-          <div class="tool-link-tags">${tags}</div>
+        <a class="tool-link ${activeClass}" href="${tool.path}" data-category="${escapeHtml(tool.category)}">
+          <div class="tool-link-head">
+            <span class="tool-link-category">${escapeHtml(tool.category)}</span>
+            <div class="tool-link-tags">${tags}</div>
+          </div>
           <strong>${escapeHtml(tool.title)}</strong>
           <p>${escapeHtml(tool.summary)}</p>
         </a>
@@ -1263,7 +1273,7 @@ function renderHomeCategoryLinks() {
     <nav class="home-category-links" aria-label="카테고리별 도구">
       ${CATEGORY_PAGE_DEFS.map(
         (page) => `
-          <a href="${page.path}">
+          <a href="${page.path}" data-category="${escapeHtml(page.categories[0] || "전체")}">
             <span>${escapeHtml(page.eyebrow)}</span>
             <strong>${escapeHtml(page.title)}</strong>
           </a>
@@ -1282,7 +1292,7 @@ function renderToolLaunchCard(tool) {
   const searchText = [tool.title, tool.summary, visual.copy, ...tool.keywords].join(" ");
 
   return `
-    <a class="tool-launch-card" href="${tool.path}" data-tone="${escapeHtml(visual.tone)}" data-search="${escapeHtml(searchText)}" aria-label="${escapeHtml(tool.title)} 열기">
+    <a class="tool-launch-card" href="${tool.path}" data-category="${escapeHtml(tool.category)}" data-tone="${escapeHtml(visual.tone)}" data-search="${escapeHtml(searchText)}" aria-label="${escapeHtml(tool.title)} 열기">
       <span class="tool-launch-icon" aria-hidden="true">${escapeHtml(visual.icon)}</span>
       <span class="tool-launch-body">
         <strong>${renderToolTitle(tool)}</strong>
