@@ -46,7 +46,7 @@ function main() {
   const api = loadAppApi(app);
   const tests = [
     ...buildStructureTests(api),
-    ...buildLogicTests(api),
+    ...buildLogicTests(api, app),
     ...buildMetadataTests(api),
     ...buildSecurityTests(api, app),
     ...buildUploadUxTests(app),
@@ -207,7 +207,7 @@ function buildStructureTests(api) {
   ];
 }
 
-function buildLogicTests(api) {
+function buildLogicTests(api, app) {
   const srt = "1\n00:00:01,000 --> 00:00:02,000\nHello\n\n2\n00:00:03,000 --> 00:00:04,000\nWorld";
   return [
     test("case converter handles camel and snake case", () => {
@@ -320,6 +320,12 @@ function buildLogicTests(api) {
       assert(api.getAudioModelProfile("fast").id === "quality", "retired fast profile should fall back to quality");
       assert(api.getAudioModelProfile("missing").id === "quality", "missing model profile should fall back to the default quality profile");
     }),
+    test("audio transcription uses a worker for heavy model inference", () => {
+      assert(app.includes("function transcribeAudioInWorker"), "audio transcription worker bridge is missing");
+      assert(app.includes('new Worker(audioTranscriptionWorkerUrl, { type: "module" })'), "audio transcription should use a module worker");
+      assert(app.includes("transcriber(message.audioData"), "worker should receive decoded waveform data instead of loading a blob URL");
+      assert(app.includes("백그라운드에서 텍스트로 변환 중입니다"), "worker progress copy is missing");
+    }),
     test("beta tool title attaches beta label without a whitespace break", () => {
       const title = api.renderToolTitle({ title: "녹음 파일 텍스트 변환", beta: true });
       assert(
@@ -381,7 +387,7 @@ function buildLogicTests(api) {
     }),
     test("audio transcription session failures explain dtype compatibility", () => {
       const result = api.formatAudioTranscriptionError(new Error("Missing required scale"));
-      assert(result.includes("정밀도") && result.includes("CPU 경량/호환"), "session error guidance is too vague");
+      assert(result.includes("정밀도 조합") && result.includes("새로고침"), "session error guidance is too vague");
     }),
     test("text diff counts add and remove rows", () => {
       const result = api.diffLines("A\nB", "A\nC");

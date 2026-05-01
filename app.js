@@ -1733,7 +1733,11 @@ const AUDIO_PREPROCESS_FRAME_SECONDS = 0.05;
 const AUDIO_PREPROCESS_EDGE_PADDING_SECONDS = 0.65;
 const AUDIO_PREPROCESS_TARGET_RMS = 0.16;
 const AUDIO_PREPROCESS_MAX_GAIN = 12;
-const audioTranscriberCache = new Map();
+const AUDIO_TRANSFORMERS_MODULE_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.1.0";
+let audioTranscriptionWorker = null;
+let audioTranscriptionWorkerUrl = "";
+let audioTranscriptionWorkerRequestId = 0;
+const audioTranscriptionWorkerRequests = new Map();
 
 function renderAudioFileTranscription(container) {
   container.innerHTML = `
@@ -1924,17 +1928,18 @@ function renderAudioFileTranscription(container) {
       nodes.modelStatus.textContent = "모델 준비 중";
       nodes.runMeta.textContent = preparedAudio.summary;
       setAudioProcessing(true, `${preparedAudio.summary} 모델을 준비하고 있습니다.`);
-      const transcriber = await getAudioTranscriber(profile.id, runtimeMode, (progress) => {
+      const candidates = getAudioTranscriberCandidates(runtimeMode, false);
+      const progressCallback = (progress) => {
         const label = formatModelProgress(progress);
         if (label) {
           nodes.modelStatus.textContent = label;
           setAudioProcessing(true, `${profile.label} ${label} · 처음 실행이면 다운로드 시간이 걸릴 수 있습니다.`);
         }
-      });
+      };
 
       nodes.modelStatus.textContent = "변환 중";
-      nodes.runMeta.textContent = "브라우저 안에서 녹음 파일을 분석하고 있습니다. 창을 닫지 말아 주세요.";
-      setAudioProcessing(true, "녹음 파일을 텍스트로 변환 중입니다. 창을 닫지 말아 주세요.");
+      nodes.runMeta.textContent = "브라우저 백그라운드 작업에서 녹음 파일을 분석하고 있습니다. 창을 닫지 말아 주세요.";
+      setAudioProcessing(true, "녹음 파일을 백그라운드에서 텍스트로 변환 중입니다. 창을 닫지 말아 주세요.");
       const options = {
         task: "transcribe",
         chunk_length_s: 20,
@@ -1949,7 +1954,13 @@ function renderAudioFileTranscription(container) {
       };
       if (nodes.language.value) options.language = nodes.language.value;
 
-      const result = await transcriber(preparedAudio.url, options);
+      const result = await transcribeAudioInWorker({
+        profile,
+        candidates,
+        audioData: preparedAudio.audioData,
+        options,
+        progressCallback,
+      });
       state.rawTranscript = cleanAudioTranscriptDraft(formatAudioTranscriptionResult(result, false));
       renderAudioTranscriptOutput();
       nodes.modelStatus.textContent = "완료";
@@ -2061,18 +2072,10 @@ function describeAudioFile(file, metadata) {
 }
 
 async function prepareAudioInputForTranscription(file) {
-  const fallback = () => {
-    const url = URL.createObjectURL(file);
-    return {
-      url,
-      stats: null,
-      summary: "전처리를 건너뛰고 원본 녹음 파일을 분석합니다.",
-      cleanup: () => URL.revokeObjectURL(url),
-    };
-  };
-
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return fallback();
+  if (!AudioContextClass) {
+    throw new Error("현재 브라우저는 녹음 파일을 음성 인식용 파형으로 변환하는 기능을 지원하지 않습니다.");
+  }
 
   let context = null;
   try {
@@ -2081,24 +2084,185 @@ async function prepareAudioInputForTranscription(file) {
     const audioBuffer = await context.decodeAudioData(arrayBuffer.slice(0));
     const mono = extractMonoAudioPcm(audioBuffer);
     const processed = preprocessAudioPcm(mono, audioBuffer.sampleRate);
-    if (!processed.samples.length) return fallback();
-
-    const wav = encodePcm16Wav(processed.samples, processed.sampleRate);
-    const blob = new Blob([wav], { type: "audio/wav" });
-    const url = URL.createObjectURL(blob);
+    if (!processed.samples.length) {
+      throw new Error("녹음 파일에서 분석할 수 있는 음성 구간을 찾지 못했습니다.");
+    }
+    const audioData =
+      processed.samples.byteOffset === 0 && processed.samples.byteLength === processed.samples.buffer.byteLength
+        ? processed.samples
+        : new Float32Array(processed.samples);
     return {
-      url,
+      audioData,
       stats: processed.stats,
       summary: formatAudioPreprocessSummary(processed.stats),
-      cleanup: () => URL.revokeObjectURL(url),
+      cleanup: () => {},
     };
   } catch {
-    return fallback();
+    throw new Error("브라우저가 이 녹음 파일을 음성 인식용 파형으로 변환하지 못했습니다. 다른 형식의 짧은 녹음 파일로 다시 시도해 주세요.");
   } finally {
     if (context?.close) {
       context.close().catch(() => {});
     }
   }
+}
+
+function transcribeAudioInWorker({ profile, candidates, audioData, options, progressCallback }) {
+  if (!window.Worker) {
+    return Promise.reject(new Error("브라우저가 백그라운드 음성 인식 작업을 지원하지 않습니다."));
+  }
+  if (!audioData?.buffer?.byteLength || !(audioData instanceof Float32Array)) {
+    return Promise.reject(new Error("녹음 파일의 파형 데이터를 음성 인식 작업으로 전달하지 못했습니다."));
+  }
+
+  const worker = getAudioTranscriptionWorker();
+  const requestId = `${Date.now()}-${(audioTranscriptionWorkerRequestId += 1)}`;
+  return new Promise((resolve, reject) => {
+    audioTranscriptionWorkerRequests.set(requestId, { resolve, reject, progressCallback });
+    try {
+      worker.postMessage(
+        {
+          id: requestId,
+          type: "transcribe",
+          profile: {
+            model: profile.model,
+            label: profile.label,
+          },
+          candidates,
+          audioData,
+          options,
+        },
+        [audioData.buffer]
+      );
+    } catch (error) {
+      audioTranscriptionWorkerRequests.delete(requestId);
+      reject(error);
+    }
+  });
+}
+
+function getAudioTranscriptionWorker() {
+  if (audioTranscriptionWorker) return audioTranscriptionWorker;
+
+  const source = createAudioTranscriptionWorkerSource();
+  const blob = new Blob([source], { type: "text/javascript" });
+  audioTranscriptionWorkerUrl = URL.createObjectURL(blob);
+  audioTranscriptionWorker = new Worker(audioTranscriptionWorkerUrl, { type: "module" });
+  audioTranscriptionWorker.addEventListener("message", handleAudioTranscriptionWorkerMessage);
+  audioTranscriptionWorker.addEventListener("error", handleAudioTranscriptionWorkerFailure);
+  audioTranscriptionWorker.addEventListener("messageerror", handleAudioTranscriptionWorkerFailure);
+  return audioTranscriptionWorker;
+}
+
+function handleAudioTranscriptionWorkerMessage(event) {
+  const message = event.data || {};
+  const request = audioTranscriptionWorkerRequests.get(message.id);
+  if (!request) return;
+
+  if (message.type === "progress") {
+    request.progressCallback?.(message.progress);
+    return;
+  }
+
+  audioTranscriptionWorkerRequests.delete(message.id);
+  if (message.type === "result") {
+    request.resolve(message.result);
+    return;
+  }
+  request.reject(new Error(message.error || "백그라운드 음성 인식 작업에 실패했습니다."));
+}
+
+function handleAudioTranscriptionWorkerFailure(error) {
+  const message = error?.message || "백그라운드 음성 인식 작업이 중단되었습니다.";
+  audioTranscriptionWorkerRequests.forEach(({ reject }) => reject(new Error(message)));
+  audioTranscriptionWorkerRequests.clear();
+  if (audioTranscriptionWorker) {
+    audioTranscriptionWorker.terminate();
+    audioTranscriptionWorker = null;
+  }
+  if (audioTranscriptionWorkerUrl) {
+    URL.revokeObjectURL(audioTranscriptionWorkerUrl);
+    audioTranscriptionWorkerUrl = "";
+  }
+}
+
+function createAudioTranscriptionWorkerSource() {
+  return `
+    const transformersModuleUrl = ${JSON.stringify(AUDIO_TRANSFORMERS_MODULE_URL)};
+    const pipelineCache = new Map();
+    let transformersPromise = null;
+
+    self.addEventListener("message", (event) => {
+      const message = event.data || {};
+      if (message.type !== "transcribe") return;
+      transcribe(message).catch((error) => {
+        self.postMessage({
+          id: message.id,
+          type: "error",
+          error: error && error.message ? error.message : String(error || "Unknown worker error"),
+        });
+      });
+    });
+
+    async function transcribe(message) {
+      const transformers = await loadTransformers();
+      if (!transformers.pipeline) {
+        throw new Error("Transformers.js 파이프라인을 불러오지 못했습니다.");
+      }
+
+      const transcriber = await getPipeline(transformers, message);
+      const result = await transcriber(message.audioData, message.options || {});
+      self.postMessage({ id: message.id, type: "result", result });
+    }
+
+    function loadTransformers() {
+      if (!transformersPromise) {
+        transformersPromise = import(transformersModuleUrl);
+      }
+      return transformersPromise;
+    }
+
+    async function getPipeline(transformers, message) {
+      let lastError = null;
+      const candidates = Array.isArray(message.candidates) && message.candidates.length
+        ? message.candidates
+        : [{ device: "wasm", dtype: { encoder_model: "q8", decoder_model_merged: "fp16" } }];
+      for (const candidate of candidates) {
+        const key = [message.profile.model, candidate.device, formatDtypeKey(candidate.dtype)].join(":");
+        if (!pipelineCache.has(key)) {
+          pipelineCache.set(
+            key,
+            transformers
+              .pipeline("automatic-speech-recognition", message.profile.model, {
+                device: candidate.device,
+                dtype: candidate.dtype,
+                progress_callback: (progress) => {
+                  self.postMessage({ id: message.id, type: "progress", progress });
+                },
+              })
+              .catch((error) => {
+                pipelineCache.delete(key);
+                throw error;
+              })
+          );
+        }
+
+        try {
+          return await pipelineCache.get(key);
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      throw lastError || new Error("음성 인식 모델을 준비하지 못했습니다.");
+    }
+
+    function formatDtypeKey(dtype) {
+      if (!dtype || typeof dtype !== "object") return String(dtype || "default");
+      return Object.keys(dtype)
+        .sort()
+        .map((key) => key + ":" + dtype[key])
+        .join(",");
+    }
+  `;
 }
 
 function extractMonoAudioPcm(audioBuffer) {
@@ -2310,52 +2474,6 @@ function formatDuration(seconds) {
   return `${minutes}:${String(remain).padStart(2, "0")}`;
 }
 
-async function getAudioTranscriber(profileId, deviceMode, progressCallback) {
-  const profile = getAudioModelProfile(profileId);
-  const transformers = await loadLibrary("transformers");
-  if (!transformers?.pipeline) {
-    throw new Error("Transformers.js 파이프라인을 불러오지 못했습니다.");
-  }
-
-  let lastError = null;
-  const canUseWebGpu = await canUseAudioWebGpu();
-  for (const candidate of getAudioTranscriberCandidates(deviceMode, canUseWebGpu)) {
-    const key = `${profile.model}:${candidate.device}:${formatAudioDtypeKey(candidate.dtype)}`;
-    if (!audioTranscriberCache.has(key)) {
-      audioTranscriberCache.set(
-        key,
-        transformers
-          .pipeline("automatic-speech-recognition", profile.model, {
-            device: candidate.device,
-            dtype: candidate.dtype,
-            progress_callback: progressCallback,
-          })
-          .catch((error) => {
-            audioTranscriberCache.delete(key);
-            throw error;
-          })
-      );
-    }
-
-    try {
-      return await audioTranscriberCache.get(key);
-    } catch (error) {
-      lastError = error;
-    }
-  }
-
-  throw lastError || new Error("음성 인식 모델을 준비하지 못했습니다.");
-}
-
-async function canUseAudioWebGpu() {
-  if (!navigator.gpu?.requestAdapter) return false;
-  try {
-    return Boolean(await navigator.gpu.requestAdapter());
-  } catch {
-    return false;
-  }
-}
-
 function getAudioTranscriberCandidates(deviceMode, canUseWebGpu = Boolean(navigator.gpu)) {
   if (deviceMode === "webgpu") {
     if (!canUseWebGpu) {
@@ -2386,24 +2504,16 @@ function getAudioTranscriberCandidates(deviceMode, canUseWebGpu = Boolean(naviga
   ];
 }
 
-function formatAudioDtypeKey(dtype) {
-  if (!dtype || typeof dtype !== "object") return String(dtype || "default");
-  return Object.keys(dtype)
-    .sort()
-    .map((key) => `${key}:${dtype[key]}`)
-    .join(",");
-}
-
 function formatAudioTranscriptionError(error) {
   const message = String(error?.message || "").trim();
   if (/can't create a session|TransposeDQWeights|Missing required scale|qdq_actions/i.test(message)) {
-    return "녹음 파일 텍스트 변환에 실패했습니다. 브라우저 음성 인식 모델의 정밀도 조합이 현재 실행 환경과 맞지 않습니다. 새로고침 후 CPU 경량/호환으로 다시 시도해 주세요.";
+    return "녹음 파일 텍스트 변환에 실패했습니다. 브라우저 음성 인식 모델의 정밀도 조합이 현재 실행 환경과 맞지 않습니다. 새로고침 후 다시 시도해 주세요.";
   }
   if (/failed to fetch|load failed|network/i.test(message)) {
     return "녹음 파일 텍스트 변환에 실패했습니다. 브라우저가 선택한 녹음 파일이나 음성 인식 모델 파일을 가져오지 못했습니다. 새로고침 후 다시 시도하고, 회사망·보안 프로그램·광고 차단 기능이 cdn.jsdelivr.net, huggingface.co, cas-bridge.xethub.hf.co 접속을 막는지 확인해 주세요.";
   }
   if (/backend|webgpu|wasm|dynamically imported module/i.test(message)) {
-    return "녹음 파일 텍스트 변환에 실패했습니다. 브라우저 음성 인식 백엔드를 준비하지 못했습니다. 실행 방식을 CPU 경량/호환으로 두고 다시 시도해 주세요.";
+    return "녹음 파일 텍스트 변환에 실패했습니다. 브라우저 음성 인식 백엔드를 준비하지 못했습니다. 새로고침 후 다시 시도해 주세요.";
   }
   return `녹음 파일 텍스트 변환에 실패했습니다. ${message}`.trim();
 }
