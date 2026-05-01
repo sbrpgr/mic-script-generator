@@ -1138,6 +1138,7 @@ function renderHomePage() {
   els.toolOverview.innerHTML = `
     <div class="home-divider" aria-hidden="true"></div>
     ${renderHomeCategoryLinks()}
+    <div class="home-divider home-divider-after-categories" aria-hidden="true"></div>
   `;
 
   els.toolWorkspace.innerHTML = `
@@ -1173,11 +1174,6 @@ function renderCategoryPage(categoryPage) {
         <p class="eyebrow">${escapeHtml(categoryPage.eyebrow)}</p>
         <h2>${escapeHtml(categoryPage.title)}</h2>
         <p>${escapeHtml(categoryPage.description)}</p>
-      </div>
-      <div class="category-metrics" aria-label="카테고리 요약">
-        <span><strong>${tools.length}</strong><small>도구</small></span>
-        <span><strong>0</strong><small>서버 저장</small></span>
-        <span><strong>무료</strong><small>로그인 없음</small></span>
       </div>
     </div>
   `;
