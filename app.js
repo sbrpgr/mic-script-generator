@@ -1694,6 +1694,14 @@ const TOOL_RENDERERS = {
 };
 
 const AUDIO_TRANSCRIPTION_MODEL = "onnx-community/whisper-tiny";
+const AUDIO_TRANSCRIPTION_WASM_BALANCED_DTYPE = Object.freeze({
+  encoder_model: "q8",
+  decoder_model_merged: "fp16",
+});
+const AUDIO_TRANSCRIPTION_WEBGPU_DTYPE = Object.freeze({
+  encoder_model: "fp32",
+  decoder_model_merged: "fp32",
+});
 const AUDIO_TRANSCRIPTION_MAX_SECONDS = 5 * 60;
 const AUDIO_TRANSCRIPTION_MAX_BYTES = 80 * 1024 * 1024;
 const audioTranscriberCache = new Map();
@@ -2042,7 +2050,7 @@ async function getAudioTranscriber(deviceMode, progressCallback) {
 
   let lastError = null;
   for (const candidate of getAudioTranscriberCandidates(deviceMode)) {
-    const key = `${AUDIO_TRANSCRIPTION_MODEL}:${candidate.device}:${candidate.dtype}`;
+    const key = `${AUDIO_TRANSCRIPTION_MODEL}:${candidate.device}:${formatAudioDtypeKey(candidate.dtype)}`;
     if (!audioTranscriberCache.has(key)) {
       audioTranscriberCache.set(
         key,
@@ -2063,7 +2071,6 @@ async function getAudioTranscriber(deviceMode, progressCallback) {
       return await audioTranscriberCache.get(key);
     } catch (error) {
       lastError = error;
-      if (deviceMode !== "auto" && candidate.device !== "webgpu") break;
     }
   }
 
@@ -2074,21 +2081,37 @@ function getAudioTranscriberCandidates(deviceMode) {
   const canUseWebGpu = Boolean(navigator.gpu);
   if (deviceMode === "webgpu") {
     return [
-      { device: "webgpu", dtype: "fp32" },
-      { device: "wasm", dtype: "q8" },
+      { device: "webgpu", dtype: AUDIO_TRANSCRIPTION_WEBGPU_DTYPE },
+      { device: "wasm", dtype: AUDIO_TRANSCRIPTION_WASM_BALANCED_DTYPE },
+      { device: "wasm", dtype: "fp32" },
     ];
   }
   if (deviceMode === "wasm" || !canUseWebGpu) {
-    return [{ device: "wasm", dtype: "q8" }];
+    return [
+      { device: "wasm", dtype: AUDIO_TRANSCRIPTION_WASM_BALANCED_DTYPE },
+      { device: "wasm", dtype: "fp32" },
+    ];
   }
   return [
-    { device: "wasm", dtype: "q8" },
-    { device: "webgpu", dtype: "fp32" },
+    { device: "wasm", dtype: AUDIO_TRANSCRIPTION_WASM_BALANCED_DTYPE },
+    { device: "webgpu", dtype: AUDIO_TRANSCRIPTION_WEBGPU_DTYPE },
+    { device: "wasm", dtype: "fp32" },
   ];
+}
+
+function formatAudioDtypeKey(dtype) {
+  if (!dtype || typeof dtype !== "object") return String(dtype || "default");
+  return Object.keys(dtype)
+    .sort()
+    .map((key) => `${key}:${dtype[key]}`)
+    .join(",");
 }
 
 function formatAudioTranscriptionError(error) {
   const message = String(error?.message || "").trim();
+  if (/can't create a session|TransposeDQWeights|Missing required scale|qdq_actions/i.test(message)) {
+    return "녹음 파일 텍스트 변환에 실패했습니다. 브라우저 음성 인식 모델의 정밀도 조합이 현재 실행 환경과 맞지 않습니다. 새로고침 후 CPU 처리(권장)로 다시 시도해 주세요.";
+  }
   if (/failed to fetch|load failed|network/i.test(message)) {
     return "녹음 파일 텍스트 변환에 실패했습니다. 브라우저가 선택한 녹음 파일이나 음성 인식 모델 파일을 가져오지 못했습니다. 새로고침 후 다시 시도하고, 회사망·보안 프로그램·광고 차단 기능이 cdn.jsdelivr.net, huggingface.co, cas-bridge.xethub.hf.co 접속을 막는지 확인해 주세요.";
   }

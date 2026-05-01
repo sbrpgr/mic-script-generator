@@ -14,7 +14,7 @@ Current production baseline:
 - Production domain: `https://ko-workspace.com/`
 - Cloudflare Pages project: `mic-script-generator`
 - Latest AdSense/SEO readiness commit: `580c060 Improve AdSense SEO readiness`
-- Current static asset cache version: `20260501-04`
+- Current static asset cache version: `20260501-05`
 - Category landing pages, privacy policy updates, sitemap updates, and core FAQ copy were deployed on 2026-04-29
 
 Core constraints:
@@ -42,6 +42,7 @@ Core constraints:
 - `녹음 파일 텍스트 변환`
   - Browser-side audio-file transcription beta tool
   - Uses Transformers.js with an on-demand Whisper model download
+  - Uses a mixed precision default (`encoder_model` q8, `decoder_model_merged` fp16) with fp32 fallback to avoid q8 decoder session failures in ONNX Runtime Web
   - Supports short local audio files such as m4a, mp3, wav, aac, webm, and ogg
   - Keeps the selected recording file in the browser; no application-server upload
   - Treats output as a lightweight human-review text draft, not a stored transcript manager or guaranteed final transcript

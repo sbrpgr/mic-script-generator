@@ -290,12 +290,20 @@ function buildLogicTests(api) {
       );
     }),
     test("audio transcription prefers stable CPU backend by default", () => {
-      assert(api.getAudioTranscriberCandidates("auto")[0].device === "wasm", "auto mode should try wasm first");
-      assert(api.getAudioTranscriberCandidates("webgpu")[0].device === "webgpu", "webgpu mode should honor explicit choice");
+      const autoCandidates = api.getAudioTranscriberCandidates("auto");
+      const webGpuCandidates = api.getAudioTranscriberCandidates("webgpu");
+      assert(autoCandidates[0].device === "wasm", "auto mode should try wasm first");
+      assert(autoCandidates[0].dtype.decoder_model_merged === "fp16", "wasm mode should avoid q8 decoder sessions");
+      assert(autoCandidates.some((candidate) => candidate.dtype === "fp32"), "auto mode should include fp32 fallback");
+      assert(webGpuCandidates[0].device === "webgpu", "webgpu mode should honor explicit choice");
     }),
     test("audio transcription fetch failures explain network and model loading", () => {
       const result = api.formatAudioTranscriptionError(new Error("Failed to fetch"));
       assert(result.includes("cdn.jsdelivr.net") && result.includes("huggingface.co"), "fetch error guidance is too vague");
+    }),
+    test("audio transcription session failures explain dtype compatibility", () => {
+      const result = api.formatAudioTranscriptionError(new Error("Missing required scale"));
+      assert(result.includes("정밀도") && result.includes("CPU 처리"), "session error guidance is too vague");
     }),
     test("text diff counts add and remove rows", () => {
       const result = api.diffLines("A\nB", "A\nC");
