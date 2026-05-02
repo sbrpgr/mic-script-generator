@@ -119,6 +119,24 @@ const TOOL_DEFS = [
     ],
   },
   {
+    id: "csv-excel-converter",
+    path: "/tools/csv-excel-converter/",
+    category: "텍스트",
+    title: "CSV 엑셀 변환기",
+    summary:
+      "CSV와 TSV 파일을 XLSX 엑셀 파일로 바꾸고, XLSX 시트를 CSV로 내보냅니다. 여러 파일을 브라우저에서 일괄 변환합니다.",
+    seoTitle: "CSV 엑셀 변환기 | CSV XLSX 변환 일괄 처리",
+    seoDescription:
+      "CSV, TSV 파일을 XLSX 엑셀 파일로 변환하고 XLSX 시트를 CSV로 내보내는 무료 브라우저 도구입니다. 한글 CSV, CP949, 앞자리 0 보존, 여러 파일 일괄 변환을 지원합니다.",
+    keywords: ["CSV 엑셀 변환", "CSV XLSX 변환", "엑셀 CSV 변환", "CP949 CSV", "일괄 변환"],
+    guide: [
+      { title: "파일 선택", text: "CSV, TSV, XLSX 파일을 하나 이상 선택하거나 업로드 영역에 끌어다 놓습니다." },
+      { title: "변환 방향", text: "CSV/TSV는 XLSX로, XLSX는 CSV로 자동 변환합니다. CSV 인코딩과 구분자는 필요하면 직접 지정합니다." },
+      { title: "실무 옵션", text: "전화번호, 우편번호, 사번처럼 앞자리 0이 중요한 값은 텍스트로 보존할 수 있습니다." },
+      { title: "결과 저장", text: "파일별 결과를 확인한 뒤 개별 다운로드하거나 여러 결과를 ZIP으로 한 번에 내려받습니다." },
+    ],
+  },
+  {
     id: "character-counter",
     path: "/tools/character-counter/",
     category: "텍스트",
@@ -503,6 +521,7 @@ const TOOL_VISUALS = {
   "webcam-recorder": { icon: "\uD83C\uDFA5", tone: "orange", copy: "\uc6f9\ucea0\uacfc \ub9c8\uc774\ud06c\ub97c \ud544\ud130\ub97c \uc801\uc6a9\ud574 \ub179\ud654\ud569\ub2c8\ub2e4." },
   "ai-text-cleaner": { icon: "\u2728", tone: "violet", copy: "AI \ub2f5\ubcc0\uc758 \ubcc4\ud45c\uc640 \ub9c8\ud06c\ub2e4\uc6b4\uc744 \uc815\ub9ac\ud569\ub2c8\ub2e4." },
   "ai-table-converter": { icon: "\u25A4", tone: "green", copy: "AI \ud45c\ub97c \ubb38\uc11c\uc640 \uc5d1\uc140\uc5d0 \ubd99\uc5ec\ub123\uae30 \uc88b\uac8c \ubcc0\ud658\ud569\ub2c8\ub2e4." },
+  "csv-excel-converter": { icon: "XL", tone: "emerald", copy: "CSV, TSV, XLSX 파일을 서로 변환하고 여러 결과를 묶어 저장합니다." },
   "character-counter": { icon: "\uD83D\uDD22", tone: "blue", copy: "\uacf5\ubc31 \ud3ec\ud568\uacfc \uc81c\uc678 \uae00\uc790\uc218\ub97c \uacc4\uc0b0\ud569\ub2c8\ub2e4." },
   "line-break-cleaner": { icon: "\u21B5", tone: "cyan", copy: "\uc904\ubc14\uafc8\uacfc \uacf5\ubc31\uc744 \ubb38\ub2e8\uc73c\ub85c \uc815\ub9ac\ud569\ub2c8\ub2e4." },
   "markdown-editor": { icon: "MD", tone: "indigo", copy: "\uc77c\ubc18 \ud14d\uc2a4\ud2b8\ub97c \ub9c8\ud06c\ub2e4\uc6b4 \ubb38\uc11c\ub85c \ud3b8\uc9d1\ud569\ub2c8\ub2e4." },
@@ -550,6 +569,11 @@ const TOOL_USE_EXAMPLES = {
     "AI 답변 앞뒤 설명 문구까지 그대로 붙여넣고 표 데이터만 자동으로 골라냅니다.",
     "마크다운 표를 Word, 한글, Google Docs에 붙는 문서용 표로 복사합니다.",
     "Excel과 Google Sheets에 셀 단위로 붙여넣기 좋은 TSV와 CSV를 함께 만듭니다.",
+  ],
+  "csv-excel-converter": [
+    "한글 CSV를 CP949 또는 UTF-8로 읽어 XLSX 엑셀 파일로 변환합니다.",
+    "여러 CSV·TSV 파일을 한 번에 올리고 결과 XLSX를 개별 또는 ZIP으로 저장합니다.",
+    "XLSX 파일의 첫 시트 또는 전체 시트를 CSV로 내보내 후속 시스템 업로드에 사용합니다.",
   ],
   "character-counter": [
     "자기소개서, 과제, 블로그 원고의 공백 포함/제외 글자수를 확인합니다.",
@@ -668,6 +692,10 @@ const TOOL_EXTRA_FAQS = {
     question: "표 앞뒤 설명 문구가 있어도 표만 변환할 수 있나요?",
     answer: "네. AI 답변 전체를 붙여넣어도 마크다운 표, 파이프 표, TSV, CSV 형태를 찾아 표 데이터만 분리합니다. 셀 안의 별표, 링크, 코드 같은 서식 흔적 제거 여부도 선택할 수 있습니다.",
   },
+  "csv-excel-converter": {
+    question: "CSV 파일을 올리면 서버로 전송되나요?",
+    answer: "아니요. 선택한 CSV, TSV, XLSX 파일은 브라우저에서 읽고 변환합니다. 변환 라이브러리 파일은 CDN에서 내려받지만 사용자가 올린 파일명, 내용, 결과 데이터는 분석 이벤트나 자체 서버로 보내지 않습니다.",
+  },
   "character-counter": {
     question: "공백 제외 글자수도 계산되나요?",
     answer: "네. 공백 포함 글자수와 공백 제외 글자수, 단어 수, 줄 수, 바이트 수를 함께 보여줍니다. 자기소개서, 과제, 블로그 원고처럼 제출 기준이 있는 글을 점검할 때 유용합니다.",
@@ -770,6 +798,7 @@ const ANALYTICS_CONTROL_EVENTS = {
   extractBtn: { event: "tool_run", action: "extract" },
   makeBtn: { event: "tool_run", action: "make" },
   convertBtn: { event: "tool_run", action: "convert" },
+  convertSpreadsheetBtn: { event: "tool_run", action: "convert_spreadsheet" },
   compressBtn: { event: "tool_run", action: "compress" },
   mergeBtn: { event: "tool_run", action: "merge" },
   splitBtn: { event: "tool_run", action: "split" },
@@ -779,6 +808,7 @@ const ANALYTICS_CONTROL_EVENTS = {
   copyMarkdownBtn: { event: "result_copy", action: "copy_markdown" },
   copyPlainBtn: { event: "result_copy", action: "copy_plain" },
   downloadBtn: { event: "file_download", action: "download" },
+  downloadZipBtn: { event: "file_download", action: "download_zip" },
   downloadTranscriptBtn: { event: "file_download", action: "download_transcript" },
   downloadAllBtn: { event: "file_download", action: "download_all" },
   downloadVideoBtn: { event: "file_download", action: "download_video" },
@@ -819,10 +849,10 @@ const CATEGORY_PAGE_DEFS = [
     title: "텍스트 업무 도구",
     eyebrow: "Text Tools",
     description:
-      "AI 표 복붙 변환, AI 서식 정리, 글자수 세기, 줄바꿈 정리, 추출기처럼 매일 쓰는 텍스트 작업을 브라우저에서 바로 처리합니다.",
+      "AI 표 복붙 변환, CSV 엑셀 변환, AI 서식 정리, 글자수 세기, 줄바꿈 정리, 추출기처럼 매일 쓰는 텍스트·데이터 작업을 브라우저에서 바로 처리합니다.",
     metaDescription:
-      "코워크스페이스 텍스트 업무 도구 모음입니다. AI 표 복붙 변환, AI 복붙 서식 정리, 글자수 세기, 줄바꿈 정리, 이메일·URL·전화번호 추출 등을 무료로 사용할 수 있습니다.",
-    keywords: ["AI 표 변환", "텍스트 정리", "글자수 세기", "AI 서식 정리"],
+      "코워크스페이스 텍스트 업무 도구 모음입니다. AI 표 복붙 변환, CSV 엑셀 변환, AI 복붙 서식 정리, 글자수 세기, 줄바꿈 정리, 이메일·URL·전화번호 추출 등을 무료로 사용할 수 있습니다.",
+    keywords: ["AI 표 변환", "CSV 엑셀 변환", "텍스트 정리", "글자수 세기", "AI 서식 정리"],
     categories: ["텍스트"],
     guide: [
       { title: "도구 선택", text: "정리, 계산, 추출, 비교처럼 필요한 텍스트 작업을 고릅니다." },
@@ -916,6 +946,15 @@ const LIBRARIES = {
     type: "module",
     src: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs",
     worker: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs",
+  },
+  xlsx: {
+    global: "XLSX",
+    type: "module",
+    src: "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs",
+  },
+  jszip: {
+    global: "JSZip",
+    src: "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js",
   },
   transformers: {
     global: "TransformersJS",
@@ -1705,6 +1744,7 @@ const TOOL_RENDERERS = {
   "webcam-recorder": renderWebcamRecorder,
   "ai-text-cleaner": renderAiTextCleaner,
   "ai-table-converter": renderAiTableConverter,
+  "csv-excel-converter": renderCsvExcelConverter,
   "character-counter": renderCharacterCounter,
   "line-break-cleaner": renderLineBreakCleaner,
   "markdown-editor": renderMarkdownEditor,
@@ -4590,6 +4630,304 @@ function renderAiTableConverter(container) {
     const csv = `\ufeff${tableToCsv(table)}`;
     downloadBlob(new Blob([csv], { type: "text/csv;charset=utf-8" }), "ai-table-converted.csv");
   });
+}
+
+const SPREADSHEET_CONVERTER_MAX_FILE_BYTES = 25 * 1024 * 1024;
+const SPREADSHEET_CONVERTER_MAX_TOTAL_BYTES = 120 * 1024 * 1024;
+
+function renderCsvExcelConverter(container) {
+  container.innerHTML = `
+    <div class="tool-section spreadsheet-tool">
+      <article class="input-card">
+        <div class="section-heading">
+          <div>
+            <h2>CSV·TSV·XLSX 파일</h2>
+            <p class="tool-note">여러 파일을 선택하면 CSV/TSV는 XLSX로, XLSX는 CSV로 브라우저 안에서 변환합니다.</p>
+          </div>
+          <button id="clearSpreadsheetFilesBtn" type="button">초기화</button>
+        </div>
+        <div class="upload-box spreadsheet-upload-box">
+          <label for="spreadsheetFiles">파일 선택 또는 끌어다 놓기</label>
+          <input id="spreadsheetFiles" type="file" accept=".csv,.tsv,.xlsx,text/csv,text/tab-separated-values,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" multiple />
+          <p>CSV, TSV, XLSX 파일을 여러 개 선택할 수 있습니다. 구형 XLS는 첫 버전에서 제외했습니다.</p>
+        </div>
+        <div id="spreadsheetFileList" class="file-list" aria-live="polite"></div>
+      </article>
+
+      <aside class="action-card">
+        <div class="field-grid">
+          <div class="field">
+            <label for="csvInputEncoding">CSV 읽기 인코딩</label>
+            <select id="csvInputEncoding">
+              <option value="auto">자동 감지</option>
+              <option value="utf-8">UTF-8</option>
+              <option value="cp949">CP949/EUC-KR</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="csvDelimiter">CSV 구분자</label>
+            <select id="csvDelimiter">
+              <option value="auto">자동 감지</option>
+              <option value=",">쉼표</option>
+              <option value="tab">탭</option>
+              <option value=";">세미콜론</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="xlsxSheetMode">XLSX 시트</label>
+            <select id="xlsxSheetMode">
+              <option value="first">첫 시트만 CSV</option>
+              <option value="all">모든 시트를 각각 CSV</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="csvOutputEncoding">CSV 저장 방식</label>
+            <select id="csvOutputEncoding">
+              <option value="utf8bom">UTF-8 BOM</option>
+              <option value="utf8">UTF-8</option>
+            </select>
+          </div>
+        </div>
+        <div class="check-row">
+          <label class="check-item"><input id="preserveSpreadsheetText" type="checkbox" checked /> 앞자리 0·긴 숫자·날짜를 텍스트로 보존</label>
+          <label class="check-item"><input id="trimSpreadsheetCells" type="checkbox" checked /> 셀 앞뒤 공백 정리</label>
+          <label class="check-item"><input id="removeSpreadsheetEmptyRows" type="checkbox" checked /> 빈 행 제거</label>
+        </div>
+        <div class="action-row">
+          <button id="convertSpreadsheetBtn" class="primary-action" type="button" disabled>변환하기</button>
+          <button id="downloadZipBtn" type="button" disabled>전체 ZIP 저장</button>
+        </div>
+        <p id="spreadsheetStatus" class="tool-note">선택한 파일은 자체 서버로 업로드되지 않습니다. 변환 라이브러리만 필요할 때 CDN에서 불러옵니다.</p>
+      </aside>
+
+      <section class="stat-grid" id="spreadsheetStats" aria-live="polite"></section>
+
+      <article class="result-card spreadsheet-result-card">
+        <div class="section-heading">
+          <div>
+            <h2>변환 결과</h2>
+            <p id="spreadsheetResultMeta" class="tool-note">아직 변환한 결과가 없습니다.</p>
+          </div>
+        </div>
+        <div id="spreadsheetResultList" class="spreadsheet-result-list" aria-live="polite"></div>
+      </article>
+
+      <article class="result-card spreadsheet-preview-card">
+        <div class="section-heading">
+          <div>
+            <h2>미리보기</h2>
+            <p id="spreadsheetPreviewMeta" class="tool-note">변환 후 첫 결과의 앞부분을 보여줍니다.</p>
+          </div>
+        </div>
+        <div id="spreadsheetPreview" class="ai-table-preview spreadsheet-preview" aria-live="polite">
+          <p class="tool-note">CSV나 엑셀 파일을 선택하고 변환하면 첫 8행을 확인할 수 있습니다.</p>
+        </div>
+      </article>
+    </div>
+  `;
+
+  const fileInput = container.querySelector("#spreadsheetFiles");
+  const fileList = container.querySelector("#spreadsheetFileList");
+  const convertBtn = container.querySelector("#convertSpreadsheetBtn");
+  const clearBtn = container.querySelector("#clearSpreadsheetFilesBtn");
+  const downloadZipBtn = container.querySelector("#downloadZipBtn");
+  const status = container.querySelector("#spreadsheetStatus");
+  const stats = container.querySelector("#spreadsheetStats");
+  const resultList = container.querySelector("#spreadsheetResultList");
+  const resultMeta = container.querySelector("#spreadsheetResultMeta");
+  const preview = container.querySelector("#spreadsheetPreview");
+  const previewMeta = container.querySelector("#spreadsheetPreviewMeta");
+
+  const state = {
+    files: [],
+    results: [],
+    busy: false,
+  };
+
+  function getOptions() {
+    return {
+      inputEncoding: container.querySelector("#csvInputEncoding").value,
+      delimiter: container.querySelector("#csvDelimiter").value,
+      sheetMode: container.querySelector("#xlsxSheetMode").value,
+      outputEncoding: container.querySelector("#csvOutputEncoding").value,
+      preserveText: container.querySelector("#preserveSpreadsheetText").checked,
+      trimCells: container.querySelector("#trimSpreadsheetCells").checked,
+      removeEmptyRows: container.querySelector("#removeSpreadsheetEmptyRows").checked,
+    };
+  }
+
+  fileInput.addEventListener("change", () => {
+    state.files = Array.from(fileInput.files || []);
+    state.results = [];
+    renderSpreadsheetFileList();
+    renderSpreadsheetResults();
+    syncSpreadsheetActions();
+  });
+
+  clearBtn.addEventListener("click", () => {
+    fileInput.value = "";
+    state.files = [];
+    state.results = [];
+    renderSpreadsheetFileList();
+    renderSpreadsheetResults();
+    syncSpreadsheetActions();
+    status.textContent = "파일 선택을 초기화했습니다.";
+  });
+
+  convertBtn.addEventListener("click", runSpreadsheetConversion);
+  downloadZipBtn.addEventListener("click", downloadSpreadsheetResultsAsZip);
+  resultList.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-result-index]");
+    if (!button) return;
+    const result = state.results[Number(button.dataset.resultIndex)];
+    if (!result?.blob) return;
+    downloadBlob(result.blob, result.outputName);
+  });
+
+  renderSpreadsheetFileList();
+  renderSpreadsheetResults();
+  syncSpreadsheetActions();
+
+  async function runSpreadsheetConversion() {
+    if (state.busy || !state.files.length) return;
+
+    const totalBytes = state.files.reduce((sum, file) => sum + file.size, 0);
+    if (totalBytes > SPREADSHEET_CONVERTER_MAX_TOTAL_BYTES) {
+      showToast(`전체 파일 크기는 ${formatBytes(SPREADSHEET_CONVERTER_MAX_TOTAL_BYTES)} 이하부터 권장합니다.`);
+      return;
+    }
+
+    state.busy = true;
+    state.results = [];
+    syncSpreadsheetActions();
+    renderSpreadsheetResults();
+    status.textContent = "변환 라이브러리를 불러오는 중입니다.";
+
+    try {
+      const XLSX = await loadLibrary("xlsx");
+      const options = getOptions();
+      for (const file of state.files) {
+        const fileResults = await convertSpreadsheetFile(file, options, XLSX);
+        state.results.push(...fileResults);
+        renderSpreadsheetResults();
+      }
+      status.textContent = state.results.length
+        ? `${state.results.length.toLocaleString("ko-KR")}개 결과를 만들었습니다.`
+        : "변환 가능한 결과가 없습니다.";
+      if (!state.results.length) showToast("변환 가능한 CSV, TSV, XLSX 파일을 선택해 주세요.");
+    } catch (error) {
+      status.textContent = formatUserNotice("스프레드시트 변환에 실패했습니다. 파일 형식이나 브라우저 메모리 상태를 확인해 주세요.");
+      trackToolError(TOOL_MAP["csv-excel-converter"], error, "convert_spreadsheet");
+      showToast("스프레드시트 변환에 실패했습니다.");
+    } finally {
+      state.busy = false;
+      syncSpreadsheetActions();
+      renderSpreadsheetResults();
+    }
+  }
+
+  function renderSpreadsheetFileList() {
+    if (!state.files.length) {
+      fileList.innerHTML = `<p class="tool-note">선택한 파일이 없습니다.</p>`;
+      return;
+    }
+
+    fileList.innerHTML = state.files
+      .map((file, index) => {
+        const kind = getSpreadsheetFileKind(file);
+        const label = kind ? kind.label : "지원 제외";
+        return `
+          <div class="file-item">
+            <span>${index + 1}. ${escapeHtml(file.name)}</span>
+            <span>${escapeHtml(label)} · ${formatBytes(file.size)}</span>
+          </div>
+        `;
+      })
+      .join("");
+  }
+
+  function renderSpreadsheetResults() {
+    resultMeta.textContent = state.results.length
+      ? `${state.results.length.toLocaleString("ko-KR")}개 결과가 준비되었습니다.`
+      : "아직 변환한 결과가 없습니다.";
+    downloadZipBtn.disabled = state.busy || state.results.length === 0;
+
+    stats.innerHTML = [
+      ["선택 파일", `${state.files.length.toLocaleString("ko-KR")}개`],
+      ["결과 파일", `${state.results.length.toLocaleString("ko-KR")}개`],
+      ["전체 크기", formatBytes(state.files.reduce((sum, file) => sum + file.size, 0))],
+      ["처리 방식", "브라우저"],
+    ]
+      .map(
+        ([label, value]) => `
+          <article class="stat-card">
+            <span>${label}</span>
+            <strong>${value}</strong>
+          </article>
+        `
+      )
+      .join("");
+
+    if (!state.results.length) {
+      resultList.innerHTML = `<p class="tool-note">변환 결과가 여기에 표시됩니다.</p>`;
+      preview.innerHTML = `<p class="tool-note">CSV나 엑셀 파일을 선택하고 변환하면 첫 8행을 확인할 수 있습니다.</p>`;
+      previewMeta.textContent = "변환 후 첫 결과의 앞부분을 보여줍니다.";
+      return;
+    }
+
+    resultList.innerHTML = state.results
+      .map(
+        (result, index) => `
+          <div class="spreadsheet-result-item">
+            <div>
+              <strong>${escapeHtml(result.outputName)}</strong>
+              <p class="tool-note">${escapeHtml(result.inputName)} · ${escapeHtml(result.detail)} · ${formatBytes(result.blob.size)}</p>
+              ${result.warning ? `<p class="tool-note warning-note">${escapeHtml(result.warning)}</p>` : ""}
+            </div>
+            <button type="button" data-result-index="${index}">다운로드</button>
+          </div>
+        `
+      )
+      .join("");
+
+    const first = state.results[0];
+    preview.innerHTML = renderSpreadsheetPreview(first.previewRows);
+    previewMeta.textContent = `${first.outputName} · 앞부분 미리보기`;
+  }
+
+  function syncSpreadsheetActions() {
+    convertBtn.disabled = state.busy || !state.files.length;
+    clearBtn.disabled = state.busy || !state.files.length;
+    downloadZipBtn.disabled = state.busy || !state.results.length;
+  }
+
+  async function downloadSpreadsheetResultsAsZip() {
+    if (!state.results.length) {
+      showToast("저장할 변환 결과가 없습니다.");
+      return;
+    }
+    if (state.results.length === 1) {
+      downloadBlob(state.results[0].blob, state.results[0].outputName);
+      return;
+    }
+
+    try {
+      status.textContent = "ZIP 파일을 만드는 중입니다.";
+      const JSZip = await loadLibrary("jszip");
+      const zip = new JSZip();
+      const usedNames = new Set();
+      state.results.forEach((result) => {
+        zip.file(makeUniqueOutputName(result.outputName, usedNames), result.blob);
+      });
+      const blob = await zip.generateAsync({ type: "blob" });
+      downloadBlob(blob, "csv-excel-converted.zip");
+      status.textContent = "전체 결과 ZIP 파일을 만들었습니다.";
+    } catch (error) {
+      status.textContent = formatUserNotice("ZIP 파일 생성에 실패했습니다. 결과를 개별 다운로드해 주세요.");
+      trackToolError(TOOL_MAP["csv-excel-converter"], error, "download_zip");
+      showToast("ZIP 파일 생성에 실패했습니다.");
+    }
+  }
 }
 
 function renderCharacterCounter(container) {
@@ -8076,6 +8414,296 @@ function buildDocumentTableHtml(table) {
     `<tbody>${bodyHtml}</tbody>`,
     "</table></body></html>",
   ].join("");
+}
+
+async function convertSpreadsheetFile(file, options, XLSX) {
+  if (file.size > SPREADSHEET_CONVERTER_MAX_FILE_BYTES) {
+    throw new Error(`File too large: ${file.name}`);
+  }
+
+  const kind = getSpreadsheetFileKind(file);
+  if (!kind) {
+    throw new Error(`Unsupported spreadsheet file: ${file.name}`);
+  }
+
+  const buffer = await file.arrayBuffer();
+  if (kind.source === "delimited") {
+    return [convertDelimitedFileToXlsx(file, buffer, kind, options, XLSX)];
+  }
+
+  return convertXlsxFileToCsv(file, buffer, options, XLSX);
+}
+
+function convertDelimitedFileToXlsx(file, buffer, kind, options, XLSX) {
+  const decoded = decodeSpreadsheetText(buffer, options.inputEncoding);
+  const delimiter = resolveSpreadsheetDelimiter(decoded.text, options.delimiter, kind.id);
+  const rows = normalizeSpreadsheetRows(parseDelimitedText(decoded.text, delimiter), options);
+  const workbook = XLSX.utils.book_new();
+  const sheet = XLSX.utils.aoa_to_sheet(rows.map((row) => row.map((cell) => (options.preserveText ? String(cell) : coerceSpreadsheetCellValue(cell)))));
+  sheet["!cols"] = estimateSpreadsheetColumns(rows);
+  XLSX.utils.book_append_sheet(workbook, sheet, sanitizeSheetName(getSpreadsheetBaseName(file.name) || "Sheet1"));
+  const bytes = XLSX.write(workbook, { bookType: "xlsx", type: "array", compression: true });
+  const outputName = `${sanitizeFilename(getSpreadsheetBaseName(file.name) || "converted")}.xlsx`;
+  return {
+    inputName: file.name,
+    outputName,
+    blob: new Blob([bytes], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    }),
+    detail: `${kind.label} -> XLSX · ${rows.length.toLocaleString("ko-KR")}행 · ${decoded.encodingLabel} · ${formatDelimiterLabel(delimiter)}`,
+    warning: rows.length ? "" : "읽을 수 있는 행이 없었습니다.",
+    previewRows: rows,
+  };
+}
+
+function convertXlsxFileToCsv(file, buffer, options, XLSX) {
+  const workbook = XLSX.read(buffer, { type: "array", cellFormula: false, cellHTML: false, cellText: true });
+  const sheetNames = options.sheetMode === "all" ? workbook.SheetNames : workbook.SheetNames.slice(0, 1);
+  const results = [];
+
+  for (const sheetName of sheetNames) {
+    const sheet = workbook.Sheets[sheetName];
+    if (!sheet) continue;
+    const rows = normalizeSpreadsheetRows(
+      XLSX.utils.sheet_to_json(sheet, {
+        header: 1,
+        defval: "",
+        blankrows: !options.removeEmptyRows,
+        raw: false,
+      }),
+      { ...options, preserveText: true }
+    );
+    const csv = matrixToDelimitedText(rows, ",");
+    const outputName = buildSheetCsvFilename(file.name, sheetName, sheetNames.length > 1);
+    results.push({
+      inputName: file.name,
+      outputName,
+      blob: new Blob([encodeCsvOutput(csv, options.outputEncoding)], { type: "text/csv;charset=utf-8" }),
+      detail: `XLSX -> CSV · ${escapeControlText(sheetName)} · ${rows.length.toLocaleString("ko-KR")}행`,
+      warning: rows.length ? "" : "빈 시트이거나 내보낼 셀이 없습니다.",
+      previewRows: rows,
+    });
+  }
+
+  return results;
+}
+
+function getSpreadsheetFileKind(file) {
+  const name = String(file?.name || "").toLowerCase();
+  const type = String(file?.type || "").toLowerCase();
+  if (name.endsWith(".csv") || type === "text/csv") return { id: "csv", label: "CSV", source: "delimited" };
+  if (name.endsWith(".tsv") || type === "text/tab-separated-values") return { id: "tsv", label: "TSV", source: "delimited" };
+  if (
+    name.endsWith(".xlsx") ||
+    type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  ) {
+    return { id: "xlsx", label: "XLSX", source: "workbook" };
+  }
+  return null;
+}
+
+function decodeSpreadsheetText(buffer, encoding) {
+  const bytes = new Uint8Array(buffer);
+  const body = hasUtf8Bom(bytes) ? bytes.subarray(3) : bytes;
+  if (encoding === "utf-8" || hasUtf8Bom(bytes)) {
+    return { text: decodeTextWithEncoding(body, "utf-8"), encodingLabel: hasUtf8Bom(bytes) ? "UTF-8 BOM" : "UTF-8" };
+  }
+  if (encoding === "cp949") {
+    return { text: decodeTextWithEncoding(body, "euc-kr"), encodingLabel: "CP949/EUC-KR" };
+  }
+
+  try {
+    return { text: decodeTextWithEncoding(body, "utf-8", true), encodingLabel: hasUtf8Bom(bytes) ? "UTF-8 BOM" : "UTF-8" };
+  } catch {
+    return { text: decodeTextWithEncoding(body, "euc-kr"), encodingLabel: "CP949/EUC-KR" };
+  }
+}
+
+function hasUtf8Bom(bytes) {
+  return bytes.length >= 3 && bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf;
+}
+
+function decodeTextWithEncoding(bytes, encoding, fatal = false) {
+  return new TextDecoder(encoding, { fatal }).decode(bytes).replace(/^\ufeff/, "");
+}
+
+function resolveSpreadsheetDelimiter(text, option, fileKind) {
+  if (option === "tab") return "\t";
+  if (option === "," || option === ";") return option;
+  if (fileKind === "tsv") return "\t";
+  return detectDelimitedTextDelimiter(text);
+}
+
+function detectDelimitedTextDelimiter(text) {
+  const sample = normalizeNewlines(text).split("\n").slice(0, 40).filter((line) => line.trim()).join("\n");
+  const candidates = [",", "\t", ";"];
+  let best = ",";
+  let bestScore = -1;
+
+  for (const delimiter of candidates) {
+    const rows = parseDelimitedText(sample, delimiter).slice(0, 20);
+    const counts = rows.map((row) => row.length).filter((count) => count > 1);
+    if (!counts.length) continue;
+    const common = mostCommonNumber(counts);
+    const score = counts.filter((count) => count === common).length * common;
+    if (score > bestScore) {
+      bestScore = score;
+      best = delimiter;
+    }
+  }
+
+  return best;
+}
+
+function parseDelimitedText(text, delimiter = ",") {
+  const source = normalizeNewlines(text);
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let quoted = false;
+
+  for (let index = 0; index < source.length; index += 1) {
+    const char = source[index];
+    if (char === "\"") {
+      if (quoted && source[index + 1] === "\"") {
+        cell += "\"";
+        index += 1;
+      } else {
+        quoted = !quoted;
+      }
+      continue;
+    }
+    if (char === delimiter && !quoted) {
+      row.push(cell);
+      cell = "";
+      continue;
+    }
+    if (char === "\n" && !quoted) {
+      row.push(cell);
+      rows.push(row);
+      row = [];
+      cell = "";
+      continue;
+    }
+    cell += char;
+  }
+
+  row.push(cell);
+  rows.push(row);
+  while (rows.length && rows[rows.length - 1].every((value) => String(value).trim() === "")) rows.pop();
+  return rows;
+}
+
+function normalizeSpreadsheetRows(rows, options) {
+  const normalized = rows.map((row) =>
+    row.map((value) => {
+      const text = value === null || value === undefined ? "" : String(value);
+      return options.trimCells ? text.trim() : text;
+    })
+  );
+  return options.removeEmptyRows ? normalized.filter((row) => row.some((cell) => String(cell).trim() !== "")) : normalized;
+}
+
+function coerceSpreadsheetCellValue(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return "";
+  if (/^-?\d+(\.\d+)?$/.test(text) && !/^[-+]?0\d/.test(text) && text.replace(/[-.]/g, "").length < 15) {
+    return Number(text);
+  }
+  return text;
+}
+
+function matrixToDelimitedText(rows, delimiter = ",") {
+  return rows
+    .map((row) =>
+      row
+        .map((cell) => {
+          const value = cell === null || cell === undefined ? "" : String(cell);
+          return value.includes("\"") || value.includes("\n") || value.includes("\r") || value.includes(delimiter)
+            ? `"${value.replace(/"/g, "\"\"")}"`
+            : value;
+        })
+        .join(delimiter)
+    )
+    .join("\r\n");
+}
+
+function encodeCsvOutput(text, outputEncoding) {
+  return outputEncoding === "utf8bom" ? `\ufeff${text}` : text;
+}
+
+function estimateSpreadsheetColumns(rows) {
+  const width = Math.min(30, rows.reduce((max, row) => Math.max(max, row.length), 0));
+  return Array.from({ length: width }, (_, column) => {
+    const maxLength = rows.slice(0, 100).reduce((max, row) => Math.max(max, String(row[column] || "").length), 0);
+    return { wch: clampNumber(maxLength + 2, 8, 34) };
+  });
+}
+
+function renderSpreadsheetPreview(rows) {
+  if (!rows?.length) return `<p class="tool-note">미리볼 행이 없습니다.</p>`;
+  const sample = rows.slice(0, 8);
+  const width = Math.min(8, rows.reduce((max, row) => Math.max(max, row.length), 0));
+  return `
+    <table>
+      <tbody>
+        ${sample
+          .map((row) => `<tr>${Array.from({ length: width }, (_, index) => `<td>${escapeHtml(row[index] ?? "")}</td>`).join("")}</tr>`)
+          .join("")}
+      </tbody>
+    </table>
+  `;
+}
+
+function mostCommonNumber(values) {
+  const counts = new Map();
+  values.forEach((value) => counts.set(value, (counts.get(value) || 0) + 1));
+  return [...counts].sort((left, right) => right[1] - left[1])[0]?.[0] || 0;
+}
+
+function getSpreadsheetBaseName(name) {
+  return String(name || "").replace(/\.[^.]+$/, "");
+}
+
+function sanitizeSheetName(name) {
+  const cleaned = String(name || "Sheet1")
+    .replace(/[\[\]:*?/\\]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 31);
+  return cleaned || "Sheet1";
+}
+
+function buildSheetCsvFilename(fileName, sheetName, includeSheetName) {
+  const base = sanitizeFilename(getSpreadsheetBaseName(fileName) || "converted");
+  const suffix = includeSheetName ? `-${sanitizeFilename(escapeControlText(sheetName)).slice(0, 40) || "sheet"}` : "";
+  return `${base}${suffix}.csv`;
+}
+
+function makeUniqueOutputName(name, usedNames) {
+  const safeName = sanitizeFilename(name || "converted");
+  if (!usedNames.has(safeName)) {
+    usedNames.add(safeName);
+    return safeName;
+  }
+  const dotIndex = safeName.lastIndexOf(".");
+  const base = dotIndex > 0 ? safeName.slice(0, dotIndex) : safeName;
+  const ext = dotIndex > 0 ? safeName.slice(dotIndex) : "";
+  let counter = 2;
+  while (usedNames.has(`${base}-${counter}${ext}`)) counter += 1;
+  const nextName = `${base}-${counter}${ext}`;
+  usedNames.add(nextName);
+  return nextName;
+}
+
+function formatDelimiterLabel(delimiter) {
+  if (delimiter === "\t") return "탭";
+  if (delimiter === ";") return "세미콜론";
+  return "쉼표";
+}
+
+function escapeControlText(value) {
+  return String(value || "").replace(/[\u0000-\u001f\u007f]/g, " ").trim();
 }
 
 function normalizeNewlines(text) {

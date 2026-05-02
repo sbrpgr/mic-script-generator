@@ -111,3 +111,13 @@
 - Validated with `npm.cmd run check` and `git diff --check`
 - Deployed commit `c0b3691 Add AI table paste converter` through GitHub Actions / Cloudflare Pages
 - Verified production `https://ko-workspace.com/tools/ai-table-converter/` returned `200` and contained `app.js?v=20260502-07`
+
+### CSV Excel Converter
+
+- Added `CSV 엑셀 변환기` at `/tools/csv-excel-converter/`
+- Converts CSV/TSV files to XLSX and XLSX sheets to CSV inside the browser
+- Supports multiple file selection, drag-and-drop, per-result downloads, and ZIP download for multiple outputs
+- Added CSV reading options for automatic UTF-8/CP949 detection, delimiter detection, first-sheet/all-sheet export, empty-row cleanup, and text preservation for leading-zero or long numeric values
+- Kept selected spreadsheet files and generated results browser-side with no application-server upload or content analytics parameters
+- Bumped shared asset cache version to `20260502-08`
+- Validated sample conversions for UTF-8 BOM CSV with quoted multiline fields, TSV, semicolon CSV, CP949/EUC-KR CSV, XLSX all-sheets and first-sheet CSV export, ZIP bundling, parser edge cases, and unsupported-file rejection

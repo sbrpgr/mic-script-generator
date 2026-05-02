@@ -13,6 +13,9 @@ const API_NAMES = [
   "convertAiTableInput",
   "tableToTsv",
   "tableToCsv",
+  "detectDelimitedTextDelimiter",
+  "parseDelimitedText",
+  "matrixToDelimitedText",
   "countTextStats",
   "cleanLineBreaks",
   "extractContacts",
@@ -316,6 +319,13 @@ function buildLogicTests(api, app) {
       assert(result.tables[0].rows[0][0] === "A|B", "escaped pipe parsing failed");
       assert(api.tableToCsv(result.tables[0]) === "항목,값\nA|B,\"1,000원\"", "AI table CSV escaping failed");
     }),
+    test("spreadsheet converter parses CSV with quoted line breaks", () => {
+      const rows = api.parseDelimitedText("이름,메모\n홍길동,\"첫 줄\n둘째 줄\"\n김,완료", ",");
+      assert(rows.length === 3, "CSV row count failed");
+      assert(rows[1][1] === "첫 줄\n둘째 줄", "quoted newline parsing failed");
+      assert(api.detectDelimitedTextDelimiter("이름\t점수\nA\t10") === "\t", "delimiter detection failed");
+      assert(api.matrixToDelimitedText([["A", "1,000"], ["B", "따옴표 \"확인\""]], ",") === "A,\"1,000\"\r\nB,\"따옴표 \"\"확인\"\"\"", "CSV serialization failed");
+    }),
     test("subtitle conversion and timing shift work", () => {
       const vtt = api.convertSubtitle(srt, "srt", "vtt");
       assert(vtt.startsWith("WEBVTT"), "SRT to VTT conversion failed");
@@ -509,6 +519,7 @@ function buildUploadUxTests(app) {
         "pdfFile",
         "imageFiles",
         "subtitleFile",
+        "spreadsheetFiles",
       ]);
       for (const id of ids) {
         assert(supportedIds.has(id), `file input ${id} does not have declared drag support`);

@@ -14,7 +14,7 @@ Current production baseline:
 - Production domain: `https://ko-workspace.com/`
 - Cloudflare Pages project: `mic-script-generator`
 - Latest AdSense/SEO readiness commit: `580c060 Improve AdSense SEO readiness`
-- Current static asset cache version: `20260502-07`
+- Current static asset cache version: `20260502-08`
 - Category landing pages, privacy policy updates, sitemap updates, and core FAQ copy were deployed on 2026-04-29
 
 Core constraints:
@@ -73,6 +73,12 @@ Core constraints:
   - Converts the selected table to document-copy HTML, spreadsheet TSV, and CSV
   - Lets users choose whether to remove Markdown-style cell formatting such as emphasis, links, inline code, list markers, and HTML
   - Keeps pasted AI answers and converted table data in the browser; no application-server upload or analytics content parameters
+- `CSV 엑셀 변환기`
+  - Converts CSV and TSV files to XLSX using browser-side SheetJS loaded on demand
+  - Converts XLSX sheets to CSV, with first-sheet or all-sheets export options
+  - Supports multiple uploaded files, per-result downloads, and ZIP download for multiple results
+  - Supports UTF-8 and CP949/EUC-KR CSV reading, delimiter auto-detection, empty-row removal, and text preservation for leading-zero IDs, phone numbers, postal codes, and long numeric strings
+  - Keeps selected spreadsheet files and generated results in the browser; no application-server upload or analytics content parameters
 - `글자수 세기`
 - `줄바꿈·공백 정리`
 - `이메일·URL·전화번호 추출기`

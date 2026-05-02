@@ -292,6 +292,7 @@ function auditUploadDropSupport() {
     "pdfFile",
     "imageFiles",
     "subtitleFile",
+    "spreadsheetFiles",
   ]);
   const fileInputIds = new Set([...app.matchAll(/<input id="([^"]+)"[^>]*type="file"/g)].map((match) => match[1]));
   for (const id of fileInputIds) {

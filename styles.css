@@ -4180,6 +4180,55 @@ body.tool-mode .info-grid {
   white-space: pre;
 }
 
+.spreadsheet-tool .field-grid {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.spreadsheet-result-list {
+  display: grid;
+  gap: 10px;
+}
+
+.spreadsheet-result-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.spreadsheet-result-item strong {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.spreadsheet-result-item button {
+  min-width: 110px;
+}
+
+.spreadsheet-preview {
+  min-height: 160px;
+}
+
+.spreadsheet-preview table {
+  min-width: 520px;
+}
+
+.warning-note {
+  color: var(--warning) !important;
+}
+
+body.tool-mode #convertSpreadsheetBtn::before {
+  content: "⇄";
+}
+
+body.tool-mode #downloadZipBtn::before {
+  content: "↓";
+}
+
 body.tool-mode #copyDocumentTableBtn::before,
 body.tool-mode #copySpreadsheetTableBtn::before,
 body.tool-mode #copyCsvTableBtn::before {
@@ -4561,5 +4610,13 @@ body.tool-mode .subtitle-textarea {
 
   .quick-tool-head {
     font-size: 0.82rem;
+  }
+
+  .spreadsheet-result-item {
+    grid-template-columns: 1fr;
+  }
+
+  .spreadsheet-result-item button {
+    width: 100%;
   }
 }
