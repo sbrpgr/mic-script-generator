@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-05-07
+
+### QR URL Indexing Cleanup
+
+- Confirmed Search Console-reported `/tools/qr-generator/` and `/tools/qr-reader/` were legacy/alias URLs, not current sitemap URLs.
+- Verified production returned `200 OK` for both aliases and served the home HTML with canonical URL `https://ko-workspace.com/`, which can trigger Google's "alternate page with proper canonical tag" exclusion.
+- Added explicit 301 redirects from `/tools/qr-generator` and `/tools/qr-generator/` to `/tools/qr-code-generator/`.
+- Added explicit 301 redirects from `/tools/qr-reader` and `/tools/qr-reader/` to `/tools/qr-link-extractor/`.
+- Added a project audit check so these SEO alias redirects do not disappear during future URL cleanup work.
+
 ## 2026-04-28
 
 ### Platform Shift

@@ -1,3 +1,7 @@
+/tools/qr-generator https://ko-workspace.com/tools/qr-code-generator/ 301
+/tools/qr-generator/ https://ko-workspace.com/tools/qr-code-generator/ 301
+/tools/qr-reader https://ko-workspace.com/tools/qr-link-extractor/ 301
+/tools/qr-reader/ https://ko-workspace.com/tools/qr-link-extractor/ 301
 https://www.ko-workspace.com/* https://ko-workspace.com/:splat 301
 http://www.ko-workspace.com/* https://ko-workspace.com/:splat 301
 http://ko-workspace.com/* https://ko-workspace.com/:splat 301

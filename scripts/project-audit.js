@@ -24,6 +24,7 @@ function main() {
     ...auditAssetVersion(),
     ...auditToolPages(),
     ...auditCategoryPages(),
+    ...auditSeoRedirects(),
     ...auditStaticReviewContent(),
     ...auditLibraryCsp(),
     ...auditSupportContact(),
@@ -139,6 +140,26 @@ function auditCategoryPages() {
     if (!html.includes(`data-category-page="${page.id}"`)) problems.push(`${relative}: missing data-category-page="${page.id}"`);
     if (!html.includes(`<link rel="canonical" href="${url}"`)) problems.push(`${relative}: missing canonical ${url}`);
     if (!sitemap.includes(`<loc>${url}</loc>`)) problems.push(`sitemap.xml: missing ${url}`);
+  }
+
+  return problems;
+}
+
+function auditSeoRedirects() {
+  const redirects = read(path.join(ROOT, "_redirects"));
+  const requiredRedirects = [
+    ["/tools/qr-generator", `${ORIGIN}/tools/qr-code-generator/`],
+    ["/tools/qr-generator/", `${ORIGIN}/tools/qr-code-generator/`],
+    ["/tools/qr-reader", `${ORIGIN}/tools/qr-link-extractor/`],
+    ["/tools/qr-reader/", `${ORIGIN}/tools/qr-link-extractor/`],
+  ];
+  const problems = [];
+
+  for (const [from, to] of requiredRedirects) {
+    const pattern = new RegExp(`^${escapeRegExp(from)}\\s+${escapeRegExp(to)}\\s+301\\s*$`, "m");
+    if (!pattern.test(redirects)) {
+      problems.push(`_redirects: missing SEO alias redirect ${from} -> ${to} 301`);
+    }
   }
 
   return problems;
@@ -497,6 +518,10 @@ function findMatchingBracket(text, start, open, close) {
 function readStringProperty(text, property) {
   const match = new RegExp(`${property}:\\s*"([^"]+)"`).exec(text);
   return match?.[1] || "";
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function findDuplicateIds(entries, label) {
